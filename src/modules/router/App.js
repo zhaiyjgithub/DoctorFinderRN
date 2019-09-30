@@ -1,5 +1,7 @@
 import HomePageViewController from '../HomePageViewController'
 import {Navigation} from 'react-native-navigation'
+import ExtraDimensions from 'react-native-extra-dimensions-android'
+
 
 
 Navigation.registerComponent('HomePageViewController', () => HomePageViewController);

@@ -42,6 +42,10 @@ react-lifecycles-compat@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-2.0.0.tgz#71d9c4cde47114c4102454f76da055c2bc48c948"
 
+react-native-extra-dimensions-android@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/react-native-extra-dimensions-android/-/react-native-extra-dimensions-android-1.2.5.tgz#8ade91029aaac7519bf305116d39019e618a60f0"
+
 react-native-navigation@^2.27.9:
   version "2.27.9"
   resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-2.27.9.tgz#3836fbc441304428442cca3e2d9c75101eab3a74"

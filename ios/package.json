@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "react-native-extra-dimensions-android": "^1.2.5",
     "react-native-navigation": "^2.27.9"
   }
 }

@@ -1,2 +1,0 @@
-# DoctorFinderRN
-React Native.

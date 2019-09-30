@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "react-native-navigation": "^2.27.9"
+  }
+}

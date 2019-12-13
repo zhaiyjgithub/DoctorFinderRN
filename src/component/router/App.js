@@ -25,7 +25,7 @@ Navigation.events().registerAppLaunchedListener(async () => {
 						options: {
 							bottomTab: {
 								text: 'Tab 1',
-								// icon: require('../images/one.png'),
+								icon: require('../../resource/image/doctor.png'),
 								testID: 'FIRST_TAB_BAR_BUTTON'
 							}
 						}
@@ -40,7 +40,7 @@ Navigation.events().registerAppLaunchedListener(async () => {
 							options: {
 								bottomTab: {
 									text: 'Tab 2',
-									// icon: require('../images/two.png'),
+									icon: require('../../resource/image/doctor.png'),
 									testID: 'SECOND_TAB_BAR_BUTTON'
 								}
 							}

@@ -8,4 +8,4 @@
 //
 // AppRegistry.registerComponent(appName, () => App);
 
-import App from './src/modules/router/App'
+import App from './src/component/router/App'

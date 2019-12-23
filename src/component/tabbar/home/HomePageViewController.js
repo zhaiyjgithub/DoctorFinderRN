@@ -10,11 +10,13 @@ import {
 	Animated,
 	Linking,
 	ScrollView,
-	AppState, TouchableOpacity, Image, Text, SectionList
+	AppState, TouchableOpacity, Image, Text, SectionList,
+	ImageBackground
 } from 'react-native'
 import {Colors} from '../../utils/Styles';
 import {ScreenDimensions} from '../../utils/Dimensions';
 import {Navigation} from 'react-native-navigation'
+import Swiper from 'react-native-swiper'
 
 const BannerScale = (375.0/190.0)
 
@@ -24,6 +26,19 @@ export default class HomePageViewController extends Component{
 
 		this.setTopBarView(false)
 		this.isHasShowTopBarSearchBar = false
+
+		this.topSpecialtyList = [
+			'Pediatrics',
+			'Gastroenterology',
+			'dermatology',
+			'Gerontology',
+			'orthopedics',
+			'Oncology',
+			'Ophthalmology',
+			'Endocrinologists',
+			'ENT-Otolaryngologists',
+			'more'
+		]
 	}
 
 	componentDidMount() {
@@ -85,10 +100,90 @@ export default class HomePageViewController extends Component{
 	}
 
 	renderBanner() {
-		let bannerHeight = ScreenDimensions.height/(BannerScale)
+		return (
+			<Swiper style={{}}
+					height={(ScreenDimensions.width/BannerScale)}
+					showsButtons={false}
+					autoplay={true}
+					activeDotColor ={Colors.systemGray}
+			>
+				<ImageBackground source={require('../../../resource/image/banner.png')} style={styles.Banner}>
+					<Text style={{fontSize:  24, color: Colors.white, fontWeight: 'bold'}}>Hello Swiper</Text>
+				</ImageBackground>
+				<ImageBackground source={require('../../../resource/image/banner.png')} style={styles.Banner}>
+					<Text style={{fontSize:  24, color: Colors.white, fontWeight: 'bold'}}>Hello Swiper</Text>
+				</ImageBackground>
+
+				<ImageBackground source={require('../../../resource/image/banner.png')} style={styles.Banner}>
+					<Text style={{fontSize:  24, color: Colors.white, fontWeight: 'bold'}}>Hello Swiper</Text>
+				</ImageBackground>
+			</Swiper>
+		)
+	}
+
+	renderListFooter() {
+		return(
+			<React.Fragment>
+				{this.renderSearchBar()}
+				{this.renderBanner()}
+				{this.renderSpecialty()}
+			</React.Fragment>
+		)
+	}
+
+	renderSpecialty() {
+		let topSpecialtyListLine1 = [
+			'Pediatrics',
+			'Gastroenterology',
+			'dermatology',
+			'Gerontology',
+			'orthopedics',
+		]
+
+		let topSpecialtyListLine2 = [
+			'Pediatrics',
+			'Gastroenterology',
+			'dermatology',
+			'Gerontology',
+			'orthopedics',
+		]
+
 		return(
 			<View>
+				<View style={{width: ScreenDimensions.width, paddingHorizontal: 16,
+					flexDirection: 'row',
+					justifyContent: 'space-between',
+					flexWrap: 'wrap'
+				}}>
+					{topSpecialtyListLine1.map((item, index) => {
+						return (
+							<TouchableOpacity style={{
+								width: 50, height: 50, borderRadius: 25,
+								backgroundColor: Colors.red,
+								marginBottom: 10,
+							}}>
 
+							</TouchableOpacity>
+						)
+					})}
+				</View>
+
+				<View style={{width: ScreenDimensions.width, paddingHorizontal: 16,
+					flexDirection: 'row',
+					justifyContent: 'space-between',
+					flexWrap: 'wrap'
+				}}>
+					{topSpecialtyListLine2.map((item, index) => {
+						return (
+							<TouchableOpacity style={{
+								width: 50, height: 50, borderRadius: 25,
+								backgroundColor: Colors.red,
+								marginBottom: 10,
+							}}>
+							</TouchableOpacity>
+						)
+					})}
+				</View>
 			</View>
 		)
 	}
@@ -109,7 +204,7 @@ export default class HomePageViewController extends Component{
 						return 'key' + item.key + index
 					}}
 					ListHeaderComponent={() => {
-						return this.renderSearchBar()
+						return this.renderListFooter()
 					}}
 
 					onScroll={(event) => {
@@ -131,3 +226,15 @@ export default class HomePageViewController extends Component{
 		)
 	}
 }
+
+const styles = StyleSheet.create({
+	BannerContainer: {
+
+	},
+	Banner: {
+		alignItems: 'center',
+		justifyContent: 'center',
+		width: ScreenDimensions.width,
+		height: (ScreenDimensions.width)/BannerScale
+	}
+})

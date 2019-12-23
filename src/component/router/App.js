@@ -1,13 +1,31 @@
-import HomePageViewController from '../HomePageViewController'
-import {Navigation} from 'react-native-navigation'
-import ExtraDimensions from 'react-native-extra-dimensions-android'
+import HomePageViewController from '../tabbar/home/HomePageViewController'
+import SearchBar from  '../tabbar/home/view/SearchBar'
+import HomePageTitleView from '../tabbar/home/view/HomePageTitleView'
 
+import {Navigation} from 'react-native-navigation'
+import {Colors} from '../utils/Styles';
 
 
 Navigation.registerComponent('HomePageViewController', () => HomePageViewController);
+Navigation.registerComponent('SearchBar', () => SearchBar);
+Navigation.registerComponent('HomePageTitleView', () => HomePageTitleView);
 
 Navigation.events().registerAppLaunchedListener(async () => {
-	// setDefaultOptions();
+	Navigation.setDefaultOptions({
+		topBar: {
+			background: {
+				color: Colors.theme,
+				drawBehind: false,
+				leftButtonColor: Colors.white,
+				rightButtonColor: Colors.white,
+			},
+			title: {
+				color: Colors.white,
+				fontWeight: 'bold',
+				fontSize: 16,
+			},
+		}
+	});
 
 	Navigation.setRoot({
 		root: {
@@ -32,20 +50,25 @@ Navigation.events().registerAppLaunchedListener(async () => {
 					}
 				},
 					{
-						component: {
-							name: 'HomePageViewController',
-							passProps: {
-								text: 'This is tab 2'
-							},
+						stack: {
+							children: [{
+								component: {
+									name: 'HomePageViewController',
+									passProps: {
+										text: 'This is tab 1'
+									}
+								}
+							}],
 							options: {
 								bottomTab: {
-									text: 'Tab 2',
+									text: 'Tab 1',
 									icon: require('../../resource/image/doctor.png'),
-									testID: 'SECOND_TAB_BAR_BUTTON'
+									testID: 'FIRST_TAB_BAR_BUTTON'
 								}
 							}
 						}
-					}]
+					}
+					]
 			}
 		}
 	});

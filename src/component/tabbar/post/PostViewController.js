@@ -13,7 +13,7 @@ import {
 	AppState, TouchableOpacity, Image, Text, RefreshControl
 } from 'react-native'
 
-export default class HomePageViewController extends Component{
+export default class PostViewController extends Component{
 	render() {
 		return(
 			<View style={{flex: 1, backgroundColor: 'yellow'}}/>

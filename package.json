@@ -5,13 +5,15 @@
   "scripts": {
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "run-ios": " react-native run-ios --simulator=\"iPhone 11\""
   },
   "dependencies": {
     "react": "16.8.6",
     "react-native": "0.60.3",
+    "react-native-extra-dimensions-android": "^1.2.5",
     "react-native-navigation": "3.2.0",
-    "react-native-extra-dimensions-android": "^1.2.5"
+    "react-native-swiper": "^1.5.14"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",

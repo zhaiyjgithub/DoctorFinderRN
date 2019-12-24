@@ -45,7 +45,9 @@ const Colors = {
 
 	chat_bg: '#f2f2f2',
 	searchBar: '#E2E2E8',
-	textGray: '#D8D8D8'
+	textGray: '#D8D8D8',
+	male: '#7dc5eb',
+	female: '#e8989a'
 };
 
 

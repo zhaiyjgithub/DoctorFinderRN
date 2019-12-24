@@ -17,6 +17,7 @@ import {Colors} from '../../utils/Styles';
 import {ScreenDimensions} from '../../utils/Dimensions';
 import {Navigation} from 'react-native-navigation'
 import Swiper from 'react-native-swiper'
+import DoctorInfoItem from './view/DoctorInfoItem';
 
 const BannerScale = (375.0/190.0)
 
@@ -149,18 +150,18 @@ export default class HomePageViewController extends Component{
 		]
 
 		return(
-			<View>
+			<View style={{backgroundColor: Colors.white, paddingBottom: 10,}}>
 				<View style={{width: ScreenDimensions.width, paddingHorizontal: 16,
 					flexDirection: 'row',
 					justifyContent: 'space-between',
-					flexWrap: 'wrap'
+					flexWrap: 'wrap',
 				}}>
 					{topSpecialtyListLine1.map((item, index) => {
 						return (
 							<TouchableOpacity style={{
 								width: 50, height: 50, borderRadius: 25,
 								backgroundColor: Colors.red,
-								marginBottom: 10,
+								marginTop: 10,
 							}}>
 
 							</TouchableOpacity>
@@ -178,7 +179,7 @@ export default class HomePageViewController extends Component{
 							<TouchableOpacity style={{
 								width: 50, height: 50, borderRadius: 25,
 								backgroundColor: Colors.red,
-								marginBottom: 10,
+								marginTop: 10,
 							}}>
 							</TouchableOpacity>
 						)
@@ -190,13 +191,13 @@ export default class HomePageViewController extends Component{
 
 	renderItem() {
 		return(
-			<Text>{'test'}</Text>
+			<DoctorInfoItem />
 		)
 	}
 
 	render() {
 		return(
-			<View style={{flex: 1, backgroundColor: Colors.white}}>
+			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
 				<SectionList
 					renderItem={({item}) => this.renderItem(item)}
 					sections={[{data: ['a', 'c']}]}

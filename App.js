@@ -24,6 +24,15 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+//全局设置Text， TextInput的allowFontScaling属性
+Text.defaultProps = Text.defaultProps || {};
+Text.defaultProps.allowFontScaling = false;
+
+TextInput.defaultProps = Text.defaultProps || {};
+TextInput.defaultProps.allowFontScaling = false;
+
+console.disableYellowBox = true; //隐藏yellow box
+
 const App = () => {
   return (
     <Fragment>

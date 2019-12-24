@@ -1,22 +1,9 @@
-import React, {Component} from 'react'
-import {
-	FlatList,
-	View,
-	StyleSheet,
-	Platform,
-	Alert,
-	DeviceEventEmitter,
-	NativeModules,
-	Animated,
-	Linking,
-	ScrollView,
-	AppState, TouchableOpacity, Image, Text, SectionList,
-	ImageBackground
-} from 'react-native'
+import React, {Component} from 'react';
+import {Alert, Image, ImageBackground, SectionList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Colors} from '../../utils/Styles';
 import {ScreenDimensions} from '../../utils/Dimensions';
-import {Navigation} from 'react-native-navigation'
-import Swiper from 'react-native-swiper'
+import {Navigation} from 'react-native-navigation';
+import Swiper from 'react-native-swiper';
 import DoctorInfoItem from './view/DoctorInfoItem';
 import {HTTP} from '../../utils/HttpTools';
 import {API_Doctor} from '../../utils/API';
@@ -75,7 +62,6 @@ export default class HomePageViewController extends Component{
 				}
 			});
 		} else {
-			console.log(isShow + ' - ' + this.isHasShowTopBarSearchBar)
 			if (isShow === false && isShow !== this.isHasShowTopBarSearchBar) {
 				this.isHasShowTopBarSearchBar = false
 				Navigation.mergeOptions(this.props.componentId, {
@@ -180,7 +166,7 @@ export default class HomePageViewController extends Component{
 				}}>
 					{topSpecialtyListLine1.map((item, index) => {
 						return (
-							<TouchableOpacity style={{
+							<TouchableOpacity key={index} style={{
 								width: 50, height: 50, borderRadius: 25,
 								backgroundColor: Colors.red,
 								marginTop: 10,
@@ -198,7 +184,7 @@ export default class HomePageViewController extends Component{
 				}}>
 					{topSpecialtyListLine2.map((item, index) => {
 						return (
-							<TouchableOpacity style={{
+							<TouchableOpacity key={index} style={{
 								width: 50, height: 50, borderRadius: 25,
 								backgroundColor: Colors.red,
 								marginTop: 10,
@@ -211,9 +197,51 @@ export default class HomePageViewController extends Component{
 		)
 	}
 
-	renderItem() {
+	showQuestionAlert() {
+		Alert.alert(
+			'Information is incorrect?',
+			'Thank you very much for the feedback you can provide us and other users.',
+			[
+				{text: 'Cancel', onPress: () => {}, style: 'cancel'},
+				{text: 'Feedback', onPress: () => {
+
+					}},
+			],
+			{ cancelable: false }
+		)
+	}
+
+	pushToDoctorInfoPage(item) {
+		Navigation.push(this.props.componentId, {
+			component: {
+				name: 'DoctorInfoViewController',
+				passProps: {
+					info: item
+				},
+				options: {
+					topBar: {
+						title: {
+							text: 'doctor name'
+						}
+					}
+				}
+			}
+		});
+	}
+
+	renderItem(item) {
 		return(
-			<DoctorInfoItem />
+			<DoctorInfoItem
+				id = {item.ID}
+				info = {item}
+				didSelectedItem = {() => {
+					this.pushToDoctorInfoPage(item)
+				}}
+
+				questionAction = {() => {
+					this.showQuestionAlert()
+				}}
+			/>
 		)
 	}
 
@@ -254,6 +282,7 @@ export default class HomePageViewController extends Component{
 						}else {
 							this.setTopBarView(false)
 						}
+
 					}}
 					ListFooterComponent={() => {
 						return (

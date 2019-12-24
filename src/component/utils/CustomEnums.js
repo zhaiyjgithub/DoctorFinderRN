@@ -19,9 +19,16 @@ const ErrorCode = {
 	Fail: 1,
 }
 
+const Gender = {
+	male: 'M',
+	female: 'F',
+	unknown: ''
+}
+
 export {
 	PLATFORM,
 	Language,
-	ErrorCode
+	ErrorCode,
+	Gender
 
 }

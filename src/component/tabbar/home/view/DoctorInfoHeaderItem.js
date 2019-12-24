@@ -7,8 +7,9 @@ import {Text,
 import {Colors} from '../../../utils/Styles';
 import {ScreenDimensions} from '../../../utils/Dimensions';
 import {Gender} from '../../../utils/CustomEnums';
+import {FormatPhone} from '../../../utils/Utils';
 
-export default class DoctorInfoItem extends Component{
+export default class DoctorInfoHeaderItem extends Component{
 
 	static getDerivedStateFromProps(props, state) {
 		if (props.id !== state.id) {
@@ -29,33 +30,47 @@ export default class DoctorInfoItem extends Component{
 		}
 	}
 
+	renderDefaultWhiteBlankView() {
+		return(
+			<View style={{position: 'absolute',
+				left: 0, right: 0, bottom: 0,
+				top: 74, backgroundColor: Colors.white,
+			}}/>
+		)
+	}
+
 	render() {
 		let doctorName = 'Dr. ' + this.state.info.FirstName + ' ' + this.state.info.LastName + ' '
 		let credential = this.state.info.Credential
 		let specialty = this.state.info.Specialty
 		let subSpecialty = this.state.info.SubSpectialty
-		let address = this.state.info.Address +'\n' + this.state.info.City + ' City\n'
-			+ this.state.info.State + ' ' + this.state.info.Zip
 
+		let phone = FormatPhone(this.state.info.Phone)
 		let gender = this.state.info.Gender
 
 		return(
 			<View style={{
 				width: ScreenDimensions.width,
-				backgroundColor: Colors.systemGray,
+				backgroundColor: Colors.theme,
 				paddingBottom: 16,
+				paddingTop: 16,
 			}}>
-				<TouchableOpacity onPress={() => {
-					this.props.didSelectedItem && this.props.didSelectedItem()
-				}} style={{
+				{this.renderDefaultWhiteBlankView()}
+				<View style={{
 					width: ScreenDimensions.width - 32,
 					marginLeft: 16,
 					borderRadius: 6,
 					backgroundColor: Colors.white,
 					flexDirection: 'row',
 					padding: 8,
-					justifyContent: 'space-between'
+					justifyContent: 'space-between',
+					shadowRadius: 8,
+					shadowColor: Colors.black,
+					shadowOpacity: 0.2,
+					shadowOffset: {width: 0, height: 0},
+					elevation: 2
 				}}>
+
 					<View style={{alignItems: 'center'}}>
 						<View  style={{width: 50, height: 50, borderRadius: 25,
 							borderWidth: 2,
@@ -99,16 +114,24 @@ export default class DoctorInfoItem extends Component{
 
 						{subSpecialty ? <Text style={{fontSize: 16, color: Colors.lightGray,}}>{subSpecialty}</Text> : null}
 
-						<Text style={{fontSize: 14, color: Colors.black,
+						<View style={{width: '100%',
 							marginTop: 6,
-							lineHeight: 14*1.4
-						}}>{address}</Text>
+						}}>
+							<Text style={{fontSize: 16, color: Colors.black,
+								fontWeight: 'bold'
+							}}>{'Phone '}</Text>
+
+							<TouchableOpacity style={{width: '100%', flexDirection: 'row',
+								alignItems: 'center', marginTop: 6,
+							}}>
+								<Image source={require('../../../../resource/image/home/phone.png')}/>
+								<Text style={{fontSize: 16, color: Colors.blue,
+									marginLeft: 8,
+								}}>{phone}</Text>
+							</TouchableOpacity>
+						</View>
 					</View>
-
-
-				</TouchableOpacity>
-
-
+				</View>
 			</View>
 		)
 	}

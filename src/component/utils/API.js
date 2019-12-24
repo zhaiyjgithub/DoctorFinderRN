@@ -1,6 +1,10 @@
-const BaseUrl = "localhost"
+const BaseUrl = "http://localhost:8090/"
 
+const API_Doctor = {
+	getHotSearchDoctors: 'Doctor/GetHotSearchDoctors'
+}
 
 export {
-	BaseUrl
+	BaseUrl,
+	API_Doctor
 }

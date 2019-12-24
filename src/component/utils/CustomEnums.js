@@ -14,10 +14,14 @@ const PLATFORM = {
 	isPad: (Platform.OS && Platform.isPad)
 };
 
-
+const ErrorCode = {
+	Ok: 0,
+	Fail: 1,
+}
 
 export {
 	PLATFORM,
 	Language,
+	ErrorCode
 
 }

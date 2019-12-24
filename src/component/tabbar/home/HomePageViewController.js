@@ -18,12 +18,19 @@ import {ScreenDimensions} from '../../utils/Dimensions';
 import {Navigation} from 'react-native-navigation'
 import Swiper from 'react-native-swiper'
 import DoctorInfoItem from './view/DoctorInfoItem';
+import {HTTP} from '../../utils/HttpTools';
+import {API_Doctor} from '../../utils/API';
+import {ErrorCode} from '../../utils/CustomEnums';
 
 const BannerScale = (375.0/190.0)
 
 export default class HomePageViewController extends Component{
 	constructor(props) {
 		super(props)
+
+		this.state = {
+			hotSearchDoctors: []
+		}
 
 		this.setTopBarView(false)
 		this.isHasShowTopBarSearchBar = false
@@ -43,7 +50,15 @@ export default class HomePageViewController extends Component{
 	}
 
 	componentDidMount() {
+		//http://localhost:8090/Doctor/GetHotSearchDoctors
 
+		HTTP.post(API_Doctor.getHotSearchDoctors, null).then((response) => {
+			if (response.code === ErrorCode.Ok) {
+				this.setState({hotSearchDoctors: response.data})
+			}
+		}).catch(() => {
+			//
+		})
 	}
 
 	setTopBarView(isShow) {
@@ -151,6 +166,13 @@ export default class HomePageViewController extends Component{
 
 		return(
 			<View style={{backgroundColor: Colors.white, paddingBottom: 10,}}>
+				<View style={{width: ScreenDimensions.width, backgroundColor: Colors.clear,
+					justifyContent: 'center', height: 40
+				}}>
+					<Text style={{fontSize: 18, color: Colors.black,
+						fontWeight: 'bold', marginLeft: 8,
+					}}>{'Specialty'}</Text>
+				</View>
 				<View style={{width: ScreenDimensions.width, paddingHorizontal: 16,
 					flexDirection: 'row',
 					justifyContent: 'space-between',
@@ -195,17 +217,33 @@ export default class HomePageViewController extends Component{
 		)
 	}
 
+	renderSectionHeader() {
+		return (
+			<View style={{width: ScreenDimensions.width, backgroundColor: Colors.systemGray,
+				justifyContent: 'center', height: 40,
+			}}>
+				<Text style={{fontSize: 18, color: Colors.black,
+					fontWeight: 'bold', marginLeft: 8,
+				}}>{'Hot search'}</Text>
+			</View>
+		)
+	}
+
 	render() {
 		return(
 			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
 				<SectionList
 					renderItem={({item}) => this.renderItem(item)}
-					sections={[{data: ['a', 'c']}]}
+					sections={[{data: this.state.hotSearchDoctors}]}
 					keyExtractor={(item, index) => {
 						return 'key' + item.key + index
 					}}
 					ListHeaderComponent={() => {
 						return this.renderListFooter()
+					}}
+
+					renderSectionHeader={() => {
+						return this.renderSectionHeader()
 					}}
 
 					onScroll={(event) => {
@@ -219,7 +257,12 @@ export default class HomePageViewController extends Component{
 					}}
 					ListFooterComponent={() => {
 						return (
-							<View style={{width: ScreenDimensions.width, height: 104,}}/>
+							<View style={{width: ScreenDimensions.width,
+								justifyContent: 'center', alignItems: 'center',
+								paddingBottom: 20,
+							}}>
+								<Text style={{fontSize: 12, color: Colors.lightGray}}>{'Click \'Search\' and get more information.'}</Text>
+							</View>
 						)
 					}}
 				/>

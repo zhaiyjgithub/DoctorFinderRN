@@ -30,7 +30,7 @@ const request = (url, options) => {
 			credentials: 'include',
 			headers: {
 				'Content-Type': 'application/json',
-			    'Authorization': "Bearer " + (global.token ? global.token : ''),
+			    // 'Authorization': "Bearer " + (global.token ? global.token : ''),
 				// 'X-GBmono-Language': global.userSelectedLanguage === 'zh-tw' ? 'zh-tw' : 'zh-cn',
 				// 'x-gbmono-user-lon': (global.userRegion.lon + ''),
 				// 'x-gbmono-user-lat': (global.userRegion.lat + ''),

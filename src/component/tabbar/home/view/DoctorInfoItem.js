@@ -13,7 +13,7 @@ export default class DoctorInfoItem extends Component{
 			<View style={{
 				width: ScreenDimensions.width,
 				backgroundColor: Colors.systemGray,
-				paddingTop: 16,
+				paddingBottom: 16,
 			}}>
 				<View style={{
 					width: ScreenDimensions.width - 32,

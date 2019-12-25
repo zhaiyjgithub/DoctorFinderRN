@@ -22,6 +22,8 @@ import {HTTP} from '../../utils/HttpTools';
 import {API_Doctor} from '../../utils/API';
 import {ErrorCode} from '../../utils/CustomEnums';
 import DoctorInfoHeaderItem from './view/DoctorInfoHeaderItem';
+import DoctorInfoTextItem from './view/DoctorInfoTextItem';
+import DoctorInfoAddressItem from './view/DoctorInfoAddressItem';
 
 export default class DoctorInfoViewController extends Component{
 	static defaultProps = {
@@ -30,9 +32,21 @@ export default class DoctorInfoViewController extends Component{
 
 	constructor(props) {
 		super(props)
+		this.state = {
+			doctorInfo: null
+		}
 
 		this.dataSource = [
-			'q',
+			menuType.header,
+			menuType.summary,
+			menuType.language,
+			menuType.address,
+			menuType.education,
+			menuType.certification,
+			menuType.award,
+			menuType.memberShip,
+			menuType.affiliation,
+			menuType.clinic
 		]
 	}
 
@@ -59,20 +73,140 @@ export default class DoctorInfoViewController extends Component{
 		// 		]
 		// 	}
 		// })
+
+		this.props.info && this.getDoctorInfoWithNpi(this.props.info.Npi)
 	}
 
-	renderItem(item) {
-		return (
-			<DoctorInfoHeaderItem
-				id = {10}
-				info = {this.props.info}
-			/>
-		)
+	getDoctorInfoWithNpi(npi) {
+		let param = {
+			Npi: npi
+		}
+
+		HTTP.post(API_Doctor.getDoctorInfoWithNpi, param).then((response) => {
+			this.setState({doctorInfo: response.data})
+		}).catch(() => {
+
+		})
+	}
+
+	renderItem(type) {
+		if (!this.props.info) {
+			return null
+		}
+
+		if (type !== menuType.header && type !== menuType.summary && !this.state.doctorInfo) {
+			return null
+		}
+
+		if (type === menuType.header) {
+			return (
+				<DoctorInfoHeaderItem
+					id = {10}
+					info = {this.props.info}
+				/>
+			)
+		}else if (type === menuType.summary) {
+			return (
+				<DoctorInfoTextItem
+					title = {'Summary'}
+					desc = {this.props.info.Summary}
+				/>
+			)
+		}else if (type === menuType.language) {
+			return (
+				<DoctorInfoTextItem
+					title = {'Other Language'}
+					desc = {this.state.doctorInfo.Lang.Lang}
+				/>
+			)
+		}else if (type === menuType.address) {
+			if (!this.state.doctorInfo) {
+				return null
+			}
+
+			let address = this.props.info.Address +'\n' + this.props.info.City + ' City\n'
+				+ this.props.info.State + ' ' + this.props.info.Zip
+
+			return (
+				<DoctorInfoAddressItem
+					title = {'Address'}
+					desc = {address}
+					lat = {this.state.doctorInfo.Geo.Lat}
+					lng = {this.state.doctorInfo.Geo.Lng}
+				/>
+			)
+		}else if (type === menuType.education) {
+			if (!this.state.doctorInfo) {
+				return null
+			}
+
+			return (
+				<DoctorInfoTextItem
+					title = {'Education & Training'}
+					list = {this.state.doctorInfo.Education}
+				/>
+			)
+		}else if (type === menuType.certification) {
+			if (!this.state.doctorInfo) {
+				return null
+			}
+
+			return (
+				<DoctorInfoTextItem
+					title = {'Certifications & Licensure'}
+					list = {this.state.doctorInfo.Certification}
+				/>
+			)
+		}else if (type === menuType.award) {
+			if (!this.state.doctorInfo) {
+				return null
+			}
+
+			return (
+				<DoctorInfoTextItem
+					title = {'Awards, Honors, & Recognition'}
+					list = {this.state.doctorInfo.Award}
+				/>
+			)
+		}else if (type === menuType.memberShip) {
+			if (!this.state.doctorInfo) {
+				return null
+			}
+
+			return (
+				<DoctorInfoTextItem
+					title = {'Professional Memberships'}
+					list = {this.state.doctorInfo.MemberShip}
+				/>
+			)
+		}else if (type === menuType.affiliation) {
+			if (!this.state.doctorInfo) {
+				return null
+			}
+
+			return (
+				<DoctorInfoTextItem
+					title = {'Professional Memberships'}
+					list = {this.state.doctorInfo.Affiliation}
+				/>
+			)
+		}else if (type === menuType.clinic) {
+			if (!this.state.doctorInfo) {
+				return null
+			}
+
+			return (
+				<DoctorInfoTextItem
+					title = {'Clinical Trials'}
+					list = {this.state.doctorInfo.Clinic}
+				/>
+			)
+		}
 	}
 
 	render() {
 		return(
-			<View style={{flex: 1, backgroundColor: Colors.white}}>
+			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
 				<FlatList
 					style={{flex: 1}}
 					renderItem={({item}) => this.renderItem(item)}
@@ -109,4 +243,17 @@ export default class DoctorInfoViewController extends Component{
 			</View>
 		)
 	}
+}
+
+const menuType = {
+	header: 0,
+	summary: 1,
+	language: 2,
+	address: 3,
+	education: 4,
+	certification: 5,
+	award: 6,
+	memberShip: 7,
+	affiliation: 8,
+	clinic: 9,
 }

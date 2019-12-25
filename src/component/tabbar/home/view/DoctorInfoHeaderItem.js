@@ -34,7 +34,7 @@ export default class DoctorInfoHeaderItem extends Component{
 		return(
 			<View style={{position: 'absolute',
 				left: 0, right: 0, bottom: 0,
-				top: 74, backgroundColor: Colors.white,
+				top: 74, backgroundColor: Colors.systemGray,
 			}}/>
 		)
 	}
@@ -64,13 +64,7 @@ export default class DoctorInfoHeaderItem extends Component{
 					flexDirection: 'row',
 					padding: 8,
 					justifyContent: 'space-between',
-					shadowRadius: 8,
-					shadowColor: Colors.black,
-					shadowOpacity: 0.2,
-					shadowOffset: {width: 0, height: 0},
-					elevation: 2
 				}}>
-
 					<View style={{alignItems: 'center'}}>
 						<View  style={{width: 50, height: 50, borderRadius: 25,
 							borderWidth: 2,

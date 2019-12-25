@@ -47,7 +47,8 @@ const Colors = {
 	searchBar: '#E2E2E8',
 	textGray: '#D8D8D8',
 	male: '#7dc5eb',
-	female: '#e8989a'
+	female: '#e8989a',
+	lightBlack: '#333333'
 };
 
 

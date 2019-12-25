@@ -104,11 +104,7 @@ export default class DoctorInfoItem extends Component{
 							lineHeight: 14*1.4
 						}}>{address}</Text>
 					</View>
-
-
 				</TouchableOpacity>
-
-
 			</View>
 		)
 	}

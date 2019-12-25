@@ -21,24 +21,9 @@ export default class HomePageViewController extends Component{
 
 		this.setTopBarView(false)
 		this.isHasShowTopBarSearchBar = false
-
-		this.topSpecialtyList = [
-			'Pediatrics',
-			'Gastroenterology',
-			'dermatology',
-			'Gerontology',
-			'orthopedics',
-			'Oncology',
-			'Ophthalmology',
-			'Endocrinologists',
-			'ENT-Otolaryngologists',
-			'more'
-		]
 	}
 
 	componentDidMount() {
-		//http://localhost:8090/Doctor/GetHotSearchDoctors
-
 		HTTP.post(API_Doctor.getHotSearchDoctors, null).then((response) => {
 			if (response.code === ErrorCode.Ok) {
 				this.setState({hotSearchDoctors: response.data})
@@ -221,7 +206,7 @@ export default class HomePageViewController extends Component{
 				options: {
 					topBar: {
 						title: {
-							text: 'doctor name'
+							text: ''
 						}
 					}
 				}

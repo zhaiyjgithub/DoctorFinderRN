@@ -30,6 +30,7 @@ target 'DoctorFinderRN' do
   
   pod 'ReactNativeNavigation', :podspec => '../node_modules/react-native-navigation/ReactNativeNavigation.podspec'
 
+  pod 'react-native-maps', :path => '../node_modules/react-native-maps'
 
   target 'DoctorFinderRNTests' do
     inherit! :search_paths

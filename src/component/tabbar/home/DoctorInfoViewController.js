@@ -30,6 +30,30 @@ export default class DoctorInfoViewController extends Component{
 		info: null
 	}
 
+	static options(passProps) {
+		return {
+			topBar: {
+				rightButtons: [
+					{
+						id: 'share',
+						enabled: true,
+						disableIconTint: false,
+						color: Colors.white,
+						icon: require('../../../resource/image/home/share.png'),
+					},
+					{
+						id: 'star',
+						enabled: true,
+						disableIconTint: false,
+						color: Colors.white,
+						icon: require('../../../resource/image/home/star.png'),
+					},
+				]
+			}
+		};
+	}
+
+
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -48,34 +72,22 @@ export default class DoctorInfoViewController extends Component{
 			menuType.affiliation,
 			menuType.clinic
 		]
+
+		this.navigationEventListener = Navigation.events().bindComponent(this);
 	}
 
 	componentDidMount() {
-		// Navigation.mergeOptions(this.props.componentId, {
-		// 	topBar: {
-		// 		rightButtons: [
-		// 			{
-		// 				id: 'buttonOne',
-		// 				text: 'Button one',
-		// 				enabled: true,
-		// 				disableIconTint: false,
-		// 				color: Colors.white,
-		// 				disabledColor: 'black',
-		// 				testID: 'buttonOneTestID',
-		// 				fontFamily: 'Helvetica',
-		// 				fontSize: 16,
-		// 				fontWeight: 'regular', // Available on iOS only, will ignore fontFamily style and use the iOS system fonts instead. Supported weights are: 'regular', 'bold', 'thin', 'ultraLight', 'light', 'medium', 'semibold', 'heavy' and 'black'.
-		// 				// Android only
-		// 				showAsAction: 'ifRoom', // See below for details.
-		// 				// iOS only
-		// 				systemItem: 'done', // Sets a system bar button item as the icon. Matches UIBarButtonSystemItem naming. See below for details.
-		// 			}
-		// 		]
-		// 	}
-		// })
-
 		this.props.info && this.getDoctorInfoWithNpi(this.props.info.Npi)
 	}
+
+	componentWillUnmount() {
+		this.navigationEventListener && this.navigationEventListener.remove();
+	}
+
+	navigationButtonPressed({ buttonId }) {
+		alert(buttonId)
+	}
+
 
 	getDoctorInfoWithNpi(npi) {
 		let param = {

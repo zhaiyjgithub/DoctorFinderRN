@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity, Image} from 'react-native';
 import {Colors} from '../../../utils/Styles';
 import {ScreenDimensions} from '../../../utils/Dimensions';
 import MapView, {Marker} from 'react-native-maps';
@@ -32,7 +32,7 @@ export default class DoctorInfoAddressItem extends Component{
 					}}>{this.props.title}</Text>
 
 					<Text style={{fontSize: 14, color: Colors.black,
-						width: '100%', marginTop: 8
+						width: '100%', marginTop: 8, lineHeight: 14*1.4
 					}}>{this.props.desc}</Text>
 
 					<View style={{width: '100%', height: 190, marginTop: 10}}>
@@ -57,6 +57,15 @@ export default class DoctorInfoAddressItem extends Component{
 							/>
 						</MapView>
 					</View>
+
+					<TouchableOpacity onPress={() => {
+						this.props.gotoRoute && this.props.gotoRoute()
+					}} style={{width: 30, height: 30,
+						position: 'absolute', top: 10, right: 10,
+						justifyContent: 'center', alignItems: 'center'
+					}}>
+						<Image source={require('../../../../resource/image/home/navigator.png')} style={{width: 25, height: 25,}} />
+					</TouchableOpacity>
 				</View>
 			</View>
 		)

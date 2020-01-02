@@ -5,7 +5,7 @@ import {Colors} from '../../../utils/Styles';
 export default class HomePageTitleView extends Component {
 	render() {
 		return(
-			<Text style={{fontSize: 16, fontWeight: 'bold', color: Colors.white}}>{'Home'}</Text>
+			<Text style={{fontSize: 16, color: Colors.white}}>{'Home'}</Text>
 		)
 	}
 }

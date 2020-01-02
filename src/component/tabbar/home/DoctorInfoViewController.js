@@ -1,29 +1,17 @@
-import React, {Component} from 'react'
-import {
-	FlatList,
-	View,
-	StyleSheet,
-	Platform,
-	Alert,
-	DeviceEventEmitter,
-	NativeModules,
-	Animated,
-	Linking,
-	ScrollView,
-	AppState, TouchableOpacity, Image, Text, SectionList,
-	ImageBackground
-} from 'react-native'
+import React, {Component} from 'react';
+import {Alert, Linking, SectionList, Text, View} from 'react-native';
 import {Colors} from '../../utils/Styles';
-import {NaviBarHeight, ScreenDimensions} from '../../utils/Dimensions';
-import {Navigation} from 'react-native-navigation'
-import Swiper from 'react-native-swiper'
+import {ScreenDimensions} from '../../utils/Dimensions';
+import {Navigation} from 'react-native-navigation';
 import DoctorInfoItem from './view/DoctorInfoItem';
 import {HTTP} from '../../utils/HttpTools';
 import {API_Doctor} from '../../utils/API';
-import {ErrorCode} from '../../utils/CustomEnums';
+import {PLATFORM} from '../../utils/CustomEnums';
 import DoctorInfoHeaderItem from './view/DoctorInfoHeaderItem';
 import DoctorInfoTextItem from './view/DoctorInfoTextItem';
 import DoctorInfoAddressItem from './view/DoctorInfoAddressItem';
+import {ShareTool} from '../../utils/ShareTool';
+import ActionSheet from 'react-native-actionsheet';
 
 export default class DoctorInfoViewController extends Component{
 	static defaultProps = {
@@ -53,41 +41,64 @@ export default class DoctorInfoViewController extends Component{
 		};
 	}
 
-
 	constructor(props) {
 		super(props)
 		this.state = {
-			doctorInfo: null
+			doctorInfo: null,
+			dataSource: [{section: 0, data: [
+					{section: 0, type: menuType.header},
+					{section: 0, type: menuType.summary},
+					{section: 0, type: menuType.language},
+					{section: 0, type: menuType.address},
+					{section: 0, type: menuType.education},
+					{section: 0, type: menuType.certification},
+					{section: 0, type: menuType.award},
+					{section: 0, type: menuType.memberShip},
+					{section: 0, type: menuType.affiliation},
+					{section: 0, type: menuType.clinic}
+		]}],
 		}
-
-		this.dataSource = [
-			menuType.header,
-			menuType.summary,
-			menuType.language,
-			menuType.address,
-			menuType.education,
-			menuType.certification,
-			menuType.award,
-			menuType.memberShip,
-			menuType.affiliation,
-			menuType.clinic
-		]
 
 		this.navigationEventListener = Navigation.events().bindComponent(this);
 	}
 
 	componentDidMount() {
 		this.props.info && this.getDoctorInfoWithNpi(this.props.info.Npi)
+		this.props.info && this.getRelatedDoctors()
 	}
 
 	componentWillUnmount() {
 		this.navigationEventListener && this.navigationEventListener.remove();
 	}
 
-	navigationButtonPressed({ buttonId }) {
-		alert(buttonId)
+	componentDidAppear() {
+		this.doctorName = 'Dr. ' + this.props.info.FirstName + ' ' + this.props.info.LastName
+		if (this._offsetY > 40) {
+			this.setTopBarTitle(this.doctorName)
+		}else {
+			this.setTopBarTitle('')
+		}
+
 	}
 
+	componentDidDisappear() {
+		//
+	}
+
+	navigationButtonPressed({ buttonId }) {
+		if (buttonId === 'share') {
+			const shareOptions = {
+				title: 'Share file',
+				url: 'http://www.google.com',
+				failOnCancel: false,
+				message: 'Your description...'
+			}
+
+			ShareTool(shareOptions)
+		}else if (buttonId === 'star') {
+			this.addCollection()
+		}
+	}
 
 	getDoctorInfoWithNpi(npi) {
 		let param = {
@@ -101,156 +112,284 @@ export default class DoctorInfoViewController extends Component{
 		})
 	}
 
-	renderItem(type) {
+	getRelatedDoctors() {
+		HTTP.post(API_Doctor.getRelatedDoctors, {}).then((response) => {
+			this.setState({dataSource: this.state.dataSource.concat({section: 1, data: response.data})})
+		}).catch(() => {
+
+		})
+	}
+
+	addCollection() {
+		let param = {
+			Npi: this.props.info.Npi,
+			UserId: 1,
+		}
+
+		HTTP.post(API_Doctor.addCollection, param).then((response) => {
+			console.log(response)
+		}).catch(() => {
+
+		})
+	}
+
+	showQuestionAlert() {
+		Alert.alert(
+			'Information is incorrect?',
+			'Thank you very much for the feedback you can provide us and other users.',
+			[
+				{text: 'Cancel', onPress: () => {}, style: 'cancel'},
+				{text: 'Feedback', onPress: () => {
+
+					}},
+			],
+			{ cancelable: false }
+		)
+	}
+
+	pushToDoctorInfoPage(item) {
+		this.setTopBarTitle('')
+		Navigation.push(this.props.componentId, {
+			component: {
+				name: 'DoctorInfoViewController',
+				passProps: {
+					info: item
+				},
+				options: {
+					topBar: {
+						title: {
+							text: ''
+						},
+						backButton: {
+							text: ''
+						}
+					}
+				}
+			}
+		});
+	}
+
+	renderItem(item) {
 		if (!this.props.info) {
 			return null
 		}
 
-		if (type !== menuType.header && type !== menuType.summary && !this.state.doctorInfo) {
-			return null
+		if (item.section === 0) {
+			let type = item.type
+			if (type !== menuType.header && type !== menuType.summary && !this.state.doctorInfo) {
+				return null
+			}
+
+			if (type === menuType.header) {
+				return (
+					<DoctorInfoHeaderItem
+						id = {10}
+						info = {this.props.info}
+					/>
+				)
+			}else if (type === menuType.summary) {
+				return (
+					<DoctorInfoTextItem
+						title = {'Summary'}
+						desc = {this.props.info.Summary}
+					/>
+				)
+			}else if (type === menuType.language) {
+				return (
+					<DoctorInfoTextItem
+						title = {'Other Language'}
+						desc = {this.state.doctorInfo.Lang.Lang}
+					/>
+				)
+			}else if (type === menuType.address) {
+				if (!this.state.doctorInfo) {
+					return null
+				}
+
+				let address = this.props.info.Address +'\n' + this.props.info.City + ' City\n'
+					+ this.props.info.State + ' ' + this.props.info.Zip
+
+				return (
+					<DoctorInfoAddressItem
+						title = {'Address'}
+						desc = {address}
+						lat = {this.state.doctorInfo.Geo.Lat}
+						lng = {this.state.doctorInfo.Geo.Lng}
+						gotoRoute = {() => {
+							this.selectedAddress = this.props.info.Address +'\n' + this.props.info.City + ' '
+								+ this.props.info.State + ' ' + this.props.info.Zip
+							this.openMap()
+						}}
+					/>
+				)
+			}else if (type === menuType.education) {
+				if (!this.state.doctorInfo) {
+					return null
+				}
+
+				return (
+					<DoctorInfoTextItem
+						title = {'Education & Training'}
+						list = {this.state.doctorInfo.Education}
+					/>
+				)
+			}else if (type === menuType.certification) {
+				if (!this.state.doctorInfo) {
+					return null
+				}
+
+				return (
+					<DoctorInfoTextItem
+						title = {'Certifications & Licensure'}
+						list = {this.state.doctorInfo.Certification}
+					/>
+				)
+			}else if (type === menuType.award) {
+				if (!this.state.doctorInfo) {
+					return null
+				}
+
+				return (
+					<DoctorInfoTextItem
+						title = {'Awards, Honors, & Recognition'}
+						list = {this.state.doctorInfo.Award}
+					/>
+				)
+			}else if (type === menuType.memberShip) {
+				if (!this.state.doctorInfo) {
+					return null
+				}
+
+				return (
+					<DoctorInfoTextItem
+						title = {'Professional Memberships'}
+						list = {this.state.doctorInfo.MemberShip}
+					/>
+				)
+			}else if (type === menuType.affiliation) {
+				if (!this.state.doctorInfo) {
+					return null
+				}
+
+				return (
+					<DoctorInfoTextItem
+						title = {'Professional Memberships'}
+						list = {this.state.doctorInfo.Affiliation}
+					/>
+				)
+			}else if (type === menuType.clinic) {
+				if (!this.state.doctorInfo) {
+					return null
+				}
+
+				return (
+					<DoctorInfoTextItem
+						title = {'Clinical Trials'}
+						list = {this.state.doctorInfo.Clinic}
+					/>
+				)
+			}
+		}else {
+			return(
+				<DoctorInfoItem
+					id = {item.ID}
+					info = {item}
+					didSelectedItem = {() => {
+						this.pushToDoctorInfoPage(item)
+					}}
+
+					questionAction = {() => {
+						this.showQuestionAlert()
+					}}
+				/>
+			)
 		}
+	}
 
-		if (type === menuType.header) {
-			return (
-				<DoctorInfoHeaderItem
-					id = {10}
-					info = {this.props.info}
-				/>
-			)
-		}else if (type === menuType.summary) {
-			return (
-				<DoctorInfoTextItem
-					title = {'Summary'}
-					desc = {this.props.info.Summary}
-				/>
-			)
-		}else if (type === menuType.language) {
-			return (
-				<DoctorInfoTextItem
-					title = {'Other Language'}
-					desc = {this.state.doctorInfo.Lang.Lang}
-				/>
-			)
-		}else if (type === menuType.address) {
-			if (!this.state.doctorInfo) {
-				return null
+	renderRelateDoctorHeader() {
+		if (this.state.dataSource.length === 2 &&
+			this.state.dataSource[1].data &&
+			this.state.dataSource[1].data.length)
+		return(
+			<Text style={{width: ScreenDimensions.width, textAlign: 'center',
+				fontSize: 16, color: '#202020', lineHeight: 16*1.4,
+				paddingTop: 5, paddingBottom: 5,
+				backgroundColor: Colors.systemGray
+			}}>
+				{'Related doctors'}
+			</Text>
+		)
+	}
+
+	setTopBarTitle(title) {
+		Navigation.mergeOptions(this.props.componentId, {
+			topBar: {
+				title: {
+					text: title,
+					fontWeight: 'bold',
+				},
+				backButton: {
+					title: ''
+				}
 			}
+		})
+	}
 
-			let address = this.props.info.Address +'\n' + this.props.info.City + ' City\n'
-				+ this.props.info.State + ' ' + this.props.info.Zip
+	showActionSheet = () => {
+		this._actionSheet.show()
+	}
 
-			return (
-				<DoctorInfoAddressItem
-					title = {'Address'}
-					desc = {address}
-					lat = {this.state.doctorInfo.Geo.Lat}
-					lng = {this.state.doctorInfo.Geo.Lng}
-				/>
-			)
-		}else if (type === menuType.education) {
-			if (!this.state.doctorInfo) {
-				return null
-			}
-
-			return (
-				<DoctorInfoTextItem
-					title = {'Education & Training'}
-					list = {this.state.doctorInfo.Education}
-				/>
-			)
-		}else if (type === menuType.certification) {
-			if (!this.state.doctorInfo) {
-				return null
-			}
-
-			return (
-				<DoctorInfoTextItem
-					title = {'Certifications & Licensure'}
-					list = {this.state.doctorInfo.Certification}
-				/>
-			)
-		}else if (type === menuType.award) {
-			if (!this.state.doctorInfo) {
-				return null
-			}
-
-			return (
-				<DoctorInfoTextItem
-					title = {'Awards, Honors, & Recognition'}
-					list = {this.state.doctorInfo.Award}
-				/>
-			)
-		}else if (type === menuType.memberShip) {
-			if (!this.state.doctorInfo) {
-				return null
-			}
-
-			return (
-				<DoctorInfoTextItem
-					title = {'Professional Memberships'}
-					list = {this.state.doctorInfo.MemberShip}
-				/>
-			)
-		}else if (type === menuType.affiliation) {
-			if (!this.state.doctorInfo) {
-				return null
-			}
-
-			return (
-				<DoctorInfoTextItem
-					title = {'Professional Memberships'}
-					list = {this.state.doctorInfo.Affiliation}
-				/>
-			)
-		}else if (type === menuType.clinic) {
-			if (!this.state.doctorInfo) {
-				return null
-			}
-
-			return (
-				<DoctorInfoTextItem
-					title = {'Clinical Trials'}
-					list = {this.state.doctorInfo.Clinic}
-				/>
-			)
+	openMap() {
+		if (PLATFORM.isIOS) {
+			this.showActionSheet()
+		}else {
+			let url = 'http://maps.google.com/maps?daddr=' + encodeURI(this.selectedAddress)
+			Linking.openURL(url).catch(err => console.error('An error occurred', err))
 		}
 	}
 
 	render() {
 		return(
 			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
-				<FlatList
+				<SectionList
 					style={{flex: 1}}
 					renderItem={({item}) => this.renderItem(item)}
-					data={this.dataSource}
+					sections={this.state.dataSource}
 					keyExtractor={(item, index) => {
 						return 'key' + item.key + index
 					}}
-					// ListHeaderComponent={() => {
-					// 	return this.renderListFooter()
-					// }}
 
+					renderSectionHeader={({section}) => {
+						if (section.section !== 0) {
+							return this.renderRelateDoctorHeader()
+						}
+					}}
 
-					// onScroll={(event) => {
-					// 	let y = event.nativeEvent.contentOffset.y
-					//
-					// 	if (y > 46) {
-					// 		this.setTopBarView(true)
-					// 	}else {
-					// 		this.setTopBarView(false)
-					// 	}
-					//
-					// }}
-					// ListFooterComponent={() => {
-					// 	return (
-					// 		<View style={{width: ScreenDimensions.width,
-					// 			justifyContent: 'center', alignItems: 'center',
-					// 			paddingBottom: 20,
-					// 		}}>
-					// 			<Text style={{fontSize: 12, color: Colors.lightGray}}>{'Click \'Search\' and get more information.'}</Text>
-					// 		</View>
-					// 	)
-					// }}
+					onScroll={(event) => {
+						this._offsetY = event.nativeEvent.contentOffset.y
+
+						if (this._offsetY > 40) {
+							this.setTopBarTitle(this.doctorName)
+						}else {
+							this.setTopBarTitle('')
+						}
+					}}
+				/>
+
+				<ActionSheet
+					ref={o => this._actionSheet = o}
+					title={'Please choose a map.'}
+					options={['Apple Map', 'Google Map', 'cancel']}
+					destructiveButtonIndex={2}
+					onPress={(index) => {
+						if (index === 0) {
+							let url = 'http://maps.apple.com/?daddr=' + encodeURI(this.selectedAddress)
+							Linking.openURL(url).catch(err => console.error('An error occurred', err))
+						}else if (index === 1)  {
+							let url = 'http://maps.google.com/maps?daddr=' + encodeURI(this.selectedAddress)
+							Linking.openURL(url).catch(err => console.error('An error occurred', err))
+						}
+					}}
 				/>
 			</View>
 		)

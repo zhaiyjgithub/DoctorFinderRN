@@ -85,6 +85,8 @@ PODS:
     - React-fishhook (= 0.60.3)
   - ReactNativeNavigation (3.2.0):
     - React
+  - RNShare (2.0.0):
+    - React
   - yoga (0.60.3.React)
 
 DEPENDENCIES:
@@ -111,6 +113,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-RCTWebSocket (from `../node_modules/react-native/Libraries/WebSocket`)
   - ReactNativeNavigation (from `../node_modules/react-native-navigation/ReactNativeNavigation.podspec`)
+  - RNShare (from `../node_modules/react-native-share`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -164,6 +167,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/WebSocket"
   ReactNativeNavigation:
     :podspec: "../node_modules/react-native-navigation/ReactNativeNavigation.podspec"
+  RNShare:
+    :path: "../node_modules/react-native-share"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -192,8 +197,9 @@ SPEC CHECKSUMS:
   React-RCTVibration: 5d9ed4a968e9d42880ddcc7c29bee3417c745408
   React-RCTWebSocket: 69d8565d66043f244b4129f3d7154c5689fb7d3e
   ReactNativeNavigation: aad255980f20cc5d2001ed37972319f3789fea70
+  RNShare: 8b171d4b43c1d886917fdd303bf7a4b87167b05c
   yoga: 843fe25849b56131275bf3e5da2c468e96f68aff
 
-PODFILE CHECKSUM: 2b0b7255f5f79b27b452a2274af40bb61adef041
+PODFILE CHECKSUM: 811f92cf5eac921e3b4d9dea4132cc398fc20adb
 
 COCOAPODS: 1.8.0.beta.2

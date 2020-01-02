@@ -8,6 +8,7 @@ import DoctorInfoItem from './view/DoctorInfoItem';
 import {HTTP} from '../../utils/HttpTools';
 import {API_Doctor} from '../../utils/API';
 import {ErrorCode} from '../../utils/CustomEnums';
+import ActionSheet from 'react-native-actionsheet';
 
 const BannerScale = (375.0/190.0)
 
@@ -41,7 +42,6 @@ export default class HomePageViewController extends Component{
 					title: {
 						component: {
 							name: 'SearchBar',
-
 						}
 					}
 				}
@@ -69,7 +69,7 @@ export default class HomePageViewController extends Component{
 				paddingVertical: 5,
 			}}>
 				<TouchableOpacity onPress={() => {
-					this.setTopBarView(true)
+					this.showActionSheet()
 				}} style={{
 					width: ScreenDimensions.width - 32,
 					height: 36,
@@ -201,14 +201,17 @@ export default class HomePageViewController extends Component{
 			component: {
 				name: 'DoctorInfoViewController',
 				passProps: {
-					info: item
+					info: item,
 				},
 				options: {
 					topBar: {
 						title: {
 							text: ''
+						},
+						backButton: {
+							title: ''
 						}
-					}
+					},
 				}
 			}
 		});

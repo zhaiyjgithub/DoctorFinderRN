@@ -32,6 +32,8 @@ target 'DoctorFinderRN' do
 
   pod 'react-native-maps', :path => '../node_modules/react-native-maps'
 
+  pod 'RNShare', :path => '../node_modules/react-native-share'
+
   target 'DoctorFinderRNTests' do
     inherit! :search_paths
     # Pods for testing

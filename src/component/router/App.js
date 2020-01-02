@@ -45,10 +45,11 @@ Navigation.events().registerAppLaunchedListener(async () => {
 			title: {
 				color: Colors.white,
 				fontWeight: 'bold',
-				fontSize: 18,
+				fontSize: 16,
 			},
 			backButton: {
-				color: Colors.white
+				color: Colors.white,
+				title: ''
 			}
 		}
 	});

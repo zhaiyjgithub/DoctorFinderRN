@@ -2,7 +2,9 @@ const BaseUrl = "http://localhost:8090/"
 
 const API_Doctor = {
 	getHotSearchDoctors: 'Doctor/GetHotSearchDoctors',
-	getDoctorInfoWithNpi: 'Doctor/GetDoctorInfoWithNpi'
+	getDoctorInfoWithNpi: 'Doctor/GetDoctorInfoWithNpi',
+	getRelatedDoctors: 'Doctor/GetRelatedDoctors',
+	addCollection: 'Doctor/AddCollection'
 }
 
 export {

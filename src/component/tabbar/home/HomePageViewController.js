@@ -120,21 +120,29 @@ export default class HomePageViewController extends Component{
 
 	renderSpecialty() {
 		let topSpecialtyListLine1 = [
+			'Internal Medicine',
+			'OB/GYN',
 			'Pediatrics',
-			'Gastroenterology',
-			'dermatology',
-			'Gerontology',
-			'orthopedics',
+			'Cardiology',
+
 		]
 
 		let topSpecialtyListLine2 = [
-			'Pediatrics',
-			'Gastroenterology',
-			'dermatology',
-			'Gerontology',
-			'orthopedics',
+			'Dermatology',
+			'Nephrology',
+			'Urology',
+			'Ophthalmology',
+
 		]
 
+		let topSpecialtyListLine3 = [
+			'Orthopedic Surgery',
+			'Otolaryngology ENT',
+			'Oncology',
+			'More',
+		]
+
+		let containerWidth = (ScreenDimensions.width - 32 - 3*8)/4.0
 		return(
 			<View style={{backgroundColor: Colors.white, paddingBottom: 10,}}>
 				<View style={{width: ScreenDimensions.width, backgroundColor: Colors.clear,
@@ -152,11 +160,15 @@ export default class HomePageViewController extends Component{
 					{topSpecialtyListLine1.map((item, index) => {
 						return (
 							<TouchableOpacity key={index} style={{
-								width: 50, height: 50, borderRadius: 25,
-								backgroundColor: Colors.red,
+								width: containerWidth,
 								marginTop: 10,
+								alignItems: 'center'
 							}}>
-
+								<Image style={{width: 40, height: 40, borderRadius: 20, backgroundColor: Colors.blue}}/>
+								<Text  style={{maxWidth: containerWidth, fontSize: 14,
+									marginTop: 8,
+									textAlign: 'center',
+									color: Colors.black}}>{item}</Text>
 							</TouchableOpacity>
 						)
 					})}
@@ -170,10 +182,37 @@ export default class HomePageViewController extends Component{
 					{topSpecialtyListLine2.map((item, index) => {
 						return (
 							<TouchableOpacity key={index} style={{
-								width: 50, height: 50, borderRadius: 25,
-								backgroundColor: Colors.red,
+								width: containerWidth,
 								marginTop: 10,
+								alignItems: 'center'
 							}}>
+								<Image style={{width: 40, height: 40, borderRadius: 20, backgroundColor: Colors.blue}}/>
+								<Text numberOfLines={2} style={{maxWidth: containerWidth, fontSize: 14,
+									marginTop: 8,
+									textAlign: 'center',
+									color: Colors.black}}>{item}</Text>
+							</TouchableOpacity>
+						)
+					})}
+				</View>
+
+				<View style={{width: ScreenDimensions.width, paddingHorizontal: 16,
+					flexDirection: 'row',
+					justifyContent: 'space-between',
+					flexWrap: 'wrap'
+				}}>
+					{topSpecialtyListLine3.map((item, index) => {
+						return (
+							<TouchableOpacity key={index} style={{
+								width: containerWidth,
+								marginTop: 10,
+								alignItems: 'center'
+							}}>
+								<Image style={{width: 40, height: 40, borderRadius: 20, backgroundColor: Colors.blue}}/>
+								<Text numberOfLines={2} style={{maxWidth: containerWidth, fontSize: 14,
+									marginTop: 8,
+									textAlign: 'center',
+									color: Colors.black}}>{item}</Text>
 							</TouchableOpacity>
 						)
 					})}

@@ -4,7 +4,9 @@ const API_Doctor = {
 	getHotSearchDoctors: 'Doctor/GetHotSearchDoctors',
 	getDoctorInfoWithNpi: 'Doctor/GetDoctorInfoWithNpi',
 	getRelatedDoctors: 'Doctor/GetRelatedDoctors',
-	addCollection: 'Doctor/AddCollection'
+	addCollection: 'Doctor/AddCollection',
+	getCollectionStatus: 'Doctor/GetCollectionStatus',
+	deleteCollection: 'Doctor/DeleteCollection'
 }
 
 export {

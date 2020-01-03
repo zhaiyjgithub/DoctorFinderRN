@@ -60,11 +60,15 @@ export default class DoctorInfoViewController extends Component{
 		}
 
 		this.navigationEventListener = Navigation.events().bindComponent(this);
+		this.isCollected = false
 	}
 
 	componentDidMount() {
-		this.props.info && this.getDoctorInfoWithNpi(this.props.info.Npi)
-		this.props.info && this.getRelatedDoctors()
+		if (this.props.info) {
+			this.getDoctorInfoWithNpi(this.props.info.Npi)
+			this.getRelatedDoctors()
+			this.getCollectionStatus()
+		}
 	}
 
 	componentWillUnmount() {
@@ -96,8 +100,35 @@ export default class DoctorInfoViewController extends Component{
 
 			ShareTool(shareOptions)
 		}else if (buttonId === 'star') {
-			this.addCollection()
+			if (this.isCollected) {
+				this.cancelCollection()
+			}else {
+				this.addCollection()
+			}
 		}
+	}
+
+	setTopBarButtons(isCollected) {
+		Navigation.mergeOptions(this.props.componentId, {
+			topBar: {
+				rightButtons: [
+					{
+						id: 'share',
+						enabled: true,
+						disableIconTint: false,
+						color: Colors.white,
+						icon: require('../../../resource/image/home/share.png'),
+					},
+					{
+						id: 'star',
+						enabled: true,
+						disableIconTint: false,
+						color: Colors.white,
+						icon: isCollected ?   require('../../../resource/image/home/star_selected.png') : require('../../../resource/image/home/star.png'),
+					},
+				]
+			}
+		})
 	}
 
 	getDoctorInfoWithNpi(npi) {
@@ -120,6 +151,20 @@ export default class DoctorInfoViewController extends Component{
 		})
 	}
 
+	getCollectionStatus() {
+		let param = {
+			Npi: this.props.info.Npi,
+			UserId: 1,
+		}
+
+		HTTP.post(API_Doctor.getCollectionStatus, param).then((response) => {
+			this.isCollected = response.data
+			this.setTopBarButtons(this.isCollected)
+		}).catch(() => {
+
+		})
+	}
+
 	addCollection() {
 		let param = {
 			Npi: this.props.info.Npi,
@@ -128,6 +173,29 @@ export default class DoctorInfoViewController extends Component{
 
 		HTTP.post(API_Doctor.addCollection, param).then((response) => {
 			console.log(response)
+			if (response.code === 0) {
+				this.isCollected = true
+				this.setTopBarButtons(this.isCollected)
+			}else {
+
+			}
+		}).catch(() => {
+
+		})
+	}
+
+	cancelCollection() {
+		let param = {
+			Npi: this.props.info.Npi,
+			UserId: 1,
+		}
+
+		HTTP.post(API_Doctor.deleteCollection, param).then((response) => {
+			console.log(response)
+			if (response.code === 0) {
+				this.isCollected = false
+				this.setTopBarButtons(this.isCollected)
+			}
 		}).catch(() => {
 
 		})

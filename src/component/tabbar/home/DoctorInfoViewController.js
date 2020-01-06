@@ -12,6 +12,7 @@ import DoctorInfoTextItem from './view/DoctorInfoTextItem';
 import DoctorInfoAddressItem from './view/DoctorInfoAddressItem';
 import {ShareTool} from '../../utils/ShareTool';
 import ActionSheet from 'react-native-actionsheet';
+import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 
 export default class DoctorInfoViewController extends Component{
 	static defaultProps = {
@@ -37,6 +38,9 @@ export default class DoctorInfoViewController extends Component{
 						icon: require('../../../resource/image/home/star.png'),
 					},
 				]
+			},
+			bottomTabs: {
+				visible: false
 			}
 		};
 	}
@@ -223,16 +227,7 @@ export default class DoctorInfoViewController extends Component{
 				passProps: {
 					info: item
 				},
-				options: {
-					topBar: {
-						title: {
-							text: ''
-						},
-						backButton: {
-							text: ''
-						}
-					}
-				}
+				options: BaseNavigatorOptions
 			}
 		});
 	}

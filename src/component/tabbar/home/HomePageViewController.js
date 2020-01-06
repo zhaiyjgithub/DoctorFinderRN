@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
-import {Alert, Image, ImageBackground, SectionList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, Image, ImageBackground, SectionList, StyleSheet, Text, TouchableOpacity, View, TextInput} from 'react-native';
 import {Colors} from '../../utils/Styles';
-import {ScreenDimensions} from '../../utils/Dimensions';
+import {ScreenDimensions, TabBar} from '../../utils/Dimensions';
 import {Navigation} from 'react-native-navigation';
 import Swiper from 'react-native-swiper';
 import DoctorInfoItem from './view/DoctorInfoItem';
 import {HTTP} from '../../utils/HttpTools';
 import {API_Doctor} from '../../utils/API';
 import {ErrorCode} from '../../utils/CustomEnums';
-import ActionSheet from 'react-native-actionsheet';
+import SearchBar from './view/SearchBar';
+import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 
 const BannerScale = (375.0/190.0)
 
@@ -17,7 +18,7 @@ export default class HomePageViewController extends Component{
 		super(props)
 
 		this.state = {
-			hotSearchDoctors: []
+			hotSearchDoctors: [],
 		}
 
 		this.setTopBarView(false)
@@ -34,6 +35,22 @@ export default class HomePageViewController extends Component{
 		})
 	}
 
+	setBottomTabBar(isHide) {
+
+	}
+
+	goToSearch(searchContent) {
+		Navigation.push(this.props.componentId, {
+			component: {
+				name: 'DoctorSearchResultListViewController',
+				passProps: {
+					searchContent: searchContent
+				},
+				options: BaseNavigatorOptions()
+			}
+		});
+	}
+
 	setTopBarView(isShow) {
 		if (isShow && isShow !== this.isHasShowTopBarSearchBar) {
 			this.isHasShowTopBarSearchBar = true
@@ -42,6 +59,11 @@ export default class HomePageViewController extends Component{
 					title: {
 						component: {
 							name: 'SearchBar',
+							passProps:{
+								onSubmitEditing: (searchContent) => {
+									this.goToSearch(searchContent)
+								}
+							}
 						}
 					}
 				}
@@ -63,26 +85,13 @@ export default class HomePageViewController extends Component{
 	}
 
 	renderSearchBar() {
-		return(
-			<View style={{
-				backgroundColor: Colors.white,
-				paddingVertical: 5,
-			}}>
-				<TouchableOpacity onPress={() => {
-					this.showActionSheet()
-				}} style={{
-					width: ScreenDimensions.width - 32,
-					height: 36,
-					backgroundColor: Colors.searchBar,
-					flexDirection: 'row',
-					alignItems: 'center',
-					marginLeft: 16,
-					borderRadius: 6,
-				}}>
-					<Image source={require('../../../resource/image/home/Search.png')} style={{marginLeft: 10, marginRight: 10}}/>
-					<Text style={{fontSize: 18, color: Colors.darkGray}}>{'Search'}</Text>
-				</TouchableOpacity>
-			</View>
+		return (
+			<SearchBar
+				isTitleView = {false}
+				onSubmitEditing={(searchContent) => {
+					this.goToSearch(searchContent)
+				}}
+			/>
 		)
 	}
 
@@ -108,13 +117,13 @@ export default class HomePageViewController extends Component{
 		)
 	}
 
-	renderListFooter() {
+	renderListHeader() {
 		return(
-			<React.Fragment>
+			<View>
 				{this.renderSearchBar()}
 				{this.renderBanner()}
 				{this.renderSpecialty()}
-			</React.Fragment>
+			</View>
 		)
 	}
 
@@ -208,7 +217,7 @@ export default class HomePageViewController extends Component{
 								marginTop: 10,
 								alignItems: 'center'
 							}}>
-								<Image style={{width: 40, height: 40, borderRadius: 20, backgroundColor: Colors.blue}}/>
+								<Image source={require('../../../resource/image/home/fei.png')} style={{width: 25, height: 25,}}/>
 								<Text numberOfLines={2} style={{maxWidth: containerWidth, fontSize: 14,
 									marginTop: 8,
 									textAlign: 'center',
@@ -242,18 +251,9 @@ export default class HomePageViewController extends Component{
 				passProps: {
 					info: item,
 				},
-				options: {
-					topBar: {
-						title: {
-							text: ''
-						},
-						backButton: {
-							title: ''
-						}
-					},
-				}
+				options: BaseNavigatorOptions()
 			}
-		});
+		})
 	}
 
 	renderItem(item) {
@@ -294,7 +294,7 @@ export default class HomePageViewController extends Component{
 						return 'key' + item.key + index
 					}}
 					ListHeaderComponent={() => {
-						return this.renderListFooter()
+						return this.renderListHeader()
 					}}
 
 					renderSectionHeader={() => {
@@ -315,7 +315,7 @@ export default class HomePageViewController extends Component{
 						return (
 							<View style={{width: ScreenDimensions.width,
 								justifyContent: 'center', alignItems: 'center',
-								paddingBottom: 20,
+								paddingBottom: TabBar.height,
 							}}>
 								<Text style={{fontSize: 12, color: Colors.lightGray}}>{'Click \'Search\' and get more information.'}</Text>
 							</View>

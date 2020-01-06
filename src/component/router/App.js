@@ -4,6 +4,7 @@ import HomePageTitleView from '../tabbar/home/view/HomePageTitleView'
 import PostViewController from '../tabbar/post/PostViewController'
 import MineViewController from '../tabbar/mine/MineViewController'
 import DoctorInfoViewController from '../tabbar/home/DoctorInfoViewController'
+import DoctorSearchResultListViewController from '../tabbar/home/DoctorSearchResultListViewController'
 //
 
 import {Navigation} from 'react-native-navigation'
@@ -26,7 +27,8 @@ Navigation.registerComponent('SearchBar', () => SearchBar);
 Navigation.registerComponent('HomePageTitleView', () => HomePageTitleView);
 Navigation.registerComponent('PostViewController', () => PostViewController);
 Navigation.registerComponent('MineViewController', () => MineViewController);
-Navigation.registerComponent('DoctorInfoViewController', () => DoctorInfoViewController);
+Navigation.registerComponent('DoctorInfoViewController', () => DoctorInfoViewController)
+Navigation.registerComponent('DoctorSearchResultListViewController', () => DoctorSearchResultListViewController);
 
 Navigation.events().registerAppLaunchedListener(async () => {
 	Navigation.setDefaultOptions({
@@ -51,6 +53,10 @@ Navigation.events().registerAppLaunchedListener(async () => {
 				color: Colors.white,
 				title: ''
 			}
+		},
+		bottomTabs: {
+			visible: true,
+			drawBehind: true,
 		}
 	});
 

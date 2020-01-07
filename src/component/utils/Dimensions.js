@@ -18,5 +18,5 @@ const TabBar = {
 export {
 	ScreenDimensions,
 	TabBar,
-	NaviBarHeight
+	NaviBarHeight,
 }

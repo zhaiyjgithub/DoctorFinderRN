@@ -30,6 +30,8 @@ Navigation.registerComponent('MineViewController', () => MineViewController);
 Navigation.registerComponent('DoctorInfoViewController', () => DoctorInfoViewController)
 Navigation.registerComponent('DoctorSearchResultListViewController', () => DoctorSearchResultListViewController);
 
+
+
 Navigation.events().registerAppLaunchedListener(async () => {
 	Navigation.setDefaultOptions({
 		statusBar: {

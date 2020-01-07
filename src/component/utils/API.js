@@ -6,7 +6,8 @@ const API_Doctor = {
 	getRelatedDoctors: 'Doctor/GetRelatedDoctors',
 	addCollection: 'Doctor/AddCollection',
 	getCollectionStatus: 'Doctor/GetCollectionStatus',
-	deleteCollection: 'Doctor/DeleteCollection'
+	deleteCollection: 'Doctor/DeleteCollection',
+	searchDoctorByPage: 'Doctor/SearchDoctorByPage'
 }
 
 export {

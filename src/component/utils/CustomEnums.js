@@ -1,6 +1,8 @@
 import {
-	Platform
+	Dimensions,
+	Platform,
 } from 'react-native';
+
 
 const Language = {
 	english: 'en',
@@ -11,7 +13,8 @@ const Language = {
 const PLATFORM = {
 	isIOS: Platform.OS === "ios",
 	isAndroid: Platform.OS === "android",
-	isPad: (Platform.OS && Platform.isPad)
+	isPad: (Platform.OS && Platform.isPad),
+	isIPhoneX: (Platform.OS === "ios" && !Platform.isPad && ((Dimensions.get('window').height) >=812))
 };
 
 const ErrorCode = {
@@ -25,10 +28,17 @@ const Gender = {
 	unknown: ''
 }
 
+const SearchBarType = {
+	normal: 0,
+	max: 1,
+	min: 2
+}
+
 export {
 	PLATFORM,
 	Language,
 	ErrorCode,
-	Gender
+	Gender,
+	SearchBarType
 
 }

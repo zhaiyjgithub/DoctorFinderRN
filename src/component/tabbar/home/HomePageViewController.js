@@ -7,9 +7,10 @@ import Swiper from 'react-native-swiper';
 import DoctorInfoItem from './view/DoctorInfoItem';
 import {HTTP} from '../../utils/HttpTools';
 import {API_Doctor} from '../../utils/API';
-import {ErrorCode} from '../../utils/CustomEnums';
+import {ErrorCode, SearchBarType} from '../../utils/CustomEnums';
 import SearchBar from './view/SearchBar';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
+import SearchFilterOverlay from './view/SearchFilterOverlay';
 
 const BannerScale = (375.0/190.0)
 
@@ -18,7 +19,8 @@ export default class HomePageViewController extends Component{
 		super(props)
 
 		this.state = {
-			hotSearchDoctors: [],
+			dataSource: [{section: 0, data: [{section: 0,}]}],
+			filterOverlayVisible: false
 		}
 
 		this.setTopBarView(false)
@@ -28,15 +30,15 @@ export default class HomePageViewController extends Component{
 	componentDidMount() {
 		HTTP.post(API_Doctor.getHotSearchDoctors, null).then((response) => {
 			if (response.code === ErrorCode.Ok) {
-				this.setState({hotSearchDoctors: response.data})
+				let list = response.data.map((item, index) => {
+					return Object.assign({section: 1}, item)
+				})
+
+				this.setState({dataSource: this.state.dataSource.concat({section: 1, data: list})})
 			}
 		}).catch(() => {
 			//
 		})
-	}
-
-	setBottomTabBar(isHide) {
-
 	}
 
 	goToSearch(searchContent) {
@@ -60,6 +62,7 @@ export default class HomePageViewController extends Component{
 						component: {
 							name: 'SearchBar',
 							passProps:{
+								type: SearchBarType.max,
 								onSubmitEditing: (searchContent) => {
 									this.goToSearch(searchContent)
 								}
@@ -87,7 +90,7 @@ export default class HomePageViewController extends Component{
 	renderSearchBar() {
 		return (
 			<SearchBar
-				isTitleView = {false}
+				type = {SearchBarType.normal}
 				onSubmitEditing={(searchContent) => {
 					this.goToSearch(searchContent)
 				}}
@@ -122,7 +125,6 @@ export default class HomePageViewController extends Component{
 			<View>
 				{this.renderSearchBar()}
 				{this.renderBanner()}
-				{this.renderSpecialty()}
 			</View>
 		)
 	}
@@ -133,7 +135,6 @@ export default class HomePageViewController extends Component{
 			'OB/GYN',
 			'Pediatrics',
 			'Cardiology',
-
 		]
 
 		let topSpecialtyListLine2 = [
@@ -154,13 +155,6 @@ export default class HomePageViewController extends Component{
 		let containerWidth = (ScreenDimensions.width - 32 - 3*8)/4.0
 		return(
 			<View style={{backgroundColor: Colors.white, paddingBottom: 10,}}>
-				<View style={{width: ScreenDimensions.width, backgroundColor: Colors.clear,
-					justifyContent: 'center', height: 40
-				}}>
-					<Text style={{fontSize: 18, color: Colors.black,
-						fontWeight: 'bold', marginLeft: 8,
-					}}>{'Specialty'}</Text>
-				</View>
 				<View style={{width: ScreenDimensions.width, paddingHorizontal: 16,
 					flexDirection: 'row',
 					justifyContent: 'space-between',
@@ -231,17 +225,19 @@ export default class HomePageViewController extends Component{
 	}
 
 	showQuestionAlert() {
-		Alert.alert(
-			'Information is incorrect?',
-			'Thank you very much for the feedback you can provide us and other users.',
-			[
-				{text: 'Cancel', onPress: () => {}, style: 'cancel'},
-				{text: 'Feedback', onPress: () => {
+		// Alert.alert(
+		// 	'Information is incorrect?',
+		// 	'Thank you very much for the feedback you can provide us and other users.',
+		// 	[
+		// 		{text: 'Cancel', onPress: () => {}, style: 'cancel'},
+		// 		{text: 'Feedback', onPress: () => {
+		//
+		// 			}},
+		// 	],
+		// 	{ cancelable: false }
+		// )
 
-					}},
-			],
-			{ cancelable: false }
-		)
+		this.setState({filterOverlayVisible: true})
 	}
 
 	pushToDoctorInfoPage(item) {
@@ -257,31 +253,48 @@ export default class HomePageViewController extends Component{
 	}
 
 	renderItem(item) {
-		return(
-			<DoctorInfoItem
-				id = {item.ID}
-				info = {item}
-				didSelectedItem = {() => {
-					this.pushToDoctorInfoPage(item)
-				}}
+		if (item.section === 0) {
+			return this.renderSpecialty()
+		}else {
+			return(
+				<DoctorInfoItem
+					id = {item.ID}
+					info = {item}
+					didSelectedItem = {() => {
+						this.pushToDoctorInfoPage(item)
+					}}
 
-				questionAction = {() => {
-					this.showQuestionAlert()
-				}}
-			/>
-		)
+					questionAction = {() => {
+						this.showQuestionAlert()
+					}}
+				/>
+			)
+		}
 	}
 
-	renderSectionHeader() {
-		return (
-			<View style={{width: ScreenDimensions.width, backgroundColor: Colors.systemGray,
-				justifyContent: 'center', height: 40,
-			}}>
-				<Text style={{fontSize: 18, color: Colors.black,
-					fontWeight: 'bold', marginLeft: 8,
-				}}>{'Hot search'}</Text>
-			</View>
-		)
+	renderSectionHeader(section) {
+		if (section === 0) {
+			return (
+				<View style={{width: ScreenDimensions.width, backgroundColor: Colors.systemGray,
+					justifyContent: 'center', height: 40,
+				}}>
+					<Text style={{fontSize: 18, color: Colors.black,
+						fontWeight: 'bold', marginLeft: 8,
+					}}>{'Specialty'}</Text>
+				</View>
+			)
+		}else {
+			return (
+				<View style={{width: ScreenDimensions.width, backgroundColor: Colors.systemGray,
+					justifyContent: 'center', height: 40,
+				}}>
+					<Text style={{fontSize: 18, color: Colors.black,
+						fontWeight: 'bold', marginLeft: 8,
+					}}>{'Hot search'}</Text>
+				</View>
+			)
+		}
+
 	}
 
 	render() {
@@ -289,7 +302,7 @@ export default class HomePageViewController extends Component{
 			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
 				<SectionList
 					renderItem={({item}) => this.renderItem(item)}
-					sections={[{data: this.state.hotSearchDoctors}]}
+					sections={this.state.dataSource}
 					keyExtractor={(item, index) => {
 						return 'key' + item.key + index
 					}}
@@ -297,8 +310,8 @@ export default class HomePageViewController extends Component{
 						return this.renderListHeader()
 					}}
 
-					renderSectionHeader={() => {
-						return this.renderSectionHeader()
+					renderSectionHeader={({section}) => {
+						return this.renderSectionHeader(section.section)
 					}}
 
 					onScroll={(event) => {
@@ -317,9 +330,16 @@ export default class HomePageViewController extends Component{
 								justifyContent: 'center', alignItems: 'center',
 								paddingBottom: TabBar.height,
 							}}>
-								<Text style={{fontSize: 12, color: Colors.lightGray}}>{'Click \'Search\' and get more information.'}</Text>
+								<Text style={{fontSize: 12, color: Colors.lightGray}}>{'Click \'Search bar\' and get more information.'}</Text>
 							</View>
 						)
+					}}
+				/>
+
+				<SearchFilterOverlay
+					isVisible={this.state.filterOverlayVisible}
+					dismiss={() => {
+						this.setState({filterOverlayVisible: false})
 					}}
 				/>
 			</View>

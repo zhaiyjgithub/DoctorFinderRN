@@ -5,7 +5,8 @@ import PostViewController from '../tabbar/post/PostViewController'
 import MineViewController from '../tabbar/mine/MineViewController'
 import DoctorInfoViewController from '../tabbar/home/DoctorInfoViewController'
 import DoctorSearchResultListViewController from '../tabbar/home/DoctorSearchResultListViewController'
-//
+import SpecialtyViewController from '../tabbar/home/SpecialtyViewController'
+//SearchFilterOverlay
 
 import {Navigation} from 'react-native-navigation'
 import {Colors} from '../utils/Styles';
@@ -29,8 +30,8 @@ Navigation.registerComponent('PostViewController', () => PostViewController);
 Navigation.registerComponent('MineViewController', () => MineViewController);
 Navigation.registerComponent('DoctorInfoViewController', () => DoctorInfoViewController)
 Navigation.registerComponent('DoctorSearchResultListViewController', () => DoctorSearchResultListViewController);
-
-
+Navigation.registerComponent('SpecialtyViewController', () => SpecialtyViewController);
+//SearchFilterOverlay
 
 Navigation.events().registerAppLaunchedListener(async () => {
 	Navigation.setDefaultOptions({
@@ -65,7 +66,8 @@ Navigation.events().registerAppLaunchedListener(async () => {
 	Navigation.setRoot({
 		root: {
 			bottomTabs: {
-				children: [{
+				children: [
+					{
 					stack: {
 						children: [{
 							component: {

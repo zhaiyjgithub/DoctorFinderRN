@@ -6,8 +6,9 @@ import {Navigation} from 'react-native-navigation';
 import DoctorInfoItem from './view/DoctorInfoItem';
 import {HTTP} from '../../utils/HttpTools';
 import {API_Doctor} from '../../utils/API';
-import {PLATFORM, SearchBarType} from '../../utils/CustomEnums';
+import {PLATFORM, SearchBarOverlayType, SearchBarType} from '../../utils/CustomEnums';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
+import SearchFilterOverlay from './view/SearchFilterOverlay';
 
 export default class DoctorSearchResultListViewController extends Component{
 	constructor(props) {
@@ -18,7 +19,8 @@ export default class DoctorSearchResultListViewController extends Component{
 			city: 'BIRMINGHAM',
 			province: 'AL',
 			searchContent: props.searchContent,
-			isRefreshing: false
+			isRefreshing: false,
+			filterOverlayVisible: false
 		}
 
 		this.page = 1
@@ -29,6 +31,7 @@ export default class DoctorSearchResultListViewController extends Component{
 
 	componentDidMount() {
 		this.searchDoctors(this.state.searchContent)
+
 	}
 
 	setTopBar(searchContent) {
@@ -44,6 +47,10 @@ export default class DoctorSearchResultListViewController extends Component{
 								this.setState({searchContent: searchContent, isRefreshing: true}, () => {
 									this.searchDoctors(true)
 								})
+							},
+							filterAction: () => {
+								this.setState({filterOverlayVisible: true})
+								// this.showOverlay()
 							}
 						}
 					}
@@ -133,6 +140,22 @@ export default class DoctorSearchResultListViewController extends Component{
 		})
 	}
 
+	pushToSpecialtyListPage() {
+		Navigation.showModal({
+			stack: {
+				children: [{
+					component: {
+						name: 'SpecialtyViewController',
+						passProps: {
+							//
+						},
+						options: BaseNavigatorOptions('Specialty')
+					}
+				}]
+			}
+		});
+	}
+
 	renderItem(item) {
 		return(
 			<DoctorInfoItem
@@ -176,6 +199,18 @@ export default class DoctorSearchResultListViewController extends Component{
 
 					renderSectionHeader={() => {
 						return(this.renderHeader())
+					}}
+				/>
+
+				<SearchFilterOverlay
+					isVisible={this.state.filterOverlayVisible}
+					dismiss={() => {
+						this.setState({filterOverlayVisible: false})
+					}}
+					didSelectedItem={(type) => {
+						if (type === SearchBarOverlayType.specialty) {
+							this.pushToSpecialtyListPage()
+						}
 					}}
 				/>
 			</View>

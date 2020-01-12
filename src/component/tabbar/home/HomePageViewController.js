@@ -335,13 +335,6 @@ export default class HomePageViewController extends Component{
 						)
 					}}
 				/>
-
-				<SearchFilterOverlay
-					isVisible={this.state.filterOverlayVisible}
-					dismiss={() => {
-						this.setState({filterOverlayVisible: false})
-					}}
-				/>
 			</View>
 		)
 	}

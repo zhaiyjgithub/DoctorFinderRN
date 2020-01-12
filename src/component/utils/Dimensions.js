@@ -15,8 +15,13 @@ const TabBar = {
 	height: (PLATFORM.isIOS ? ((Dimensions.get('window').height < 812 ? 49 : 73)) : 56) //RNN - android MD: 56
 }
 
+const StatusBar = {
+	height: PLATFORM.isIOS ? (PLATFORM.isIPhoneX ? 44 : 20) : 0
+}
+
 export {
 	ScreenDimensions,
 	TabBar,
 	NaviBarHeight,
+	StatusBar
 }

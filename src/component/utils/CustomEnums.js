@@ -34,11 +34,16 @@ const SearchBarType = {
 	min: 2
 }
 
+const SearchBarOverlayType = {
+	specialty: 0,
+}
+
 export {
 	PLATFORM,
 	Language,
 	ErrorCode,
 	Gender,
-	SearchBarType
+	SearchBarType,
+	SearchBarOverlayType
 
 }

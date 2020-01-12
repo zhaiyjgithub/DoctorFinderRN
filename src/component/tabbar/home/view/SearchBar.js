@@ -83,7 +83,9 @@ export default class SearchBar extends Component {
 							color: Colors.black
 						}} />
 
-					<TouchableOpacity style={{width: 44, height: 40,
+					<TouchableOpacity onPress={() => {
+						this.props.filterAction && this.props.filterAction()
+					}} style={{width: 44, height: 40,
 						justifyContent: 'center', alignItems: 'center'
 					}}>
 						<Image source={require('../../../../resource/image/home/filter.png')}/>

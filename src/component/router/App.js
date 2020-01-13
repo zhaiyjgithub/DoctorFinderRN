@@ -6,6 +6,9 @@ import MineViewController from '../tabbar/mine/MineViewController'
 import DoctorInfoViewController from '../tabbar/home/DoctorInfoViewController'
 import DoctorSearchResultListViewController from '../tabbar/home/DoctorSearchResultListViewController'
 import SpecialtyViewController from '../tabbar/home/SpecialtyViewController'
+import StateListViewController from '../tabbar/home/StateListViewController'
+import CityListViewController from '../tabbar/home/CityListViewController'
+import SearchFilterOverlay from '../tabbar/home/view/SearchFilterOverlay'
 //SearchFilterOverlay
 
 import {Navigation} from 'react-native-navigation'
@@ -31,7 +34,10 @@ Navigation.registerComponent('MineViewController', () => MineViewController);
 Navigation.registerComponent('DoctorInfoViewController', () => DoctorInfoViewController)
 Navigation.registerComponent('DoctorSearchResultListViewController', () => DoctorSearchResultListViewController);
 Navigation.registerComponent('SpecialtyViewController', () => SpecialtyViewController);
-//SearchFilterOverlay
+Navigation.registerComponent('StateListViewController', () => StateListViewController);
+Navigation.registerComponent('CityListViewController', () => CityListViewController);
+Navigation.registerComponent('SearchFilterOverlay', () => SearchFilterOverlay);
+//
 
 Navigation.events().registerAppLaunchedListener(async () => {
 	Navigation.setDefaultOptions({

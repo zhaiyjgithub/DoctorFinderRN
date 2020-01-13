@@ -15,12 +15,17 @@ export default class DoctorSearchResultListViewController extends Component{
 		super(props)
 		this.state = {
 			dataSource: [],
+			gender: 0,
 			specialty: '',
 			city: 'BIRMINGHAM',
-			province: 'AL',
+			State: 'AL',
 			searchContent: props.searchContent,
 			isRefreshing: false,
-			filterOverlayVisible: false
+			filterOverlayVisible: false,
+			lastGender: 0,
+			lastSpecialty: '',
+			lastCity: '',
+			lastState: ''
 		}
 
 		this.page = 1
@@ -31,7 +36,6 @@ export default class DoctorSearchResultListViewController extends Component{
 
 	componentDidMount() {
 		this.searchDoctors(this.state.searchContent)
-
 	}
 
 	setTopBar(searchContent) {
@@ -50,7 +54,6 @@ export default class DoctorSearchResultListViewController extends Component{
 							},
 							filterAction: () => {
 								this.setState({filterOverlayVisible: true})
-								// this.showOverlay()
 							}
 						}
 					}
@@ -60,12 +63,14 @@ export default class DoctorSearchResultListViewController extends Component{
 	}
 
 	searchDoctors(isRefresh) {
+		const genderType = ['', 'M', 'F']
 		let param = {
 			LastName: this.state.searchContent,
 			FirstName: '',
-			Specialty: this.state.specialty,
-			City: this.state.city,
-			State: this.state.province,
+			Gender: genderType[this.state.lastGender],
+			Specialty: this.state.lastSpecialty,
+			City: this.state.lastCity,
+			State: this.state.lastState,
 			Page: this.page,
 			PageSize: this.pageSize
 		}
@@ -90,28 +95,44 @@ export default class DoctorSearchResultListViewController extends Component{
 	}
 
 	renderHeader() {
-		let header = ''
+		let header = 'Search drs: '
 		if (this.state.searchContent.length) {
-			header = 'Search drs: ' + this.state.searchContent
+			header = header + this.state.searchContent
 		}
 
-		if (this.state.specialty.length) {
-			header = header + ' ' + this.state.specialty
+		if (this.state.searchContent.length && this.state.specialty.length) {
+			header = header + ' of ' + this.state.specialty
+		}else if (!this.state.searchContent.length && this.state.specialty.length) {
+			header = header + this.state.specialty
 		}
 
-		if (header.length >=2) {
-			header = header + ' in ' + this.state.city + ' City, ' + this.state.province
+		if ((this.state.searchContent.length || this.state.specialty.length)) {
+			if (this.state.city.length) {
+				header = header + ' in ' + this.state.city + ' City, ' + this.state.State
+			}else if (!this.state.city.length && this.state.State.length) {
+				header = header + ' in ' + this.state.State
+			}
+		}else if (this.state.city.length || this.state.State.length) {
+			if (this.state.city.length) {
+				header = header + 'in ' + this.state.city + ' City, ' + this.state.State
+			}else if (!this.state.city.length && this.state.State.length) {
+				header = header + 'in ' + this.state.State
+			}
 		}else {
-			header = 'Drs in ' + this.state.city + ' City, ' + this.state.province
+			header = ''
 		}
 
-		return(
-			<View style={{width: '100%', height: 25, justifyContent: 'center', backgroundColor: Colors.systemGray}}>
-				<Text numberOfLines={1} style={{width: ScreenDimensions.width - 32, marginLeft: 16,
-					fontSize: 12, color: Colors.lightGray,
-				}}>{header}</Text>
-			</View>
-		)
+		if (!header.length) {
+			return null
+		}else {
+			return(
+				<View style={{width: '100%', height: 25, justifyContent: 'center', backgroundColor: Colors.systemGray}}>
+					<Text numberOfLines={1} style={{width: ScreenDimensions.width - 32, marginLeft: 16,
+						fontSize: 12, color: Colors.lightGray,
+					}}>{header}</Text>
+				</View>
+			)
+		}
 	}
 
 	showQuestionAlert() {
@@ -147,7 +168,33 @@ export default class DoctorSearchResultListViewController extends Component{
 					component: {
 						name: 'SpecialtyViewController',
 						passProps: {
-							//
+							selectedSpecialty: this.state.specialty,
+							didSelectedSpecialty: (specialty) => {
+								this.setState({specialty: specialty})
+							}
+						},
+						options: BaseNavigatorOptions('Specialty')
+					}
+				}]
+			}
+		});
+	}
+
+	pushToStateListPage() {
+		Navigation.showModal({
+			stack: {
+				children: [{
+					component: {
+						name: 'StateListViewController',
+						passProps: {
+							selectedState: this.state.State,
+							selectedCity: this.state.city,
+							didSelectedState: (state) => {
+								this.setState({State: state})
+							},
+							didSelectedCity: (city) => {
+								this.setState({city: city})
+							}
 						},
 						options: BaseNavigatorOptions('Specialty')
 					}
@@ -159,7 +206,7 @@ export default class DoctorSearchResultListViewController extends Component{
 	renderItem(item) {
 		return(
 			<DoctorInfoItem
-				id = {item.ID}
+				id = {item.Npi}
 				info = {item}
 				didSelectedItem = {() => {
 					this.pushToDoctorInfoPage(item)
@@ -207,9 +254,28 @@ export default class DoctorSearchResultListViewController extends Component{
 					dismiss={() => {
 						this.setState({filterOverlayVisible: false})
 					}}
+					confirm = {(newSearchContent, gender) => {
+						this.setState({
+							filterOverlayVisible: false,
+							searchContent: newSearchContent,
+							lastGender: gender,
+							lastSpecialty: this.state.specialty,
+							lastCity: this.state.city,
+							lastState: this.state.State,
+						}, () => {
+							this.searchDoctors(true)
+						})
+					}}
+					searchContent = {this.state.searchContent}
+					gender = {this.state.gender}
+					specialty = {this.state.specialty}
+					State = {this.state.State}
+					city = {this.state.city}
 					didSelectedItem={(type) => {
 						if (type === SearchBarOverlayType.specialty) {
 							this.pushToSpecialtyListPage()
+						}else if (type === SearchBarOverlayType.location){
+							this.pushToStateListPage()
 						}
 					}}
 				/>

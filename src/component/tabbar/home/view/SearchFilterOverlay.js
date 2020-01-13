@@ -23,6 +23,7 @@ export default class SearchFilterOverlay extends Component{
 		city: '',
 		State: '',
 	}
+
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -109,7 +110,7 @@ export default class SearchFilterOverlay extends Component{
 				<View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
 
 				}}>
-					<Text style={{maxWidth: MainViewWidth - 16 - 48 - 8, textAlign: 'right',
+					<Text numberOfLines={2} style={{width: MainViewWidth - 16 - 88 - 8, textAlign: 'right',
 						fontSize: 16, color: Colors.lightBlack,
 					}}>{this.state.specialty}</Text>
 					{this.renderRightArrowImage()}
@@ -120,12 +121,13 @@ export default class SearchFilterOverlay extends Component{
 		)
 	}
 
-	handleIndexChange() {
-
+	handleGenderIndexChange(index) {
+		this.setState({gender: index})
 	}
 
 	renderGenderView() {
 		let width = MainViewWidth - 16
+
 		return(
 			<View style={{height: 50, marginTop: 8, flexDirection: 'row', alignItems: 'center',
 				width: width, marginLeft: 8,
@@ -137,8 +139,10 @@ export default class SearchFilterOverlay extends Component{
 					<SegmentedControlTab
 						tabsContainerStyle={{width: 150, height: 30}}
 						values={["All", "Male", "Female"]}
-						selectedIndex={this.state.selectedIndex}
-						onTabPress={this.handleIndexChange}
+						selectedIndex={this.state.gender}
+						onTabPress={(index) => {
+							this.handleGenderIndexChange(index)
+						}}
 					/>
 				</View>
 
@@ -147,45 +151,36 @@ export default class SearchFilterOverlay extends Component{
 		)
 	}
 
-	renderCityLocationView() {
+	renderLocationView() {
 		let width = MainViewWidth - 16
+
+		let desc = ''
+		if (this.state.State.length && this.state.city.length) {
+			desc = this.state.city + ', ' + this.state.State
+		}else if (this.state.State.length && !this.state.city.length) {
+			desc = this.state.State
+		}else if (!this.state.State.length && this.state.city.length) {
+			desc = this.state.city
+		}
+
 		return(
-			<View style={{height: 50, marginTop: 8, flexDirection: 'row', alignItems: 'center',
+			<TouchableOpacity onPress={() => {
+				this.props.didSelectedItem && this.props.didSelectedItem(SearchBarOverlayType.location)
+			}} style={{height: 50, marginTop: 8, flexDirection: 'row', alignItems: 'center',
 				width: width, marginLeft: 8,
 				justifyContent: 'space-between',}}>
-				<Text style={{fontSize: 16, color: Colors.black, fontWeight: 'bold'}}>{'City'}</Text>
+				<Text style={{fontSize: 16, color: Colors.black, fontWeight: 'bold'}}>{'Location'}</Text>
 
 				<View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
 
 				}}>
-					<Text style={{maxWidth: MainViewWidth - 16 - 48 - 8, textAlign: 'right',
-						fontSize: 16, color: Colors.lightBlack,}}>{'New York'}</Text>
+					<Text numberOfLines={1} style={{maxWidth: MainViewWidth - 16 - 88 - 8, textAlign: 'right',
+						fontSize: 16, color: Colors.lightBlack,}}>{desc}</Text>
 					{this.renderRightArrowImage()}
 				</View>
 
 				{this.renderLineView()}
-			</View>
-		)
-	}
-
-	renderStateLocationView() {
-		let width = MainViewWidth - 16
-		return(
-			<View style={{height: 50, marginTop: 8, flexDirection: 'row', alignItems: 'center',
-				width: width, marginLeft: 8,
-				justifyContent: 'space-between',}}>
-				<Text style={{fontSize: 16, color: Colors.black, fontWeight: 'bold'}}>{'State'}</Text>
-
-				<View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-
-				}}>
-					<Text style={{maxWidth: MainViewWidth - 16 - 48 - 8, textAlign: 'right',
-						fontSize: 16, color: Colors.lightBlack,}}>{'AL'}</Text>
-					{this.renderRightArrowImage()}
-				</View>
-
-				{this.renderLineView()}
-			</View>
+			</TouchableOpacity>
 		)
 	}
 
@@ -194,13 +189,17 @@ export default class SearchFilterOverlay extends Component{
 			<View style={{flexDirection: 'row', height: 50,
 				backgroundColor: Colors.bottom_bar,
 			}}>
-				<TouchableOpacity style={{width: '50%', height: 50,
+				<TouchableOpacity onPress={() => {
+					this.dismiss()
+				}} style={{width: '50%', height: 50,
 					justifyContent: 'center', alignItems: 'center'
 				}}>
-					<Text style={{fontSize: 16, color: Colors.red}}>{'Reset'}</Text>
+					<Text style={{fontSize: 16, color: Colors.red}}>{'Cancel'}</Text>
 				</TouchableOpacity>
 
-				<TouchableOpacity style={{width: '50%', height: 50, backgroundColor: Colors.red,
+				<TouchableOpacity onPress={() => {
+					this.props.confirm && this.props.confirm(this.state.searchContent, this.state.gender)
+				}} style={{width: '50%', height: 50, backgroundColor: Colors.red,
 					justifyContent: 'center', alignItems: 'center'
 				}}>
 					<Text style={{fontSize: 16, color: Colors.white}}>{'Confirm'}</Text>
@@ -236,8 +235,7 @@ export default class SearchFilterOverlay extends Component{
 						{this.renderSearchBarView()}
 						{this.renderSpecialtyView()}
 						{this.renderGenderView()}
-						{this.renderCityLocationView()}
-						{this.renderStateLocationView()}
+						{this.renderLocationView()}
 						{this.renderActionButtonView()}
 
 					</View>

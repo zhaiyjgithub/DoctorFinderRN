@@ -14,7 +14,7 @@
     "react-native-actionsheet": "^2.4.2",
     "react-native-extra-dimensions-android": "^1.2.5",
     "react-native-maps": "0.26.1",
-    "react-native-navigation": "4.4.0",
+    "react-native-navigation": "3.2.0",
     "react-native-segmented-control-tab": "^3.4.1",
     "react-native-share": "^2.0.0",
     "react-native-swiper": "^1.5.14"

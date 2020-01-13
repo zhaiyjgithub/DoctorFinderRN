@@ -355,7 +355,7 @@ export default class DoctorInfoViewController extends Component{
 		}else {
 			return(
 				<DoctorInfoItem
-					id = {item.ID}
+					id = {item.Npi}
 					info = {item}
 					didSelectedItem = {() => {
 						this.pushToDoctorInfoPage(item)

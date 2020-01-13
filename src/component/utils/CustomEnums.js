@@ -36,6 +36,11 @@ const SearchBarType = {
 
 const SearchBarOverlayType = {
 	specialty: 0,
+	location: 1,
+}
+
+const NavigationEventName = {
+	dismissAllModals: 'dismissAllModals'
 }
 
 export {
@@ -44,6 +49,6 @@ export {
 	ErrorCode,
 	Gender,
 	SearchBarType,
-	SearchBarOverlayType
-
+	SearchBarOverlayType,
+	NavigationEventName
 }

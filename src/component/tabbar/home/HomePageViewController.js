@@ -46,7 +46,7 @@ export default class HomePageViewController extends Component{
 			component: {
 				name: 'DoctorSearchResultListViewController',
 				passProps: {
-					searchContent: searchContent
+					searchContent: searchContent ? searchContent : ''
 				},
 				options: BaseNavigatorOptions()
 			}
@@ -258,7 +258,7 @@ export default class HomePageViewController extends Component{
 		}else {
 			return(
 				<DoctorInfoItem
-					id = {item.ID}
+					id = {item.Npi}
 					info = {item}
 					didSelectedItem = {() => {
 						this.pushToDoctorInfoPage(item)

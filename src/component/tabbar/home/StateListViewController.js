@@ -38,7 +38,58 @@ export default class StateListViewController extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			dataSource: ['AL'],
+			dataSource: [{
+				code: "AK", name: "Alask"},
+				{code: "AL", name: "Alabam"},
+				{code: "AR", name: "Arkansa"},
+				{code: "AZ", name: "Arizon"},
+				{code: "CA", name: "Californi"},
+				{code: "CO", name: "Colorad"},
+				{code: "CT", name: "Connecticu"},
+				{code: "DC", name: "District of Columbia"},
+				{code: "DE", name: "Delawar"},
+				{code: "FL", name: "Florid"},
+				{code: "GA", name: "Georgi"},
+				{code: "HI", name: "Hawai"},
+				{code: "IA", name: "Iow"},
+				{code: "ID", name: "Idah"},
+				{code: "IL", name: "Illinoi"},
+				{code: "IN", name: "Indian"},
+				{code: "KS", name: "Kansa"},
+				{code: "KY", name: "Kentuck"},
+				{code: "LA", name: "Louisian"},
+				{code: "MA", name: "Massachusett"},
+				{code: "MD", name: "Marylan"},
+				{code: "ME", name: "Main"},
+				{code: "MI", name: "Michiga"},
+				{code: "MN", name: "Minnesot"},
+				{code: "MO", name: "Missour"},
+				{code: "MS", name: "Mississipp"},
+				{code: "MT", name: "Montan"},
+				{code: "NC", name: "North Carolina"},
+				{code: "ND", name: "North Dakota"},
+				{code: "NE", name: "Nebrask"},
+				{code: "NH", name: "New Hampshire"},
+				{code: "NJ", name: "New Jersey"},
+				{code: "NM", name: "New Mexico"},
+				{code: "NV", name: "Nevad"},
+				{code: "NY", name: "New York"},
+				{code: "OH", name: "Ohi"},
+				{code: "OK", name: "Oklahom"},
+				{code: "OR", name: "Orego"},
+				{code: "PA", name: "Pennsylvani"},
+				{code: "RI", name: "Rhode Island"},
+				{code: "SC", name: "South Carolina"},
+				{code: "SD", name: "South Dakota"},
+				{code: "TN", name: "Tennesse"},
+				{code: "TX", name: "Texa"},
+				{code: "UT", name: "Uta"},
+				{code: "VA", name: "Virgini"},
+				{code: "VT", name: "Vermon"},
+				{code: "WA", name: "Washingto"},
+				{code: "WI", name: "Wisconsi"},
+				{code: "WV", name: "West Virginia"},
+				{code: "WY", name: "Wyomin"},],
 			selectedState: props.selectedState,
 			selectedCity: props.selectedCity
 		}
@@ -93,14 +144,17 @@ export default class StateListViewController extends Component {
 	}
 
 	renderItem(item) {
-		let isSelected = (item === this.state.selectedState)
+		let isSelected = (item.code === this.state.selectedState)
+
+		let desc = item.name + '(' + item.code + ')'
 		return(
 			<TouchableOpacity onPress={() => {
+				this.setState({selectedState: item.code})
 				this.pushToCityPage()
 			}} style={{width: '100%', paddingHorizontal: 16, height: 50,
 				flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
 			}}>
-				<Text style={{fontSize: 16, color: isSelected ? Colors.theme : Colors.black,}}>{item}</Text>
+				<Text style={{fontSize: 16, color: isSelected ? Colors.theme : Colors.black,}}>{desc}</Text>
 				{isSelected ? this.renderRightArrowImage() : null}
 				{this.renderLineView()}
 			</TouchableOpacity>

@@ -137,7 +137,7 @@ export default class SearchFilterOverlay extends Component{
 
 				<View>
 					<SegmentedControlTab
-						tabsContainerStyle={{width: 150, height: 30}}
+						tabsContainerStyle={{width: 180, height: 30}}
 						values={["All", "Male", "Female"]}
 						selectedIndex={this.state.gender}
 						onTabPress={(index) => {

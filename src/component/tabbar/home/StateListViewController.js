@@ -87,7 +87,7 @@ export default class StateListViewController extends Component {
 						this.props.didSelectedCity && this.props.didSelectedCity(city)
 					}
 				},
-				options: BaseNavigatorOptions()
+				options: BaseNavigatorOptions('City')
 			}
 		});
 	}

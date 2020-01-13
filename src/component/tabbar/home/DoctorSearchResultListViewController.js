@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
-import {Alert, Linking, SectionList, Text, View, RefreshControl} from 'react-native';
+import {Alert, Linking, SectionList, Text, View, RefreshControl, ActivityIndicator,
+	Keyboard
+} from 'react-native';
 import {Colors} from '../../utils/Styles';
 import {ScreenDimensions, TabBar} from '../../utils/Dimensions';
 import {Navigation} from 'react-native-navigation';
@@ -25,7 +27,9 @@ export default class DoctorSearchResultListViewController extends Component{
 			lastGender: 0,
 			lastSpecialty: '',
 			lastCity: '',
-			lastState: ''
+			lastState: '',
+			isTotal: false,
+			isNoData: false,
 		}
 
 		this.page = 1
@@ -35,7 +39,7 @@ export default class DoctorSearchResultListViewController extends Component{
 	}
 
 	componentDidMount() {
-		this.searchDoctors(this.state.searchContent)
+		this.refresh()
 	}
 
 	setTopBar(searchContent) {
@@ -49,10 +53,11 @@ export default class DoctorSearchResultListViewController extends Component{
 							searchContent: searchContent,
 							onSubmitEditing: (searchContent) => {
 								this.setState({searchContent: searchContent, isRefreshing: true}, () => {
-									this.searchDoctors(true)
+									this.refresh()
 								})
 							},
 							filterAction: () => {
+								Keyboard.dismiss()
 								this.setState({filterOverlayVisible: true})
 							}
 						}
@@ -81,23 +86,45 @@ export default class DoctorSearchResultListViewController extends Component{
 			}
 
 			if (response.data && !response.data.length) {
+				if (this.state.dataSource.length) {
+					this.setState({isTotal: true, isRefreshing: false})
+				}else {
+					this.setState({isNoData: true, dataSource: [], isRefreshing: false})
+				}
+
 				return;
 			}
 
 			if (isRefresh) {
-				this.setState({dataSource: response.data, isRefreshing: false})
+				this.setState({dataSource: response.data, isRefreshing: false ,
+					isTotal: false,
+					isNoData: false,
+				})
 			}else {
-				this.setState({dataSource: this.state.dataSource.concat(response.data)})
+				this.setState({dataSource: this.state.dataSource.concat(response.data),
+					isTotal: false,
+					isNoData: false,
+				})
 			}
 		}).catch(() => {
 
 		})
 	}
 
+	refresh() {
+		this.page = 1
+		this.searchDoctors(true)
+	}
+
+	loadMore() {
+		this.page = this.page + 1
+		this.searchDoctors(false)
+	}
+
 	renderHeader() {
 		let header = 'Search drs: '
 		if (this.state.searchContent.length) {
-			header = header + this.state.searchContent
+			header = header + '\'' + this.state.searchContent + '\''
 		}
 
 		if (this.state.searchContent.length && this.state.specialty.length) {
@@ -128,7 +155,7 @@ export default class DoctorSearchResultListViewController extends Component{
 			return(
 				<View style={{width: '100%', height: 25, justifyContent: 'center', backgroundColor: Colors.systemGray}}>
 					<Text numberOfLines={1} style={{width: ScreenDimensions.width - 32, marginLeft: 16,
-						fontSize: 12, color: Colors.lightGray,
+						fontSize: 12, color: Colors.red,
 					}}>{header}</Text>
 				</View>
 			)
@@ -196,7 +223,7 @@ export default class DoctorSearchResultListViewController extends Component{
 								this.setState({city: city})
 							}
 						},
-						options: BaseNavigatorOptions('Specialty')
+						options: BaseNavigatorOptions('State')
 					}
 				}]
 			}
@@ -219,6 +246,24 @@ export default class DoctorSearchResultListViewController extends Component{
 		)
 	}
 
+	renderListFooter() {
+		if (this.state.isTotal) {
+			return(
+				<View style={{width: ScreenDimensions.width, height: 44, alignItems: 'center'}}>
+					<Text style={{fontSize: 14, color: Colors.lightGray,}}>{'No more data...'}</Text>
+				</View>
+			)
+		}else {
+			return(
+				<View style={{width: ScreenDimensions.width,alignItems: 'center'}}>
+					<ActivityIndicator color={Colors.theme}/>
+					<Text style={{fontSize: 14, color: Colors.lightGray, marginTop: 8}}>{'Loading data...'}</Text>
+				</View>
+			)
+		}
+
+	}
+
 	render() {
 		return(
 			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
@@ -234,14 +279,18 @@ export default class DoctorSearchResultListViewController extends Component{
 							refreshing={this.state.isRefreshing}
 							enabled = {true}
 							onRefresh={() => {
-									this.searchDoctors(true)
+									this.refresh()
 								}
 							}
 						/>
 					}
 					onEndReachedThreshold = {1}
 					onEndReached = {() => {
+						this.loadMore()
+					}}
 
+					ListFooterComponent={() => {
+						return this.renderListFooter()
 					}}
 
 					renderSectionHeader={() => {
@@ -263,7 +312,7 @@ export default class DoctorSearchResultListViewController extends Component{
 							lastCity: this.state.city,
 							lastState: this.state.State,
 						}, () => {
-							this.searchDoctors(true)
+							this.refresh()
 						})
 					}}
 					searchContent = {this.state.searchContent}

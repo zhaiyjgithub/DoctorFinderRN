@@ -9,7 +9,9 @@ import SpecialtyViewController from '../tabbar/home/SpecialtyViewController'
 import StateListViewController from '../tabbar/home/StateListViewController'
 import CityListViewController from '../tabbar/home/CityListViewController'
 import SearchFilterOverlay from '../tabbar/home/view/SearchFilterOverlay'
-//SearchFilterOverlay
+import GuideViewController from '../tabbar/signInUp/GuideViewController'
+import LogInViewController from '../tabbar/signInUp/LogInViewController'
+//
 
 import {Navigation} from 'react-native-navigation'
 import {Colors} from '../utils/Styles';
@@ -37,6 +39,8 @@ Navigation.registerComponent('SpecialtyViewController', () => SpecialtyViewContr
 Navigation.registerComponent('StateListViewController', () => StateListViewController);
 Navigation.registerComponent('CityListViewController', () => CityListViewController);
 Navigation.registerComponent('SearchFilterOverlay', () => SearchFilterOverlay);
+Navigation.registerComponent('GuideViewController', () => GuideViewController);
+Navigation.registerComponent('LogInViewController', () => LogInViewController);
 //
 
 Navigation.events().registerAppLaunchedListener(async () => {
@@ -71,67 +75,84 @@ Navigation.events().registerAppLaunchedListener(async () => {
 
 	Navigation.setRoot({
 		root: {
-			bottomTabs: {
-				children: [
-					{
-					stack: {
-						children: [{
-							component: {
-								name: 'HomePageViewController',
-								passProps: {
-									text: 'This is tab 1'
-								}
-							}
-						}],
-						options: {
-							bottomTab: {
-								text: 'Finder',
-								icon: require('../../resource/image/doctor.png'),
-								testID: 'FIRST_TAB_BAR_BUTTON'
-							}
-						}
+			stack: {
+				children: [{
+					component: {
+						name: "GuideViewController"
 					}
-				},
-					{
-						stack: {
-							children: [{
-								component: {
-									name: 'PostViewController',
-									passProps: {
-										text: 'This is tab 1'
-									}
-								}
-							}],
-							options: {
-								bottomTab: {
-									text: 'Post',
-									icon: require('../../resource/image/doctor.png'),
-									testID: 'FIRST_TAB_BAR_BUTTON'
-								}
-							}
-						}
-					},
-					{
-						stack: {
-							children: [{
-								component: {
-									name: 'MineViewController',
-									passProps: {
-										text: 'This is tab 1'
-									}
-								}
-							}],
-							options: {
-								bottomTab: {
-									text: 'Mine',
-									icon: require('../../resource/image/doctor.png'),
-									testID: 'FIRST_TAB_BAR_BUTTON'
-								}
-							}
-						}
+				}],
+				options: {
+					topBar: {
+						visible: false
 					}
-					]
+				}
 			}
 		}
 	});
+
+	// Navigation.setRoot({
+	// 	root: {
+	// 		bottomTabs: {
+	// 			children: [
+	// 				{
+	// 				stack: {
+	// 					children: [{
+	// 						component: {
+	// 							name: 'HomePageViewController',
+	// 							passProps: {
+	// 								text: 'This is tab 1'
+	// 							}
+	// 						}
+	// 					}],
+	// 					options: {
+	// 						bottomTab: {
+	// 							text: 'Finder',
+	// 							icon: require('../../resource/image/doctor.png'),
+	// 							testID: 'FIRST_TAB_BAR_BUTTON'
+	// 						}
+	// 					}
+	// 				}
+	// 			},
+	// 				{
+	// 					stack: {
+	// 						children: [{
+	// 							component: {
+	// 								name: 'PostViewController',
+	// 								passProps: {
+	// 									text: 'This is tab 1'
+	// 								}
+	// 							}
+	// 						}],
+	// 						options: {
+	// 							bottomTab: {
+	// 								text: 'Post',
+	// 								icon: require('../../resource/image/doctor.png'),
+	// 								testID: 'FIRST_TAB_BAR_BUTTON'
+	// 							}
+	// 						}
+	// 					}
+	// 				},
+	// 				{
+	// 					stack: {
+	// 						children: [{
+	// 							component: {
+	// 								name: 'MineViewController',
+	// 								passProps: {
+	// 									text: 'This is tab 1'
+	// 								}
+	// 							}
+	// 						}],
+	// 						options: {
+	// 							bottomTab: {
+	// 								text: 'Mine',
+	// 								icon: require('../../resource/image/doctor.png'),
+	// 								testID: 'FIRST_TAB_BAR_BUTTON'
+	// 							}
+	// 						}
+	// 					}
+	// 				}
+	// 				]
+	// 		}
+	// 	}
+	// });
 });

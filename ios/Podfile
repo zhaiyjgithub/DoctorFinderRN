@@ -34,6 +34,9 @@ target 'DoctorFinderRN' do
 
   pod 'RNShare', :path => '../node_modules/react-native-share'
 
+
+  pod 'react-native-spinkit', :path => '../node_modules/react-native-spinkit'
+
   target 'DoctorFinderRNTests' do
     inherit! :search_paths
     # Pods for testing

@@ -59,6 +59,11 @@ PODS:
   - React-jsinspector (0.60.3)
   - react-native-maps (0.26.1):
     - React
+  - react-native-simple-toast (1.0.0):
+    - React
+    - Toast (~> 4.0.0)
+  - react-native-spinkit (1.4.1):
+    - React
   - React-RCTActionSheet (0.60.3):
     - React-Core (= 0.60.3)
   - React-RCTAnimation (0.60.3):
@@ -87,6 +92,7 @@ PODS:
     - React
   - RNShare (2.0.0):
     - React
+  - Toast (4.0.0)
   - yoga (0.60.3.React)
 
 DEPENDENCIES:
@@ -102,6 +108,8 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-maps (from `../node_modules/react-native-maps`)
+  - react-native-simple-toast (from `../node_modules/react-native-simple-toast`)
+  - react-native-spinkit (from `../node_modules/react-native-spinkit`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -119,6 +127,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - boost-for-react-native
+    - Toast
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -145,6 +154,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
+  react-native-simple-toast:
+    :path: "../node_modules/react-native-simple-toast"
+  react-native-spinkit:
+    :path: "../node_modules/react-native-spinkit"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -186,6 +199,8 @@ SPEC CHECKSUMS:
   React-jsiexecutor: d9023c5c199114d2b6f38ec861a4d923c73d0735
   React-jsinspector: 817b64f3c8a807f09d78620f4f505868d89b26f3
   react-native-maps: 6e499eee4eabf422ba8b6f94e993cc768bf35153
+  react-native-simple-toast: 9c2f5979dfe555d0aa7b084348a06fd6ef7a6f55
+  react-native-spinkit: da294fd828216ad211fe36a5c14c1e09f09e62db
   React-RCTActionSheet: 9c42321fd5652515d706dd722c5a10b1970d7ec8
   React-RCTAnimation: fabb087dde8964c9a835a7fabd0e7e5701787913
   React-RCTBlob: 93f34281d9c9c9e216b25824309eed9fe22a5d41
@@ -198,8 +213,9 @@ SPEC CHECKSUMS:
   React-RCTWebSocket: 69d8565d66043f244b4129f3d7154c5689fb7d3e
   ReactNativeNavigation: aad255980f20cc5d2001ed37972319f3789fea70
   RNShare: 8b171d4b43c1d886917fdd303bf7a4b87167b05c
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   yoga: 843fe25849b56131275bf3e5da2c468e96f68aff
 
-PODFILE CHECKSUM: 811f92cf5eac921e3b4d9dea4132cc398fc20adb
+PODFILE CHECKSUM: bb8010a2eb2f1f7033fccf94f5bc613ade34b1bc
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.8.0.beta.2

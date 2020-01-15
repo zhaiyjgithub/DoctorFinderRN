@@ -19,19 +19,7 @@ import {Navigation} from 'react-native-navigation';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 
 export default class GuideViewController extends Component{
-    pushToLogInPage() {
-        // Navigation.push(this.props.componentId, {
-        //     component: {
-        //         name: 'LogInViewController',
-        //         passProps: {
-        //
-        //         },
-        //         topBar: {
-        //             visible: false
-        //         }
-        //     }
-        // });
-
+    modalToLogInPage() {
         Navigation.showModal({
             stack: {
                 children: [{
@@ -50,6 +38,28 @@ export default class GuideViewController extends Component{
             }
         });
     }
+
+    modalSignUpPage() {
+        //
+        Navigation.showModal({
+            stack: {
+                children: [{
+                    component: {
+                        name: 'SignUpViewController',
+                        passProps: {
+
+                        },
+                        options: {
+                            topBar: {
+                                visible: false
+                            }
+                        }
+                    }
+                }]
+            }
+        });
+    }
+
     render() {
         let buttonWidth = (ScreenDimensions.width - 40 - 16)/2.0
         let buttonHeight = ScreenDimensions.width*(50.0/375)
@@ -66,7 +76,9 @@ export default class GuideViewController extends Component{
                     marginBottom: PLATFORM.isIPhoneX ? 34 : 20,
                     paddingHorizontal: 20,
                 }}>
-                    <TouchableOpacity style={{width: buttonWidth,
+                    <TouchableOpacity onPress={() => {
+                        this.modalSignUpPage()
+                    }} style={{width: buttonWidth,
                         height: buttonHeight, justifyContent: 'center', alignItems: 'center',
                         backgroundColor: Colors.theme, borderRadius: 4,
                     }}>
@@ -74,7 +86,7 @@ export default class GuideViewController extends Component{
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={() => {
-                        this.pushToLogInPage()
+                        this.modalToLogInPage()
                     }} style={{width: buttonWidth,
                         height: buttonHeight, justifyContent: 'center', alignItems: 'center',
                         backgroundColor: Colors.theme, borderRadius: 4,

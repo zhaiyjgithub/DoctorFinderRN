@@ -11,6 +11,9 @@ import CityListViewController from '../tabbar/home/CityListViewController'
 import SearchFilterOverlay from '../tabbar/home/view/SearchFilterOverlay'
 import GuideViewController from '../tabbar/signInUp/GuideViewController'
 import LogInViewController from '../tabbar/signInUp/LogInViewController'
+import SignUpViewController from '../tabbar/signInUp/SignUpViewController'
+import VerifyAccountViewController from '../tabbar/signInUp/VerifyAccountViewController'
+import ResetPasswordViewController from '../tabbar/signInUp/ResetPasswordViewController'
 //
 
 import {Navigation} from 'react-native-navigation'
@@ -41,6 +44,9 @@ Navigation.registerComponent('CityListViewController', () => CityListViewControl
 Navigation.registerComponent('SearchFilterOverlay', () => SearchFilterOverlay);
 Navigation.registerComponent('GuideViewController', () => GuideViewController);
 Navigation.registerComponent('LogInViewController', () => LogInViewController);
+Navigation.registerComponent('SignUpViewController', () => SignUpViewController);
+Navigation.registerComponent('VerifyAccountViewController', () => VerifyAccountViewController);
+Navigation.registerComponent('ResetPasswordViewController', () => ResetPasswordViewController);
 //
 
 Navigation.events().registerAppLaunchedListener(async () => {

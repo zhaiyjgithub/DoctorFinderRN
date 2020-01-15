@@ -17,6 +17,7 @@ import {Colors} from '../../utils/Styles';
 import {NaviBarHeight, ScreenDimensions} from '../../utils/Dimensions';
 import {PLATFORM} from '../../utils/CustomEnums';
 import {Navigation} from 'react-native-navigation';
+import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 
 export default class LogInViewController extends Component{
     constructor(props) {
@@ -26,6 +27,19 @@ export default class LogInViewController extends Component{
             password: ''
         }
     }
+
+    pushToVerifyAccountPage() {
+        Navigation.push(this.props.componentId, {
+            component: {
+                name: 'VerifyAccountViewController',
+                passProps: {
+                    info: item,
+                },
+                options: BaseNavigatorOptions('Verify')
+            }
+        })
+    }
+
     render() {
         let buttonWidth = (ScreenDimensions.width - 40 - 16)/2.0
         let buttonHeight = ScreenDimensions.width*(50.0/375)
@@ -45,6 +59,7 @@ export default class LogInViewController extends Component{
                     }}>Sign in to your account</Text>
 
                     <TextInput
+                        keyboardType = {'email-address'}
                         clearButtonMode={'while-editing'}
                         onChangeText={(text) => {
                             this.setState({account: text + ''})
@@ -56,7 +71,7 @@ export default class LogInViewController extends Component{
                         placeholder = {'Account'}
                         placeholderTextColor={Colors.lightGray}
                         style={{width: ScreenDimensions.width - 40, marginTop: 40,
-                            height: 40, textAlign: 'left', paddingLeft: 8, fontSize: 16,
+                            height: buttonHeight, textAlign: 'left', paddingLeft: 8, fontSize: 16,
                             color: Colors.lightBlack, borderRadius: 4, backgroundColor: Colors.systemGray,
                             borderWidth: 1.0, borderColor: Colors.theme
                         }}/>
@@ -74,12 +89,14 @@ export default class LogInViewController extends Component{
                         placeholder = {'Password'}
                         placeholderTextColor={Colors.lightGray}
                         style={{width: ScreenDimensions.width - 40, marginTop: 20,
-                            height: 40, textAlign: 'left', paddingLeft: 8, fontSize: 16,
+                            height: buttonHeight, textAlign: 'left', paddingLeft: 8, fontSize: 16,
                             color: Colors.lightBlack, borderRadius: 4, backgroundColor: Colors.systemGray,
                             borderWidth: 1.0, borderColor: Colors.theme
                         }}/>
 
-                    <TouchableOpacity style={{
+                    <TouchableOpacity onPress={() => {
+                        this.pushToVerifyAccountPage()
+                    }}  style={{
                         height: 30, justifyContent: 'center', alignItems: 'center',
                         marginTop: 8
                     }}>
@@ -91,7 +108,7 @@ export default class LogInViewController extends Component{
                         backgroundColor: Colors.theme, borderRadius: 4,
                         marginTop: 20
                     }}>
-                        <Text style={{fontSize: 18, color: Colors.white, fontWeight: 'bold'}}>{'Create account'}</Text>
+                        <Text style={{fontSize: 18, color: Colors.white, fontWeight: 'bold'}}>{'Sign in'}</Text>
                     </TouchableOpacity>
 
                     <Text style={{fontSize: 16, color: Colors.lightBlack, marginTop: 16}}>{'Are you new with Doc Finder?'}</Text>

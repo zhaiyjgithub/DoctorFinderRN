@@ -79,86 +79,86 @@ Navigation.events().registerAppLaunchedListener(async () => {
 		}
 	});
 
-	Navigation.setRoot({
-		root: {
-			stack: {
-				children: [{
-					component: {
-						name: "GuideViewController"
-					}
-				}],
-				options: {
-					topBar: {
-						visible: false
-					}
-				}
-			}
-		}
-	});
-
 	// Navigation.setRoot({
 	// 	root: {
-	// 		bottomTabs: {
-	// 			children: [
-	// 				{
-	// 				stack: {
-	// 					children: [{
-	// 						component: {
-	// 							name: 'HomePageViewController',
-	// 							passProps: {
-	// 								text: 'This is tab 1'
-	// 							}
-	// 						}
-	// 					}],
-	// 					options: {
-	// 						bottomTab: {
-	// 							text: 'Finder',
-	// 							icon: require('../../resource/image/doctor.png'),
-	// 							testID: 'FIRST_TAB_BAR_BUTTON'
-	// 						}
-	// 					}
+	// 		stack: {
+	// 			children: [{
+	// 				component: {
+	// 					name: "GuideViewController"
 	// 				}
-	// 			},
-	// 				{
-	// 					stack: {
-	// 						children: [{
-	// 							component: {
-	// 								name: 'PostViewController',
-	// 								passProps: {
-	// 									text: 'This is tab 1'
-	// 								}
-	// 							}
-	// 						}],
-	// 						options: {
-	// 							bottomTab: {
-	// 								text: 'Post',
-	// 								icon: require('../../resource/image/doctor.png'),
-	// 								testID: 'FIRST_TAB_BAR_BUTTON'
-	// 							}
-	// 						}
-	// 					}
-	// 				},
-	// 				{
-	// 					stack: {
-	// 						children: [{
-	// 							component: {
-	// 								name: 'MineViewController',
-	// 								passProps: {
-	// 									text: 'This is tab 1'
-	// 								}
-	// 							}
-	// 						}],
-	// 						options: {
-	// 							bottomTab: {
-	// 								text: 'Mine',
-	// 								icon: require('../../resource/image/doctor.png'),
-	// 								testID: 'FIRST_TAB_BAR_BUTTON'
-	// 							}
-	// 						}
-	// 					}
+	// 			}],
+	// 			options: {
+	// 				topBar: {
+	// 					visible: false
 	// 				}
-	// 				]
+	// 			}
 	// 		}
 	// 	}
 	// });
+
+	Navigation.setRoot({
+		root: {
+			bottomTabs: {
+				children: [
+				// 	{
+				// 	stack: {
+				// 		children: [{
+				// 			component: {
+				// 				name: 'HomePageViewController',
+				// 				passProps: {
+				// 					text: 'This is tab 1'
+				// 				}
+				// 			}
+				// 		}],
+				// 		options: {
+				// 			bottomTab: {
+				// 				text: 'Finder',
+				// 				icon: require('../../resource/image/doctor.png'),
+				// 				testID: 'FIRST_TAB_BAR_BUTTON'
+				// 			}
+				// 		}
+				// 	}
+				// },
+				// 	{
+				// 		stack: {
+				// 			children: [{
+				// 				component: {
+				// 					name: 'PostViewController',
+				// 					passProps: {
+				// 						text: 'This is tab 1'
+				// 					}
+				// 				}
+				// 			}],
+				// 			options: {
+				// 				bottomTab: {
+				// 					text: 'Post',
+				// 					icon: require('../../resource/image/doctor.png'),
+				// 					testID: 'FIRST_TAB_BAR_BUTTON'
+				// 				}
+				// 			}
+				// 		}
+				// 	},
+					{
+						stack: {
+							children: [{
+								component: {
+									name: 'MineViewController',
+									passProps: {
+										text: 'This is tab 1'
+									}
+								}
+							}],
+							options: {
+								bottomTab: {
+									text: 'Mine',
+									icon: require('../../resource/image/doctor.png'),
+									testID: 'FIRST_TAB_BAR_BUTTON'
+								}
+							}
+						}
+					}
+				]
+			}
+		}
+	});
 });

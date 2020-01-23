@@ -57,6 +57,8 @@ PODS:
     - React-cxxreact (= 0.60.3)
     - React-jsi (= 0.60.3)
   - React-jsinspector (0.60.3)
+  - react-native-camera-kit (8.0.4):
+    - React
   - react-native-maps (0.26.1):
     - React
   - react-native-simple-toast (1.0.0):
@@ -107,6 +109,7 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-camera-kit (from `../node_modules/react-native-camera-kit`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-simple-toast (from `../node_modules/react-native-simple-toast`)
   - react-native-spinkit (from `../node_modules/react-native-spinkit`)
@@ -152,6 +155,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-camera-kit:
+    :path: "../node_modules/react-native-camera-kit"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
   react-native-simple-toast:
@@ -198,6 +203,7 @@ SPEC CHECKSUMS:
   React-jsi: c2b6e57836bcae2677a036384111dc2c58e94369
   React-jsiexecutor: d9023c5c199114d2b6f38ec861a4d923c73d0735
   React-jsinspector: 817b64f3c8a807f09d78620f4f505868d89b26f3
+  react-native-camera-kit: ded127598a48890a360fbf5e26cf7c44fcc5b873
   react-native-maps: 6e499eee4eabf422ba8b6f94e993cc768bf35153
   react-native-simple-toast: 9c2f5979dfe555d0aa7b084348a06fd6ef7a6f55
   react-native-spinkit: da294fd828216ad211fe36a5c14c1e09f09e62db
@@ -216,6 +222,6 @@ SPEC CHECKSUMS:
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   yoga: 843fe25849b56131275bf3e5da2c468e96f68aff
 
-PODFILE CHECKSUM: bb8010a2eb2f1f7033fccf94f5bc613ade34b1bc
+PODFILE CHECKSUM: d5ca8d4eed2cd46fd46d4808c607646e7ffe0aed
 
 COCOAPODS: 1.8.0.beta.2

@@ -47,9 +47,9 @@ export default class MineViewController extends Component{
 
 				<TouchableOpacity style={{position: 'absolute', left: 16, top: 16, width: 60, height: 60,
 					borderRadius: 6, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: Colors.white,
-					backgroundColor: Colors.white
+					backgroundColor: Colors.white, overflow: 'hidden'
 				}}>
-					<Image style={{width: 60, height: 60,}}/>
+					<Image source={require('../../../resource/image/base/avatar.jpg')} style={{width: 60, height: 60,}}/>
 				</TouchableOpacity>
 
 				<Text numberOfLines={1} style={{position: 'absolute', left: 16 + 60 + 8, bottom: 16 + 30, width: (ScreenDimensions.width - (16 + 60 + 8 + 8)),

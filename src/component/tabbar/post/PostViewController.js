@@ -13,8 +13,11 @@ import {
 	AppState, TouchableOpacity, Image, Text, RefreshControl, SectionList,
 } from 'react-native';
 import {Colors} from '../../utils/Styles';
-import {NaviBarHeight, ScreenDimensions} from '../../utils/Dimensions';
+import {NaviBarHeight, ScreenDimensions, TabBar} from '../../utils/Dimensions';
 import {Gender, PLATFORM} from '../../utils/CustomEnums';
+import PostItem from './view/PostItem';
+import {Navigation} from 'react-native-navigation';
+import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 
 export default class PostViewController extends Component{
 	constructor(props) {
@@ -26,50 +29,43 @@ export default class PostViewController extends Component{
 
 	renderItem() {
 		return(
-			<View style={{
-				width: ScreenDimensions.width,
-				paddingBottom: 16,
-			}}>
-				<TouchableOpacity onPress={() => {
-					this.props.didSelectedItem && this.props.didSelectedItem()
-				}} style={{
-					width: ScreenDimensions.width - 32,
-					marginLeft: 16,
-					borderRadius: 6,
-					backgroundColor: Colors.white,
-				}}>
-					<View style={{flexDirection: 'row', alignItems: 'center', width: ScreenDimensions.width - 32, marginTop: 8, justifyContent: 'space-between'}}>
-						<View style={{flexDirection: 'row', alignItems: 'center', marginLeft: 8}}>
-							<Image style={{width: 16, height: 16, borderRadius: 8, backgroundColor: Colors.blue}}/>
-							<Text numberOfLines={1} style={{fontSize: 14, color: Colors.black, marginLeft: 5, maxWidth: 150,}}>{'Simth09sdfsfsfsdfsdfsdf0234'}</Text>
-							<Text style={{marginLeft: 8, backgroundColor: Colors.systemGray, borderRadius: 10,
-								paddingHorizontal: 5, paddingVertical: 3,
-								color: Colors.green, fontWeight: 'bold',
-							}}>{'tag'}</Text>
-						</View>
-
-						<TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', marginRight: 8}}>
-							<Image style={{width: 16, height: 16, borderRadius: 8, backgroundColor: Colors.red}}/>
-							<Text style={{fontSize: 14, color: Colors.lightGray, marginLeft: 5,}}>{'19'}</Text>
-						</TouchableOpacity>
-					</View>
-
-					<Text numberOfLines={1} style={{marginVertical: 16, fontSize: 20, fontWeight: 'bold', color: Colors.black,
-						width: '100%', paddingHorizontal: 8,
-					}}>{'Title'}</Text>
-
-					<View style={{flexDirection: 'row', alignItems: 'center', marginLeft: 8, width: '100%', marginTop: 8, marginBottom: 8}}>
-						<Image style={{width: 16, height: 16, borderRadius: 8, backgroundColor: Colors.red}}/>
-						<Text style={{fontSize: 14, color: Colors.lightGray, marginLeft: 5,}}>{'19'}</Text>
-
-						<Text numberOfLines={1} style={{fontSize: 14, color: Colors.lightGray, marginLeft: 8, width: ScreenDimensions.width - 32 - 16 - 50,
-							textAlign: 'left',
-						}}>{'6 minutes * reply by Zack'}</Text>
-					</View>
-
-				</TouchableOpacity>
-			</View>
+			<PostItem />
 		)
+	}
+
+	renderHeader() {
+		return(
+			<View style={{width: '100%', height: 16, backgroundColor: Colors.clear}}/>
+		)
+	}
+
+	renderFabButton() {
+		return(
+			<TouchableOpacity onPress={() => {
+				this.pushToNewPostPage()
+			}} style={{position: 'absolute', right: 16, bottom: TabBar.height + 32, backgroundColor: Colors.theme,
+				borderRadius: 25, width: 50, height: 50, justifyContent: 'center', alignItems: 'center',
+				shadowRadius: 8,
+				shadowColor: Colors.theme,
+				shadowOpacity: 0.5,
+				shadowOffset: {width: 0, height: 0},
+				elevation: 2,
+			}}>
+				<Image source={require('../../../resource/image/post/add.png')} style={{width: 25, height: 25, }}/>
+			</TouchableOpacity>
+		)
+	}
+
+	pushToNewPostPage() {
+		Navigation.push(this.props.componentId, {
+			component: {
+				name: 'NewPostViewController',
+				passProps: {
+
+				},
+				options: BaseNavigatorOptions('New Post')
+			}
+		})
 	}
 
 	render() {
@@ -83,10 +79,12 @@ export default class PostViewController extends Component{
 						return 'key' + item.key + index
 					}}
 
-					// ListFooterComponent={() => {
-					// 	return this.renderListFooter()
-					// }}
+					ListHeaderComponent={() => {
+						return this.renderHeader()
+					}}
 				/>
+
+				{this.renderFabButton()}
 			</View>
 		)
 	}

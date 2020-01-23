@@ -14,6 +14,7 @@ import LogInViewController from '../tabbar/signInUp/LogInViewController'
 import SignUpViewController from '../tabbar/signInUp/SignUpViewController'
 import VerifyAccountViewController from '../tabbar/signInUp/VerifyAccountViewController'
 import ResetPasswordViewController from '../tabbar/signInUp/ResetPasswordViewController'
+import NewPostViewController from '../tabbar/post/NewPostViewController'
 //
 
 import {Navigation} from 'react-native-navigation'
@@ -47,6 +48,7 @@ Navigation.registerComponent('LogInViewController', () => LogInViewController);
 Navigation.registerComponent('SignUpViewController', () => SignUpViewController);
 Navigation.registerComponent('VerifyAccountViewController', () => VerifyAccountViewController);
 Navigation.registerComponent('ResetPasswordViewController', () => ResetPasswordViewController);
+Navigation.registerComponent('NewPostViewController', () => NewPostViewController);
 //
 
 Navigation.events().registerAppLaunchedListener(async () => {

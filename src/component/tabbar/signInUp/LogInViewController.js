@@ -62,7 +62,7 @@ export default class LogInViewController extends Component{
                         keyboardType = {'email-address'}
                         clearButtonMode={'while-editing'}
                         onChangeText={(text) => {
-                            this.setState({account: text + ''})
+                            this.setState({account: text.trim() + ''})
                         }}
                         selectionColor = {Colors.theme}
                         // value = {this.state.searchContent}
@@ -80,7 +80,7 @@ export default class LogInViewController extends Component{
                         secureTextEntry={true}
                         clearButtonMode={'while-editing'}
                         onChangeText={(text) => {
-                            this.setState({password: text + ''})
+                            this.setState({password: text.trim() + ''})
                         }}
                         selectionColor = {Colors.theme}
                         // value = {this.state.searchContent}

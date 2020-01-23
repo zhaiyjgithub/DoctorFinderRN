@@ -100,44 +100,44 @@ Navigation.events().registerAppLaunchedListener(async () => {
 		root: {
 			bottomTabs: {
 				children: [
-				// 	{
-				// 	stack: {
-				// 		children: [{
-				// 			component: {
-				// 				name: 'HomePageViewController',
-				// 				passProps: {
-				// 					text: 'This is tab 1'
-				// 				}
-				// 			}
-				// 		}],
-				// 		options: {
-				// 			bottomTab: {
-				// 				text: 'Finder',
-				// 				icon: require('../../resource/image/doctor.png'),
-				// 				testID: 'FIRST_TAB_BAR_BUTTON'
-				// 			}
-				// 		}
-				// 	}
-				// },
-				// 	{
-				// 		stack: {
-				// 			children: [{
-				// 				component: {
-				// 					name: 'PostViewController',
-				// 					passProps: {
-				// 						text: 'This is tab 1'
-				// 					}
-				// 				}
-				// 			}],
-				// 			options: {
-				// 				bottomTab: {
-				// 					text: 'Post',
-				// 					icon: require('../../resource/image/doctor.png'),
-				// 					testID: 'FIRST_TAB_BAR_BUTTON'
-				// 				}
-				// 			}
-				// 		}
-				// 	},
+					{
+					stack: {
+						children: [{
+							component: {
+								name: 'HomePageViewController',
+								passProps: {
+									text: 'This is tab 1'
+								}
+							}
+						}],
+						options: {
+							bottomTab: {
+								text: 'Finder',
+								icon: require('../../resource/image/doctor.png'),
+								testID: 'FIRST_TAB_BAR_BUTTON'
+							}
+						}
+					}
+				},
+					{
+						stack: {
+							children: [{
+								component: {
+									name: 'PostViewController',
+									passProps: {
+										text: 'This is tab 1'
+									}
+								}
+							}],
+							options: {
+								bottomTab: {
+									text: 'Post',
+									icon: require('../../resource/image/doctor.png'),
+									testID: 'FIRST_TAB_BAR_BUTTON'
+								}
+							}
+						}
+					},
 					{
 						stack: {
 							children: [{

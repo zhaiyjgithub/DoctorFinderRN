@@ -48,7 +48,7 @@ export default class SignUpViewController extends Component{
 						keyboardType = {'email-address'}
 						clearButtonMode={'while-editing'}
 						onChangeText={(text) => {
-							this.setState({account: text + ''})
+							this.setState({account: text.trim() + ''})
 						}}
 						selectionColor = {Colors.theme}
 						// value = {this.state.searchContent}
@@ -66,7 +66,7 @@ export default class SignUpViewController extends Component{
 						secureTextEntry={true}
 						clearButtonMode={'while-editing'}
 						onChangeText={(text) => {
-							this.setState({password: text + ''})
+							this.setState({password: text.trim() + ''})
 						}}
 						selectionColor = {Colors.theme}
 						// value = {this.state.searchContent}
@@ -91,7 +91,7 @@ export default class SignUpViewController extends Component{
 							keyboardType = {'number-pad'}
 							clearButtonMode={'while-editing'}
 							onChangeText={(text) => {
-								this.setState({code: text + ''})
+								this.setState({code: text.trim() + ''})
 							}}
 							selectionColor = {Colors.theme}
 							underlineColorAndroid = {'transparent'}
@@ -106,7 +106,7 @@ export default class SignUpViewController extends Component{
 
 						<TouchableOpacity style={{
 							height: buttonHeight, justifyContent: 'center', alignItems: 'center',
-							marginTop: 8, color: Colors.theme, width: 80,
+							marginTop: 8, color: Colors.theme, width: 80, backgroundColor: Colors.white
 						}}>
 							<Text style={{fontSize: 16, color: Colors.white, fontWeight: 'bold'}}>{'Get'}</Text>
 						</TouchableOpacity>

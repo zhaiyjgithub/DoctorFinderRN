@@ -26,7 +26,7 @@ export default class SearchBar extends Component {
 					returnKeyType={'search'}
 					clearButtonMode={'while-editing'}
 					onChangeText={(text) => {
-						this.setState({searchContent: text + ''})
+						this.setState({searchContent: text.trim() + ''})
 					}}
 					selectionColor = {Colors.theme}
 					onSubmitEditing={() => {
@@ -70,7 +70,7 @@ export default class SearchBar extends Component {
 							this.props.onSubmitEditing && this.props.onSubmitEditing(this.state.searchContent)
 						}}
 						onChangeText={(text) => {
-							this.setState({searchContent: text + ''})
+							this.setState({searchContent: text.trim() + ''})
 						}}
 						value = {this.state.searchContent}
 						style={{
@@ -109,7 +109,7 @@ export default class SearchBar extends Component {
 							this.props.onSubmitEditing && this.props.onSubmitEditing(this.state.searchContent)
 						}}
 						onChangeText={(text) => {
-							this.setState({searchContent: text + ''})
+							this.setState({searchContent: text.trim() + ''})
 						}}
 						value = {this.state.searchContent}
 						style={{

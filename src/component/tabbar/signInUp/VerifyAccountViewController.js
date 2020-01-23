@@ -55,7 +55,7 @@ export default class VerifyAccountViewController extends Component{
 						keyboardType = {'email-address'}
 						clearButtonMode={'while-editing'}
 						onChangeText={(text) => {
-							this.setState({account: text + ''})
+							this.setState({account: text.trim() + ''})
 						}}
 						selectionColor = {Colors.theme}
 						// value = {this.state.searchContent}

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Alert, Linking, SectionList, Text, View, RefreshControl, ActivityIndicator,
-	Keyboard
+	Keyboard, TouchableOpacity
 } from 'react-native';
 import {Colors} from '../../utils/Styles';
 import {ScreenDimensions, TabBar} from '../../utils/Dimensions';
@@ -15,6 +15,8 @@ import SearchFilterOverlay from './view/SearchFilterOverlay';
 export default class DoctorSearchResultListViewController extends Component{
 	constructor(props) {
 		super(props)
+		this.setTopBar(props.searchContent)
+
 		this.state = {
 			dataSource: [],
 			gender: 0,
@@ -22,24 +24,24 @@ export default class DoctorSearchResultListViewController extends Component{
 			city: 'BIRMINGHAM',
 			State: 'AL',
 			searchContent: props.searchContent,
-			isRefreshing: false,
+			isRefreshing: true,
 			filterOverlayVisible: false,
-			lastGender: 0,
 			lastSpecialty: '',
-			lastCity: '',
-			lastState: '',
+			lastCity: 'BIRMINGHAM',
+			lastState: 'AL',
 			isTotal: false,
 			isNoData: false,
 		}
 
 		this.page = 1
 		this.pageSize = 30
-
-		this.setTopBar(props.searchContent)
+		this.isScrollToTop = false
 	}
 
 	componentDidMount() {
-		this.refresh()
+		setTimeout(() => {
+			this.refresh()
+		}, 800)
 	}
 
 	setTopBar(searchContent) {
@@ -72,42 +74,48 @@ export default class DoctorSearchResultListViewController extends Component{
 		let param = {
 			LastName: this.state.searchContent,
 			FirstName: this.state.searchContent,
-			Gender: genderType[this.state.lastGender],
-			Specialty: (this.state.lastSpecialty && this.state.lastSpecialty.length ? this.state.lastSpecialty : this.state.searchContent),
+			Gender: genderType[this.state.gender],
+			Specialty: this.state.lastSpecialty,// (this.state.lastSpecialty && this.state.lastSpecialty.length ? this.state.lastSpecialty : this.state.searchContent),
 			City: this.state.lastCity,
 			State: this.state.lastState,
 			Page: this.page,
 			PageSize: this.pageSize
 		}
 
+		if (isRefresh) {
+			this.setState({isRefreshing: true})
+		}
+
 		HTTP.post(API_Doctor.searchDoctorByPage, param).then((response) => {
-			if (!response) {
-				return;
+			if (isRefresh) {
+				this.setState({isRefreshing: false})
 			}
 
-			if (response.data && !response.data.length) {
-				if (this.state.dataSource.length) {
-					this.setState({isTotal: true, isRefreshing: false})
-				}else {
-					this.setState({isNoData: true, dataSource: [], isRefreshing: false})
-				}
-
+			if (!response) {
 				return;
 			}
 
 			if (isRefresh) {
 				this.setState({dataSource: response.data, isRefreshing: false ,
-					isTotal: false,
+					isTotal: response.data < this.pageSize,
 					isNoData: false,
+				}, () => {
+					if (this.isScrollToTop) {
+						this.isScrollToTop = false
+						this.scrollsToTop()
+					}
 				})
 			}else {
 				this.setState({dataSource: this.state.dataSource.concat(response.data),
-					isTotal: false,
+					isTotal: response.data < this.pageSize,
 					isNoData: false,
 				})
 			}
 		}).catch(() => {
-
+			this.isScrollToTop = true
+			if (isRefresh) {
+				this.setState({isRefreshing: false})
+			}
 		})
 	}
 
@@ -119,6 +127,16 @@ export default class DoctorSearchResultListViewController extends Component{
 	loadMore() {
 		this.page = this.page + 1
 		this.searchDoctors(false)
+	}
+
+	scrollsToTop() {
+		this._sectionList && this._sectionList.scrollToLocation({
+			animated: true,
+			itemIndex: 0,
+			sectionIndex: 0,
+			viewOffset: 0,
+			viewPosition: 0,
+		})
 	}
 
 	renderHeader() {
@@ -155,7 +173,7 @@ export default class DoctorSearchResultListViewController extends Component{
 			return(
 				<View style={{width: '100%', height: 25, justifyContent: 'center', backgroundColor: Colors.systemGray}}>
 					<Text numberOfLines={1} style={{width: ScreenDimensions.width - 32, marginLeft: 16,
-						fontSize: 12, color: Colors.red,
+						fontSize: 12, color: Colors.red, fontWeight: 'bold'
 					}}>{header}</Text>
 				</View>
 			)
@@ -253,21 +271,25 @@ export default class DoctorSearchResultListViewController extends Component{
 					<Text style={{fontSize: 14, color: Colors.lightGray,}}>{'No more data...'}</Text>
 				</View>
 			)
-		}else {
+		}else if (this.state.dataSource.length) {
 			return(
 				<View style={{width: ScreenDimensions.width,alignItems: 'center'}}>
 					<ActivityIndicator color={Colors.theme}/>
 					<Text style={{fontSize: 14, color: Colors.lightGray, marginTop: 8}}>{'Loading data...'}</Text>
 				</View>
 			)
+		}else {
+			return (<View />)
 		}
-
 	}
 
 	render() {
 		return(
 			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
 				<SectionList
+					ref={(o) => {
+						this._sectionList = o
+					}}
 					style={{flex: 1, backgroundColor: Colors.systemGray}}
 					renderItem={({item}) => this.renderItem(item)}
 					sections={[{data: this.state.dataSource}]}
@@ -303,15 +325,24 @@ export default class DoctorSearchResultListViewController extends Component{
 					dismiss={() => {
 						this.setState({filterOverlayVisible: false})
 					}}
+					cancel = {() => {
+						this.setState({
+							filterOverlayVisible: false,
+							specialty: this.state.lastSpecialty,
+							city: this.state.lastCity,
+							State: this.state.lastState,
+						})
+					}}
 					confirm = {(newSearchContent, gender) => {
 						this.setState({
 							filterOverlayVisible: false,
 							searchContent: newSearchContent,
-							lastGender: gender,
+							gender: gender,
 							lastSpecialty: this.state.specialty,
 							lastCity: this.state.city,
 							lastState: this.state.State,
 						}, () => {
+							this.isScrollToTop = true
 							this.refresh()
 						})
 					}}

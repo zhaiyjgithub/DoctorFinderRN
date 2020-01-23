@@ -10,40 +10,83 @@ import {
 	Animated,
 	Linking,
 	ScrollView,
-	AppState, TouchableOpacity, Image, Text, RefreshControl
-} from 'react-native'
+	AppState, TouchableOpacity, Image, Text, RefreshControl, SectionList,
+} from 'react-native';
 import {Colors} from '../../utils/Styles';
 import {NaviBarHeight, ScreenDimensions} from '../../utils/Dimensions';
-import {PLATFORM} from '../../utils/CustomEnums';
+import {Gender, PLATFORM} from '../../utils/CustomEnums';
 
 export default class PostViewController extends Component{
-	render() {
-		let buttonWidth = (ScreenDimensions.width - 40 - 16)/2.0
-		let buttonHeight = ScreenDimensions.width*(50.0/375)
+	constructor(props) {
+		super(props)
+		this.state = {
+			dataSource: ['a', 'c']
+		}
+	}
+
+	renderItem() {
 		return(
-			<View style={{flex: 1, backgroundColor: Colors.white,
-				alignItems: 'center', justifyContent: 'space-between'
+			<View style={{
+				width: ScreenDimensions.width,
+				paddingBottom: 16,
 			}}>
-				<Text style={{fontSize: 22, fontWeight: 'bold',
-					color: Colors.lightBlack, marginTop: ScreenDimensions.height*0.312
-				}}>Doctor Finder</Text>
-
-				<View style={{width: '100%', flexDirection: 'row', alignItems: 'center',
-					justifyContent: 'space-between', paddingLeft: 25,
-					marginBottom: PLATFORM.isIPhoneX ? 34 : 20,
+				<TouchableOpacity onPress={() => {
+					this.props.didSelectedItem && this.props.didSelectedItem()
+				}} style={{
+					width: ScreenDimensions.width - 32,
+					marginLeft: 16,
+					borderRadius: 6,
+					backgroundColor: Colors.white,
 				}}>
-					<TouchableOpacity style={{width: buttonWidth,
-						height: buttonHeight, justifyContent: 'center', alignItems: 'center'
-					}}>
-						<Text>{'Create account'}</Text>
-					</TouchableOpacity>
+					<View style={{flexDirection: 'row', alignItems: 'center', width: ScreenDimensions.width - 32, marginTop: 8, justifyContent: 'space-between'}}>
+						<View style={{flexDirection: 'row', alignItems: 'center', marginLeft: 8}}>
+							<Image style={{width: 16, height: 16, borderRadius: 8, backgroundColor: Colors.blue}}/>
+							<Text numberOfLines={1} style={{fontSize: 14, color: Colors.black, marginLeft: 5, maxWidth: 150,}}>{'Simth09sdfsfsfsdfsdfsdf0234'}</Text>
+							<Text style={{marginLeft: 8, backgroundColor: Colors.systemGray, borderRadius: 10,
+								paddingHorizontal: 5, paddingVertical: 3,
+								color: Colors.green, fontWeight: 'bold',
+							}}>{'tag'}</Text>
+						</View>
 
-					<TouchableOpacity style={{width: buttonWidth,
-						height: buttonHeight, justifyContent: 'center', alignItems: 'center'
-					}}>
-						<Text>{'Log in'}</Text>
-					</TouchableOpacity>
-				</View>
+						<TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', marginRight: 8}}>
+							<Image style={{width: 16, height: 16, borderRadius: 8, backgroundColor: Colors.red}}/>
+							<Text style={{fontSize: 14, color: Colors.lightGray, marginLeft: 5,}}>{'19'}</Text>
+						</TouchableOpacity>
+					</View>
+
+					<Text numberOfLines={1} style={{marginVertical: 16, fontSize: 20, fontWeight: 'bold', color: Colors.black,
+						width: '100%', paddingHorizontal: 8,
+					}}>{'Title'}</Text>
+
+					<View style={{flexDirection: 'row', alignItems: 'center', marginLeft: 8, width: '100%', marginTop: 8, marginBottom: 8}}>
+						<Image style={{width: 16, height: 16, borderRadius: 8, backgroundColor: Colors.red}}/>
+						<Text style={{fontSize: 14, color: Colors.lightGray, marginLeft: 5,}}>{'19'}</Text>
+
+						<Text numberOfLines={1} style={{fontSize: 14, color: Colors.lightGray, marginLeft: 8, width: ScreenDimensions.width - 32 - 16 - 50,
+							textAlign: 'left',
+						}}>{'6 minutes * reply by Zack'}</Text>
+					</View>
+
+				</TouchableOpacity>
+			</View>
+		)
+	}
+
+	render() {
+		return(
+			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
+				<FlatList
+					style={{flex: 1}}
+					renderItem={({item}) => this.renderItem(item)}
+					data={this.state.dataSource}
+					keyExtractor={(item, index) => {
+						return 'key' + item.key + index
+					}}
+
+					// ListFooterComponent={() => {
+					// 	return this.renderListFooter()
+					// }}
+				/>
 			</View>
 		)
 	}

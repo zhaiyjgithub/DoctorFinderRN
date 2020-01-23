@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Alert, Linking, SectionList, Text, View} from 'react-native';
+import {Alert, Linking, SectionList, Text, TouchableOpacity, View} from 'react-native';
 import {Colors} from '../../utils/Styles';
 import {ScreenDimensions} from '../../utils/Dimensions';
 import {Navigation} from 'react-native-navigation';
@@ -411,6 +411,23 @@ export default class DoctorInfoViewController extends Component{
 		}
 	}
 
+	renderCallButton() {
+		return(
+			<TouchableOpacity style={{position: 'absolute', left: 30, width: ScreenDimensions.width - 60,
+				height: 50, borderRadius: 25, justifyContent: 'center', alignItems: 'center',
+				bottom: PLATFORM.isIPhoneX ? 34 : 20, backgroundColor: Colors.theme
+			}}>
+				<Text style={{fontSize: 18, color: Colors.white, fontWeight: 'bold'}}>{'Book'}</Text>
+			</TouchableOpacity>
+		)
+	}
+
+	renderListFooter() {
+		return(
+			<View style={{width: ScreenDimensions.width, height: 60, alignItems: 'center'}} />
+		)
+	}
+
 	render() {
 		return(
 			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
@@ -428,6 +445,10 @@ export default class DoctorInfoViewController extends Component{
 						}
 					}}
 
+					ListFooterComponent={() => {
+						return this.renderListFooter()
+					}}
+
 					onScroll={(event) => {
 						this._offsetY = event.nativeEvent.contentOffset.y
 
@@ -438,6 +459,8 @@ export default class DoctorInfoViewController extends Component{
 						}
 					}}
 				/>
+
+				{this.renderCallButton()}
 
 				<ActionSheet
 					ref={o => this._actionSheet = o}

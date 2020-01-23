@@ -118,6 +118,7 @@ export default class MineViewController extends Component{
 						style={{flex: 1, backgroundColor: Colors.systemGray}}
 						renderItem={({item}) => this.renderItem(item)}
 						sections={this.state.dataSource}
+						stickySectionHeadersEnabled={false}
 						keyExtractor={(item, index) => {
 							return 'key' + item.key + index
 						}}

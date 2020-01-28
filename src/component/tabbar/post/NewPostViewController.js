@@ -17,10 +17,28 @@ import {Colors} from '../../utils/Styles';
 import {NaviBarHeight, ScreenDimensions, TabBar} from '../../utils/Dimensions';
 import {Gender, PLATFORM} from '../../utils/CustomEnums';
 import {CameraKitGalleryView} from 'react-native-camera-kit'
+import {Navigation} from 'react-native-navigation';
+import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 
 export default class NewPostViewController extends Component{
 
-	renderSpeprateLine() {
+	pushToGalleryPage() {
+		Navigation.push(this.props.componentId, {
+			component: {
+				name: 'GalleryViewController',
+				passProps: {
+					DoneSelected: (imageObjs) => {
+						imageObjs.forEach((image,key) => {
+							console.log(image.imageUri)
+						})
+					}
+				},
+				options: BaseNavigatorOptions('Gallery')
+			}
+		})
+	}
+
+	renderLine() {
 		return(
 			<View style={{width: ScreenDimensions.width - 20, height: 1, backgroundColor: Colors.lineColor,
 			}}/>
@@ -41,7 +59,7 @@ export default class NewPostViewController extends Component{
 						}}>
 							<TouchableOpacity onPress={() => {
 								Keyboard.dismiss()
-
+								this.pushToGalleryPage()
 							}} key={index} style={{width: size, height: size, backgroundColor: Colors.systemGray, borderRadius: 6,
 								justifyContent: 'center', alignItems: 'center',
 							}}>
@@ -56,47 +74,6 @@ export default class NewPostViewController extends Component{
 					)
 				})}
 			</View>
-		)
-	}
-
-	renderCameraKitView() {
-		return(
-			<Modal
-				animationType={"fade"}
-				transparent={true}
-				visible={true}
-				onRequestClose={() => {
-
-				}}
-				onShow={() => {
-
-				}}
-				onDismiss={() => {
-				}}
-			>
-
-				<TouchableOpacity activeOpacity={1} onPress={() => {
-					Keyboard.dismiss()
-				}} style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center',
-					alignItems: 'center'
-				}}>
-					<View style={{width: ScreenDimensions.width, backgroundColor: Colors.white,
-						borderRadius: 6, overflow: 'hidden'
-					}}>
-						<CameraKitGalleryView
-							ref={gallery => this.gallery = gallery}
-							style={{flex: 1, marginTop: 20}}
-							minimumInteritemSpacing={10}
-							minimumLineSpacing={10}
-							columnCount={3}
-							onTapImage={event => {
-								// event.nativeEvent.selected - ALL selected images ids
-							}}
-						/>
-					</View>
-				</TouchableOpacity>
-
-			</Modal>
 		)
 	}
 
@@ -126,7 +103,7 @@ export default class NewPostViewController extends Component{
 							color: Colors.black, backgroundColor: Colors.white
 						}}/>
 
-					{this.renderSpeprateLine()}
+					{this.renderLine()}
 				</View>
 
 				<TextInput
@@ -147,7 +124,6 @@ export default class NewPostViewController extends Component{
 
 				{this.renderImagePiker()}
 
-				{this.renderCameraKitView()}
 			</TouchableOpacity>
 		)
 	}

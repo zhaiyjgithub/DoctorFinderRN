@@ -27,9 +27,9 @@ export default class GalleryViewController extends Component{
 	constructor(props) {
 		super(props)
 		this.state = {
-			selectedImages: []
+			selectedImages: this.initSelectedImages(props.selectedEventMap)
 		}
-		this.imageEventMap = new Map()
+		this.imageEventMap = props.selectedEventMap
 		this.navigationEventListener = Navigation.events().bindComponent(this);
 	}
 
@@ -37,15 +37,20 @@ export default class GalleryViewController extends Component{
 		this.navigationEventListener && this.navigationEventListener.remove();
 	}
 
+	initSelectedImages(imageMap) {
+		let selectedImages = []
+
+		for (let [key, item] of imageMap) {
+			selectedImages.push(key)
+		}
+
+		return selectedImages
+	}
+
 	navigationButtonPressed({ buttonId }) {
 		if (buttonId === 'done') {
-			let imageUrls = []
-			for (let [key, item] of this.imageEventMap) {
-				imageUrls.push({selectedId: key, uri: item})
-			}
-			console.log(imageUrls)
-				// this.props.DoneSelected && this.props.DoneSelected(imageUrls)
-				// Navigation.pop(this.props.componentId);
+			this.props.doneSelected && this.props.doneSelected(this.imageEventMap)
+			Navigation.pop(this.props.componentId);
 		}
 	}
 

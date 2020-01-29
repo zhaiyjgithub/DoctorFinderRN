@@ -21,16 +21,39 @@ import {Navigation} from 'react-native-navigation';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 
 export default class NewPostViewController extends Component{
+	constructor(props) {
+		super(props)
+		this.state = {
+			title: '',
+			description: '',
+			imageObjs: [{selectedId: '', uri: '', type: ImageMenuType.add}]
+		}
+	}
 
 	pushToGalleryPage() {
+		let selectedEventMap = new Map()
+		this.state.imageObjs.forEach((item, index) => {
+			if (item.selectedId.length) {
+				selectedEventMap.set(item.selectedId, item.uri)
+			}
+		})
+
 		Navigation.push(this.props.componentId, {
 			component: {
 				name: 'GalleryViewController',
 				passProps: {
-					DoneSelected: (imageObjs) => {
-						imageObjs.forEach((image,key) => {
-							console.log(image.imageUri)
-						})
+					selectedEventMap : selectedEventMap,
+					doneSelected: (imageMap) => {
+						let imageUrls = []
+						for (let [key, item] of imageMap) {
+							imageUrls.push({selectedId: key, uri: item, type: ImageMenuType.image})
+						}
+
+						if (imageUrls.length < 4) {
+							imageUrls.push({selectedId: '', uri: '', type: ImageMenuType.add})
+						}
+
+						this.setState({imageObjs: imageUrls})
 					}
 				},
 				options: BaseNavigatorOptions('Gallery')
@@ -45,31 +68,57 @@ export default class NewPostViewController extends Component{
 		)
 	}
 
+	deleteItem(delItem) {
+		let list = this.state.imageObjs.filter((item, index) => {
+			return item.selectedId !== delItem.selectedId
+		})
+
+		let isHasAddItem = false
+
+		for (let i = 0; i < list.length; i ++) {
+			let item = list[i]
+			if (item.type === ImageMenuType.add) {
+				isHasAddItem = true
+				break
+			}
+		}
+		if (!isHasAddItem) {
+			list.push({selectedId: '', uri: '', type: ImageMenuType.add})
+		}
+
+		this.setState({imageObjs: list})
+	}
+
 	renderImagePiker() {
 		let size = (ScreenDimensions.width - 40 - 30)/4.0
-		let images = [0, 1, 2, 3]
 		return(
 			<View style={{width: ScreenDimensions.width, flexDirection: 'row', alignItems: 'center', marginTop: 15,
-				paddingHorizontal: 20, justifyContent: 'space-between'
+				paddingHorizontal: 20,
 			}}>
-				{images.map((value ,index) => {
+				{this.state.imageObjs.map((item ,index) => {
 					return(
 						<View key={index} style={{width: size, height: size, backgroundColor: Colors.systemGray, borderRadius: 6,
-							justifyContent: 'center', alignItems: 'center',
+							justifyContent: 'center', alignItems: 'center', marginRight: (index  < 3) ? 10 : 0
 						}}>
 							<TouchableOpacity onPress={() => {
 								Keyboard.dismiss()
-								this.pushToGalleryPage()
+								if (item.type === ImageMenuType.add) {
+									this.pushToGalleryPage()
+								}
 							}} key={index} style={{width: size, height: size, backgroundColor: Colors.systemGray, borderRadius: 6,
-								justifyContent: 'center', alignItems: 'center',
+								justifyContent: 'center', alignItems: 'center', overflow: 'hidden'
 							}}>
-								<Image style={{width: size/2.0, height: size/2.0}} source={require('../../../resource/image/post/add.png')}/>
+								<Image style={{width: item.type === ImageMenuType.add ? size/2.0 : size, height: item.type === ImageMenuType.add ? size/2.0 : size}} source={item.type === ImageMenuType.add ? require('../../../resource/image/post/add.png') :
+									{uri: item.uri}
+								}/>
 							</TouchableOpacity>
 
-							<TouchableOpacity style={{position: 'absolute', right: -5, top: -5, width: 20, height: 20,
+							{item.type !== ImageMenuType.add ? <TouchableOpacity onPress={() => {
+								this.deleteItem(item)
+							}} style={{position: 'absolute', right: -5, top: -5, width: 20, height: 20, backgroundColor: Colors.white
 							}}>
 								<Image source={require('../../../resource/image/post/delete.png')} style={{width: 20, height: 20,}}/>
-							</TouchableOpacity>
+							</TouchableOpacity> : null}
 						</View>
 					)
 				})}
@@ -127,4 +176,10 @@ export default class NewPostViewController extends Component{
 			</TouchableOpacity>
 		)
 	}
+}
+
+
+const ImageMenuType = {
+	add: 0,
+	image: 1,
 }

@@ -19,15 +19,61 @@ import {Gender, PLATFORM} from '../../utils/CustomEnums';
 import {CameraKitGalleryView} from 'react-native-camera-kit'
 import {Navigation} from 'react-native-navigation';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
+import {ShareTool} from '../../utils/ShareTool';
+import RNFetchBlob from 'rn-fetch-blob';
+import {HTTP} from '../../utils/HttpTools';
+import {API_Post, BaseUrl} from '../../utils/API';
+import Spinner from 'react-native-spinkit'
+import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
+import SimpleToast from 'react-native-simple-toast';
 
 export default class NewPostViewController extends Component{
+	static options(passProps) {
+		return {
+			topBar: {
+				rightButtons: [
+					{
+						id: 'send',
+						enabled: true,
+						disableIconTint: false,
+						color: Colors.white,
+						icon: require('../../../resource/image/post/post.png'),
+					},
+				]
+			},
+			bottomTabs: {
+				visible: false
+			}
+		};
+	}
 	constructor(props) {
 		super(props)
 		this.state = {
 			title: '',
 			description: '',
-			imageObjs: [{selectedId: '', uri: '', type: ImageMenuType.add}]
+			imageObjs: [{selectedId: '', uri: '', type: ImageMenuType.add}],
+			isSpinnerVisible: false
 		}
+
+		this.navigationEventListener = Navigation.events().bindComponent(this);
+	}
+
+	componentWillUnmount() {
+		this.navigationEventListener && this.navigationEventListener.remove();
+	}
+
+	navigationButtonPressed({ buttonId }) {
+		if (buttonId === 'send') {
+			this.createNewPost()
+		}
+	}
+
+	showSpinner() {
+		this.setState({isSpinnerVisible: true})
+	}
+
+	hideSpinner() {
+		this.setState({isSpinnerVisible: false})
 	}
 
 	pushToGalleryPage() {
@@ -38,26 +84,112 @@ export default class NewPostViewController extends Component{
 			}
 		})
 
-		Navigation.push(this.props.componentId, {
-			component: {
-				name: 'GalleryViewController',
-				passProps: {
-					selectedEventMap : selectedEventMap,
-					doneSelected: (imageMap) => {
-						let imageUrls = []
-						for (let [key, item] of imageMap) {
-							imageUrls.push({selectedId: key, uri: item, type: ImageMenuType.image})
-						}
+		Keyboard.dismiss()
+		setTimeout(() => {
+			Navigation.push(this.props.componentId, {
+				component: {
+					name: 'GalleryViewController',
+					passProps: {
+						selectedEventMap : selectedEventMap,
+						doneSelected: (imageMap) => {
+							let imageUrls = []
+							for (let [key, item] of imageMap) {
+								imageUrls.push({selectedId: key, uri: item, type: ImageMenuType.image})
+							}
 
-						if (imageUrls.length < 4) {
-							imageUrls.push({selectedId: '', uri: '', type: ImageMenuType.add})
-						}
+							if (imageUrls.length < 4) {
+								imageUrls.push({selectedId: '', uri: '', type: ImageMenuType.add})
+							}
 
-						this.setState({imageObjs: imageUrls})
-					}
-				},
-				options: BaseNavigatorOptions('Gallery')
+							this.setState({imageObjs: imageUrls})
+						}
+					},
+					options: BaseNavigatorOptions('Gallery')
+				}
+			})
+		}, 600)
+	}
+
+	createNewPost() {
+		let files = []
+		let imageUriCount = 0
+
+		for (let i = 0; i < this.state.imageObjs.length; i ++) {
+			let item = this.state.imageObjs[i]
+			if (item.type !== ImageMenuType.add) {
+				imageUriCount = imageUriCount + 1
 			}
+		}
+
+		if (imageUriCount) {
+			for (let i = 0; i < this.state.imageObjs.length; i ++) {
+				let item = this.state.imageObjs[i]
+				if (item.type !== ImageMenuType.add) {
+					this.convertUriToBase64Data(item.uri, (err, base64Data) => {
+						if (!err) {
+							let ext = 'jpg'
+							let filePaths = item.uri.split('.')
+							ext = filePaths[filePaths.length - 1]
+
+							files.push({
+								Ext: ext,
+								Base64Data: base64Data
+							})
+						}
+
+						if ((i + 1) >= imageUriCount) {
+							let param = {
+								UserID: 1,
+								Type: 0,
+								Title: this.state.title,
+								Description: this.state.description,
+								Files: files
+							}
+
+							this.postUpload(param)
+						}
+					})
+				}
+			}
+		}else {
+			let param = {
+				UserID: 1,
+				Type: 0,
+				Title: this.state.title,
+				Description: this.state.description,
+				Files: files
+			}
+
+			this.postUpload(param)
+		}
+	}
+
+	convertUriToBase64Data(imageFileUrl, cb) {
+		let fs = imageFileUrl
+		if (PLATFORM.isIOS) {
+			fs = fs.replace("file://", "")
+		}
+
+		RNFetchBlob.fs.readFile(fs, "base64").then((base64Data) => {
+			cb && cb(null, base64Data)
+		}).catch((error) => {
+			cb && cb(error, null)
+		})
+	}
+
+	postUpload(param) {
+		this.showSpinner()
+		HTTP.post(API_Post.createPost, param).then((response) => {
+			this.hideSpinner()
+
+			SimpleToast.show("Create successfully", SimpleToast.LONG, SimpleToast.CENTER)
+
+			setTimeout(() => {
+				Navigation.pop(this.props.componentId)
+			}, 500)
+		}).catch((error) => {
+			SimpleToast.show("Create fail", SimpleToast.LONG, SimpleToast.CENTER)
+			this.hideSpinner()
 		})
 	}
 
@@ -128,7 +260,6 @@ export default class NewPostViewController extends Component{
 
 	render() {
 		let buttonHeight = ScreenDimensions.width*(60.0/375)
-
 		return(
 			<TouchableOpacity activeOpacity={1} onPress={() => {
 				Keyboard.dismiss()
@@ -141,7 +272,7 @@ export default class NewPostViewController extends Component{
 					<TextInput
 						numberOfLines={2}
 						onChangeText={(text) => {
-							this.setState({account: text.trim() + ''})
+							this.setState({title: text.trim() + ''})
 						}}
 						selectionColor = {Colors.theme}
 						underlineColorAndroid = {'transparent'}
@@ -159,7 +290,10 @@ export default class NewPostViewController extends Component{
 					multiline={true}
 					clearButtonMode={'while-editing'}
 					onChangeText={(text) => {
-						this.setState({account: text.trim() + ''})
+						this.setState({description: text.trim() + ''})
+					}}
+					ref = {(o) => {
+						this._descTextInput = o
 					}}
 					selectionColor = {Colors.theme}
 					underlineColorAndroid = {'transparent'}
@@ -173,11 +307,13 @@ export default class NewPostViewController extends Component{
 
 				{this.renderImagePiker()}
 
+				<LoadingSpinner visible={this.state.isSpinnerVisible} />
 			</TouchableOpacity>
 		)
 	}
 }
 
+// 11
 
 const ImageMenuType = {
 	add: 0,

@@ -94,6 +94,7 @@
 		13B07FAE1A68108700A75B9A /* DoctorFinderRN */ = {
 			isa = PBXGroup;
 			children = (
+				1428D65123E12AEB009C6816 /* components */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -103,6 +104,22 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = DoctorFinderRN;
+			sourceTree = "<group>";
+		};
+		1428D65123E12AEB009C6816 /* components */ = {
+			isa = PBXGroup;
+			children = (
+				1428D67D23E12DDF009C6816 /* utils */,
+			);
+			name = components;
+			path = DoctorFinderRN/components;
+			sourceTree = "<group>";
+		};
+		1428D67D23E12DDF009C6816 /* utils */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = utils;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {

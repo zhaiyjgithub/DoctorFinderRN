@@ -7,10 +7,16 @@ const API_Doctor = {
 	addCollection: 'Doctor/AddCollection',
 	getCollectionStatus: 'Doctor/GetCollectionStatus',
 	deleteCollection: 'Doctor/DeleteCollection',
-	searchDoctorByPage: 'Doctor/SearchDoctorByPage'
+	searchDoctorByPage: 'Doctor/SearchDoctorByPage',
+}
+
+const API_Post = {
+	createPost: 'Post/CreatePost',
+	uploadFile: 'Post/UploadFile'
 }
 
 export {
 	BaseUrl,
-	API_Doctor
+	API_Doctor,
+	API_Post
 }

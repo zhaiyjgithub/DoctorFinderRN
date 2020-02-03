@@ -12,7 +12,8 @@ const API_Doctor = {
 
 const API_Post = {
 	createPost: 'Post/CreatePost',
-	uploadFile: 'Post/UploadFile'
+	uploadFile: 'Post/UploadFile',
+	getPostByPage: 'Post/GetPostByPage'
 }
 
 export {

@@ -16,6 +16,7 @@ import VerifyAccountViewController from '../tabbar/signInUp/VerifyAccountViewCon
 import ResetPasswordViewController from '../tabbar/signInUp/ResetPasswordViewController'
 import NewPostViewController from '../tabbar/post/NewPostViewController'
 import GalleryViewController from '../tabbar/post/GalleryViewController'
+import PostDetailViewController from '../tabbar/post/PostDetailViewController'
 //
 
 import {Navigation} from 'react-native-navigation'
@@ -51,6 +52,7 @@ Navigation.registerComponent('VerifyAccountViewController', () => VerifyAccountV
 Navigation.registerComponent('ResetPasswordViewController', () => ResetPasswordViewController);
 Navigation.registerComponent('NewPostViewController', () => NewPostViewController);
 Navigation.registerComponent('GalleryViewController', () => GalleryViewController)
+Navigation.registerComponent('PostDetailViewController', () => PostDetailViewController)
 //
 
 Navigation.events().registerAppLaunchedListener(async () => {

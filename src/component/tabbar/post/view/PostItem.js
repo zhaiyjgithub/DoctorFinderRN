@@ -30,16 +30,6 @@ export default class PostItem extends Component{
 	}
 
 	render() {
-		// "PostID": 3,
-		// 	"UserIcon": "",
-		// 	"UserName": "Cue",
-		// 	"Type": 0,
-		// 	"Title": "Post title",
-		// 	"Likes": 0,
-		// 	"AnswerCount": 0,
-		// 	"LastAnswerName": "",
-		// 	"LastAnswerDate": "0001-01-01T00:00:00Z"
-
 		let postInfo = this.state.postInfo
 
 		let answerTitle = ''

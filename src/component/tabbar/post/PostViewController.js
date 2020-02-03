@@ -85,12 +85,42 @@ export default class PostViewController extends Component{
 	hideSpinner() {
 		this.setState({isSpinnerVisible: false})
 	}
+	//
+	pushToPostDetailPage(item) {
+		Navigation.push(this.props.componentId, {
+			component: {
+				name: 'PostDetailViewController',
+				passProps: {
+					postInfo: item,
+				},
+				options: BaseNavigatorOptions('Post Detail')
+			}
+		})
+	}
+
+
+	pushToNewPostPage() {
+		Navigation.push(this.props.componentId, {
+			component: {
+				name: 'NewPostViewController',
+				passProps: {
+
+				},
+				options: BaseNavigatorOptions('New Post')
+			}
+		})
+	}
+
+
 
 	renderItem(item) {
 		return(
 			<PostItem
 				id={item.PostID}
 				postInfo = {item}
+				didSelectedItem={() => {
+					this.pushToPostDetailPage(item)
+				}}
 			/>
 		)
 	}
@@ -116,18 +146,6 @@ export default class PostViewController extends Component{
 				<Image source={require('../../../resource/image/post/add.png')} style={{width: 25, height: 25, }}/>
 			</TouchableOpacity>
 		)
-	}
-
-	pushToNewPostPage() {
-		Navigation.push(this.props.componentId, {
-			component: {
-				name: 'NewPostViewController',
-				passProps: {
-
-				},
-				options: BaseNavigatorOptions('New Post')
-			}
-		})
 	}
 
 	renderListFooter() {

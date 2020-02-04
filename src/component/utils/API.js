@@ -14,11 +14,18 @@ const API_Post = {
 	createPost: 'Post/CreatePost',
 	uploadFile: 'Post/UploadFile',
 	getPostByPage: 'Post/GetPostByPage',
-	imgPost: 'Post/ImgPost/'
+	imgPost: 'Post/ImgPost/',
+	addAnswerToPost: 'Post/AddAnswerToPost'
+}
+
+const API_Answer = {
+	addAnswer: 'Answer/AddAnswer',
+	getAnswerListByPage: 'Answer/GetAnswerListByPage'
 }
 
 export {
 	BaseUrl,
 	API_Doctor,
-	API_Post
+	API_Post,
+	API_Answer
 }

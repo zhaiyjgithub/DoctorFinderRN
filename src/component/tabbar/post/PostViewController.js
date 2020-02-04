@@ -150,9 +150,11 @@ export default class PostViewController extends Component{
 
 	renderListFooter() {
 		return(
-			<LoadingFooter isTotal={this.state.isTotal}
-				isLoading={this.state.dataSource.length}
-			/>
+			<View style={{paddingBottom: TabBar.height}}>
+				<LoadingFooter isTotal={this.state.isTotal}
+							   isLoading={this.state.dataSource.length}
+				/>
+			</View>
 		)
 	}
 

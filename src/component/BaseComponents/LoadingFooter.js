@@ -17,13 +17,13 @@ export default class LoadingFooter extends Component{
 	render() {
 		if (this.props.isTotal) {
 			return(
-				<View style={{width: ScreenDimensions.width, height: 44, alignItems: 'center'}}>
+				<View style={{width: ScreenDimensions.width, height: 44, alignItems: 'center', marginTop: 16}}>
 					<Text style={{fontSize: 14, color: Colors.lightGray,}}>{'No more data...'}</Text>
 				</View>
 			)
 		}else if (this.props.isLoading) {
 			return(
-				<View style={{width: ScreenDimensions.width,alignItems: 'center'}}>
+				<View style={{width: ScreenDimensions.width,alignItems: 'center', marginTop: 16}}>
 					<ActivityIndicator color={Colors.theme}/>
 					<Text style={{fontSize: 14, color: Colors.lightGray, marginTop: 8}}>{'Loading data...'}</Text>
 				</View>

@@ -24,10 +24,37 @@ import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
 import LoadingFooter from '../../BaseComponents/LoadingFooter';
 import Toast from 'react-native-simple-toast'
 import AnswerItem from './view/AnswerItem';
+import {ShareTool} from '../../utils/ShareTool';
 
 export default class PostDetailViewController extends Component{
 	static defaultProps = {
 		postInfo: null
+	}
+
+	static options(passProps) {
+		return {
+			topBar: {
+				rightButtons: [
+					{
+						id: 'share',
+						enabled: true,
+						disableIconTint: false,
+						color: Colors.white,
+						icon: require('../../../resource/image/home/share.png'),
+					},
+					{
+						id: 'star',
+						enabled: true,
+						disableIconTint: false,
+						color: Colors.white,
+						icon: require('../../../resource/image/home/star.png'),
+					},
+				]
+			},
+			bottomTabs: {
+				visible: false
+			}
+		};
 	}
 
 	constructor(props) {
@@ -44,7 +71,9 @@ export default class PostDetailViewController extends Component{
 		this.page = 1
 		this.pageSize = 30
 		this.addAnswerViewBottom = new Animated.Value(0)
+		this.isCollected = false
 		this.addKeyBoardListener()
+		this.navigationEventListener = Navigation.events().bindComponent(this);
 	}
 
 	componentDidMount() {
@@ -53,6 +82,7 @@ export default class PostDetailViewController extends Component{
 
 	componentWillUnmount() {
 		this.removeKeyBoardListener()
+		this.navigationEventListener && this.navigationEventListener.remove();
 	}
 
 	addKeyBoardListener() {
@@ -79,6 +109,25 @@ export default class PostDetailViewController extends Component{
 
 	keyboardWillHide(event) {
 		Animated.timing(this.addAnswerViewBottom,{duration: PLATFORM.isIOS ? event.duration : 300,toValue: 0}).start()
+	}
+
+	navigationButtonPressed({ buttonId }) {
+		if (buttonId === 'share') {
+			const shareOptions = {
+				title: 'Share file',
+				url: 'http://www.google.com',
+				failOnCancel: false,
+				message: 'Your description...'
+			}
+
+			ShareTool(shareOptions)
+		}else if (buttonId === 'star') {
+			// if (this.isCollected) {
+			// 	this.cancelCollection()
+			// }else {
+			// 	this.addCollection()
+			// }
+		}
 	}
 
 	showSpinner() {
@@ -168,12 +217,10 @@ export default class PostDetailViewController extends Component{
 
 	renderListFooter() {
 		return(
-			<View>
+			<View style={{width: '100%', paddingBottom: 44 + 10 + (PLATFORM.isIPhoneX ? 34 : 0)}}>
 				<LoadingFooter isTotal={this.state.isTotal}
 							   isLoading={this.state.dataSource.length}
 				/>
-
-				<View style={{width: '100%', height: 44 + 10 + (PLATFORM.isIPhoneX ? 34 : 0)}}/>
 			</View>
 		)
 	}
@@ -235,6 +282,7 @@ export default class PostDetailViewController extends Component{
 						onChangeText={(text) => {
 							this.setState({newAnswer: text.trim() + ''})
 						}}
+						defaultValue ={this.state.newAnswer}
 						style={{
 							width: ScreenDimensions.width - 32 - 50 - 8,
 							height: 44,
@@ -318,23 +366,65 @@ export default class PostDetailViewController extends Component{
 		)
 	}
 
-	renderItem() {
-		return <AnswerItem />
+	likeAction(likeItem) {
+		this.addLikeToAnswer(likeItem.ID, () => {
+			let list = this.state.dataSource.map((item, index) => {
+				if (item.ID === likeItem.ID) {
+					item.Likes = item.Likes + 1
+				}
+
+				return item
+			})
+
+			this.setState({dataSource: list})
+		})
+	}
+
+	addLikeToAnswer(answerID, cb) {
+		let param = {
+			AnswerID: answerID,
+			UserID: 1,
+		}
+
+		HTTP.post(API_Answer.addAnswerLikes, param).then((response) => {
+			if (response.code) {
+				Toast.showWithGravity("Add like failed", Toast.LONG, Toast.CENTER)
+			}else {
+				cb && cb()
+			}
+		}).catch((error) => {
+			Toast.showWithGravity("Add like failed", Toast.LONG, Toast.CENTER)
+		})
+	}
+
+	renderItem(item) {
+		if (item.type === 0) {
+			return this.renderHeader()
+		}else {
+			return <AnswerItem
+				id= {item.ID}
+				likes={item.Likes}
+				answerInfo= {item}
+				clickLike ={() => {
+					this.likeAction(item)
+				}}
+				clickReply ={() => {
+					this.setState({newAnswer: '@' + item.UserName + ' '})
+					this._answerTextInput && this._answerTextInput.focus()
+				}}
+			/>
+		}
 	}
 
 	render() {
 		return(
 			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
-				<FlatList
+				<SectionList
 					style={{flex: 1}}
 					renderItem={({item}) => this.renderItem(item)}
-					data={this.state.dataSource}
+					sections={[{data: [{type: 0}]}, {data: this.state.dataSource,}]}
 					keyExtractor={(item, index) => {
 						return 'key' + index
-					}}
-
-					ListHeaderComponent={() => {
-						return this.renderHeader()
 					}}
 
 					refreshControl={

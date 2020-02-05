@@ -76,7 +76,7 @@ export default class DoctorInfoViewController extends Component{
 	}
 
 	componentWillUnmount() {
-		this.navigationEventListener && this.navigationEventListener.remove();
+		this.navigationEventListener && this.navigationEventListener.remove()
 	}
 
 	componentDidAppear() {

@@ -20,7 +20,8 @@ const API_Post = {
 
 const API_Answer = {
 	addAnswer: 'Answer/AddAnswer',
-	getAnswerListByPage: 'Answer/GetAnswerListByPage'
+	getAnswerListByPage: 'Answer/GetAnswerListByPage',
+	addAnswerLikes: 'Answer/AddAnswerLikes'
 }
 
 export {

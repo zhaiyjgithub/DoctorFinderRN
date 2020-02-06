@@ -8,6 +8,7 @@ import {Colors} from '../../../utils/Styles';
 import {ScreenDimensions} from '../../../utils/Dimensions';
 import {Gender} from '../../../utils/CustomEnums';
 import {CalcTimeStamp} from '../../../utils/Utils';
+import {API_Post, BaseUrl} from '../../../utils/API';
 
 export default class PostItem extends Component{
 	constructor(props) {
@@ -35,9 +36,10 @@ export default class PostItem extends Component{
 		let answerTitle = ''
 		if (postInfo.AnswerCount) {
 			let lastAnswerDate = postInfo.LastAnswerDate
-			answerTitle = CalcTimeStamp(lastAnswerDate) + ' - Rely by ' + postInfo.LastAnswerName
+			answerTitle = ' ' + CalcTimeStamp(lastAnswerDate) + ' - Last rely by ' + postInfo.LastAnswerName
 		}
 
+		let imgPostUrlPrefix = BaseUrl + API_Post.imgPost +'?name='
 		return(
 			<View style={{
 				width: ScreenDimensions.width,
@@ -67,9 +69,17 @@ export default class PostItem extends Component{
 						</TouchableOpacity>
 					</View>
 
-					<Text numberOfLines={1} style={{marginVertical: 16, fontSize: 20, fontWeight: 'bold', color: Colors.black,
-						width: '100%', paddingHorizontal: 8,
-					}}>{postInfo.Title}</Text>
+					<Text style={{fontSize: 12, color: Colors.lightGray, marginLeft: 8, marginTop: 8,}}>
+						{CalcTimeStamp(postInfo.PostDate)}
+					</Text>
+
+					<View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+						<Text numberOfLines={1} style={{fontSize: 20, fontWeight: 'bold', color: Colors.black,
+							width: ScreenDimensions.width - 32 - (postInfo.URLs.length ? 50 : 0), paddingHorizontal: 8, backgroundColor: Colors.white
+						}}>{postInfo.Title}</Text>
+
+						{postInfo.URLs.length ? <Image source={{uri: (imgPostUrlPrefix + postInfo.URLs[0])}} style={{width: 30, height: 30, backgroundColor: Colors.red ,marginRight: 10}}/> : null}
+					</View>
 
 					<View style={{flexDirection: 'row', alignItems: 'center', marginLeft: 8, width: '100%', marginTop: 8, marginBottom: 8}}>
 						<Image source={require('../../../../resource/image/post/chat.png')} style={{width: 14, height: 14,}}/>

@@ -15,7 +15,9 @@ const API_Post = {
 	uploadFile: 'Post/UploadFile',
 	getPostByPage: 'Post/GetPostByPage',
 	imgPost: 'Post/ImgPost/',
-	addAnswerToPost: 'Post/AddAnswerToPost'
+	addAnswerToPost: 'Post/AddAnswerToPost',
+	addFavor: 'Post/AddFavor',
+	addLikes: 'Post/AddLikes'
 }
 
 const API_Answer = {
@@ -23,6 +25,8 @@ const API_Answer = {
 	getAnswerListByPage: 'Answer/GetAnswerListByPage',
 	addAnswerLikes: 'Answer/AddAnswerLikes'
 }
+
+
 
 export {
 	BaseUrl,

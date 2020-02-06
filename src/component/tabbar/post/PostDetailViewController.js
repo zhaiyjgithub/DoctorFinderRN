@@ -25,6 +25,8 @@ import LoadingFooter from '../../BaseComponents/LoadingFooter';
 import Toast from 'react-native-simple-toast'
 import AnswerItem from './view/AnswerItem';
 import {ShareTool} from '../../utils/ShareTool';
+import ActionSheet from 'react-native-actionsheet';
+import {CalcTimeStamp} from '../../utils/Utils';
 
 export default class PostDetailViewController extends Component{
 	static defaultProps = {
@@ -36,19 +38,19 @@ export default class PostDetailViewController extends Component{
 			topBar: {
 				rightButtons: [
 					{
-						id: 'share',
+						id: 'more',
 						enabled: true,
 						disableIconTint: false,
 						color: Colors.white,
-						icon: require('../../../resource/image/home/share.png'),
+						icon: require('../../../resource/image/post/more.png'),
 					},
-					{
-						id: 'star',
-						enabled: true,
-						disableIconTint: false,
-						color: Colors.white,
-						icon: require('../../../resource/image/home/star.png'),
-					},
+					// {
+					// 	id: 'star',
+					// 	enabled: true,
+					// 	disableIconTint: false,
+					// 	color: Colors.white,
+					// 	icon: require('../../../resource/image/home/star.png'),
+					// },
 				]
 			},
 			bottomTabs: {
@@ -65,7 +67,9 @@ export default class PostDetailViewController extends Component{
 			isSpinnerVisible: false,
 			newAnswer: '',
 			isRefreshing: false,
-			isTotal: false
+			isTotal: false,
+			postLikes: props.postInfo ? props.postInfo.Likes : 0,
+			totalAnswerCount: props.postInfo ? props.postInfo.AnswerCount : 0
 		}
 
 		this.page = 1
@@ -112,22 +116,13 @@ export default class PostDetailViewController extends Component{
 	}
 
 	navigationButtonPressed({ buttonId }) {
-		if (buttonId === 'share') {
-			const shareOptions = {
-				title: 'Share file',
-				url: 'http://www.google.com',
-				failOnCancel: false,
-				message: 'Your description...'
-			}
-
-			ShareTool(shareOptions)
-		}else if (buttonId === 'star') {
-			// if (this.isCollected) {
-			// 	this.cancelCollection()
-			// }else {
-			// 	this.addCollection()
-			// }
+		if (buttonId === 'more') {
+			this.showActionSheet()
 		}
+	}
+
+	showActionSheet = () => {
+		this._actionSheet.show()
 	}
 
 	showSpinner() {
@@ -165,6 +160,14 @@ export default class PostDetailViewController extends Component{
 		}
 
 		HTTP.post(API_Answer.getAnswerListByPage, param).then((response) => {
+			if (response.code) {
+				if (isRefresh) {
+					this.setState({isRefreshing: false})
+				}
+				console.log(param)
+				return
+			}
+
 			if (isRefresh) {
 				this.setState({
 					isRefreshing: false,
@@ -174,7 +177,11 @@ export default class PostDetailViewController extends Component{
 			}else {
 				this.setState({
 					dataSource: this.state.dataSource.concat(response.data),
-					isTotal: response.data < this.pageSize
+					isTotal: response.data < this.pageSize,
+				}, () => {
+					if (this.state.isTotal) {
+						this.page = parseInt(this.state.dataSource.length/this.pageSize + 1)
+					}
 				})
 			}
 		}).catch(() => {
@@ -204,8 +211,8 @@ export default class PostDetailViewController extends Component{
 			this._answerTextInput.clear()
 			this.setState({newAnswer: ""})
 
-
 			if (!response.code) {
+				this.setState({totalAnswerCount: this.state.totalAnswerCount + 1})
 				Toast.showWithGravity("Add successfully", Toast.LONG, Toast.CENTER)
 			}else {
 				Toast.showWithGravity("Add failed", Toast.LONG, Toast.CENTER)
@@ -313,6 +320,8 @@ export default class PostDetailViewController extends Component{
 		if (!postInfo) {
 			return <View/>
 		}
+
+		let timeStamp = CalcTimeStamp(postInfo.PostDate)
 		return(
 			<View style={{backgroundColor: Colors.white}}>
 				<View style={{flexDirection: 'row', alignItems: 'center',
@@ -330,13 +339,15 @@ export default class PostDetailViewController extends Component{
 									color: Colors.green, fontWeight: 'bold',
 								}}>{'tag'}</Text>
 							</View>
-							<Text style={{fontSize: 14, color: Colors.lightGray}}>{'2 day ago'}</Text>
+							<Text style={{fontSize: 14, color: Colors.lightGray}}>{timeStamp}</Text>
 						</View>
 					</View>
 
-					<TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', marginRight: 16, minWidth: 30,}}>
+					<TouchableOpacity onPress={() => {
+						this.addLikeToPost()
+					}} style={{flexDirection: 'row', alignItems: 'center', marginRight: 16, minWidth: 30,}}>
 						<Image source={require('../../../resource/image/post/like.png')} style={{width: 14, height: 14,}}/>
-						<Text style={{fontSize: 14, color: Colors.lightGray, marginLeft: 3,}}>{postInfo.Likes}</Text>
+						<Text style={{fontSize: 14, color: Colors.lightGray, marginLeft: 3,}}>{this.state.postLikes}</Text>
 					</TouchableOpacity>
 				</View>
 
@@ -357,11 +368,15 @@ export default class PostDetailViewController extends Component{
 	}
 
 	renderSectionHeader(){
+		if (!this.props.postInfo) {
+			return null
+		}
+
 		return(
 			<View style={{width: '100%', height: 30, flexDirection: 'row', alignItems: 'center',
 				backgroundColor: Colors.systemGray, marginTop: 20,
 			}}>
-				<Text style={{fontSize: 14, color: Colors.black, marginLeft: 16,}}>{'32 replies'}</Text>
+				<Text style={{fontSize: 14, color: Colors.black, marginLeft: 16,}}>{this.state.totalAnswerCount + ' replies totally'}</Text>
 			</View>
 		)
 	}
@@ -394,6 +409,48 @@ export default class PostDetailViewController extends Component{
 			}
 		}).catch((error) => {
 			Toast.showWithGravity("Add like failed", Toast.LONG, Toast.CENTER)
+		})
+	}
+
+	addLikeToPost() {
+		let param = {
+			UserID: 1,
+			PostID: this.props.postInfo.PostID
+		}
+
+		this.showSpinner()
+		HTTP.post(API_Post.addLikes, param).then((response) => {
+			this.hideSpinner()
+			if (response.code) {
+				Toast.showWithGravity('Add failed' , Toast.LONG, Toast.CENTER)
+			}else {
+				this.props.postInfo.Likes = this.props.postInfo.Likes + 1
+				this.setState({postLikes: this.props.postInfo.Likes})
+				Toast.showWithGravity('Add successfully', Toast.LONG, Toast.CENTER)
+			}
+		}).catch(() => {
+			this.hideSpinner()
+			Toast.showWithGravity('Add failed')
+		})
+	}
+
+	addFavorToPost() {
+		let param = {
+			UserID: 1,
+			PostID: this.props.postInfo.PostID
+		}
+
+		this.showSpinner()
+		HTTP.post(API_Post.addFavor, param).then((response) => {
+			this.hideSpinner()
+			if (response.code) {
+				Toast.showWithGravity('Add failed' , Toast.LONG, Toast.CENTER)
+			}else {
+				Toast.showWithGravity('Add successfully', Toast.LONG, Toast.CENTER)
+			}
+		}).catch(() => {
+			this.hideSpinner()
+			Toast.showWithGravity('Add failed')
 		})
 	}
 
@@ -449,6 +506,30 @@ export default class PostDetailViewController extends Component{
 				/>
 
 				{this.renderAddAnswerView()}
+
+				<ActionSheet
+					ref={o => this._actionSheet = o}
+					title={'Do you want to ?'}
+					options={['Share This Post', 'Star This Post', 'Report This Post', 'Cancel']}
+					destructiveButtonIndex={3}
+					onPress={(index) => {
+						if (index === 0) {
+							const shareOptions = {
+								title: 'Share file',
+								url: 'http://www.google.com',
+								failOnCancel: false,
+								message: 'Your description...'
+							}
+
+							ShareTool(shareOptions)
+						}else if (index === 1) {
+							this.addFavorToPost()
+						}else if (index === 2) {
+							alert('Report it')
+						}
+					}}
+				/>
+
 				<LoadingSpinner visible={this.state.isSpinnerVisible} />
 			</View>
 		)

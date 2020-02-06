@@ -26,11 +26,17 @@ const API_Answer = {
 	addAnswerLikes: 'Answer/AddAnswerLikes'
 }
 
+const API_Register = {
+	signIn: 'Register/SignIn',
+	sendVerificationCode: 'Register/SendVerificationCode'
+}
+
 
 
 export {
 	BaseUrl,
 	API_Doctor,
 	API_Post,
-	API_Answer
+	API_Answer,
+	API_Register
 }

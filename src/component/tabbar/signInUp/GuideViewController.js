@@ -40,7 +40,6 @@ export default class GuideViewController extends Component{
     }
 
     modalSignUpPage() {
-        //
         Navigation.showModal({
             stack: {
                 children: [{

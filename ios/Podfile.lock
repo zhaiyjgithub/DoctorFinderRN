@@ -94,6 +94,8 @@ PODS:
     - React
   - rn-fetch-blob (0.12.0):
     - React-Core
+  - RNCAsyncStorage (1.7.1):
+    - React
   - RNShare (2.0.0):
     - React
   - Toast (4.0.0)
@@ -127,6 +129,7 @@ DEPENDENCIES:
   - React-RCTWebSocket (from `../node_modules/react-native/Libraries/WebSocket`)
   - ReactNativeNavigation (from `../node_modules/react-native-navigation/ReactNativeNavigation.podspec`)
   - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - RNShare (from `../node_modules/react-native-share`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -190,6 +193,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native-navigation/ReactNativeNavigation.podspec"
   rn-fetch-blob:
     :path: "../node_modules/rn-fetch-blob"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-community/async-storage"
   RNShare:
     :path: "../node_modules/react-native-share"
   yoga:
@@ -224,10 +229,11 @@ SPEC CHECKSUMS:
   React-RCTWebSocket: 69d8565d66043f244b4129f3d7154c5689fb7d3e
   ReactNativeNavigation: aad255980f20cc5d2001ed37972319f3789fea70
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
+  RNCAsyncStorage: 8539fc80a0075fcc9c8e2dff84cd22dc5bf1dacf
   RNShare: 8b171d4b43c1d886917fdd303bf7a4b87167b05c
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   yoga: 843fe25849b56131275bf3e5da2c468e96f68aff
 
-PODFILE CHECKSUM: 4537e673d797fcf380359bf5183140181c671655
+PODFILE CHECKSUM: d8e4c40ee86248b1e4e55f0d469997976cc5f9a4
 
 COCOAPODS: 1.8.0.beta.2

@@ -9,6 +9,7 @@
     "run-ios": " react-native run-ios --simulator=\"iPhone 11 Pro\""
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.7.1",
     "react": "16.8.6",
     "react-native": "0.60.3",
     "react-native-actionsheet": "^2.4.2",
@@ -20,6 +21,7 @@
     "react-native-share": "^2.0.0",
     "react-native-simple-toast": "^1.0.0",
     "react-native-spinkit": "^1.5.0",
+    "react-native-storage": "^1.0.1",
     "react-native-swiper": "^1.5.14",
     "rn-fetch-blob": "^0.12.0"
   },

@@ -32,11 +32,22 @@ export default class VerifyAccountViewController extends Component{
 	pushToResetPasswordPage() {
 		Navigation.push(this.props.componentId, {
 			component: {
-				name: 'DoctorInfoViewController',
+				name: 'ResetPasswordViewController',
 				passProps: {
-					info: item,
+
 				},
-				options: BaseNavigatorOptions('Reset')
+				options: {
+					statusBar: {
+						visible: true,
+						style: 'light'
+					},
+					topBar: {
+						visible: true,
+						title: {
+							text: 'Reset Password'
+						}
+					},
+				}
 			}
 		})
 	}

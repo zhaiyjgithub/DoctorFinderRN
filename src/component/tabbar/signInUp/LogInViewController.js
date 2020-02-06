@@ -15,17 +15,63 @@ import {
 } from 'react-native'
 import {Colors} from '../../utils/Styles';
 import {NaviBarHeight, ScreenDimensions} from '../../utils/Dimensions';
-import {PLATFORM} from '../../utils/CustomEnums';
+import {DBKey, PLATFORM} from '../../utils/CustomEnums';
 import {Navigation} from 'react-native-navigation';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
+import Toast from 'react-native-simple-toast'
+import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
+import {HTTP} from '../../utils/HttpTools';
+import {API_Answer, API_Register} from '../../utils/API';
+import {CacheDB} from '../../utils/DBTool';
 
 export default class LogInViewController extends Component{
     constructor(props) {
         super(props);
         this.state = {
             account: '',
-            password: ''
+            password: '',
+            isSpinnerVisible: false
         }
+    }
+
+    showSpinner() {
+        this.setState({isSpinnerVisible: true})
+    }
+
+    hideSpinner() {
+        this.setState({isSpinnerVisible: false})
+    }
+
+    signIn() {
+        if (!this.state.account.length) {
+            Toast.showWithGravity('Email can`t be empty!', Toast.LONG, Toast.CENTER)
+            return
+        }
+
+        if (!this.state.password.length) {
+            Toast.showWithGravity('Password can`t be empty!', Toast.LONG, Toast.CENTER)
+            return
+        }
+
+        let param = {
+            Email: this.state.account,
+            Password: this.state.password
+        }
+
+        this.showSpinner()
+        HTTP.post(API_Register.signIn, param).then((response) => {
+            this.hideSpinner()
+            if (!response.code) {
+                let userInfo = Object.assign(response.data.User, {Token: response.data.Token})
+                CacheDB.save(DBKey.userInfo, userInfo)
+            }else {
+                Toast.showWithGravity('Email or password is wrong!', Toast.LONG, Toast.CENTER)
+            }
+        }).catch((error) => {
+            this.hideSpinner()
+            Toast.showWithGravity('Request failed!', Toast.LONG, Toast.CENTER)
+        })
+
     }
 
     pushToVerifyAccountPage() {
@@ -33,11 +79,42 @@ export default class LogInViewController extends Component{
             component: {
                 name: 'VerifyAccountViewController',
                 passProps: {
-                    info: item,
+
                 },
-                options: BaseNavigatorOptions('Verify')
+                options: {
+                    statusBar: {
+                        visible: true,
+                        style: 'light'
+                    },
+                    topBar: {
+                        visible: true,
+                        title: {
+                            text: 'Verify Account'
+                        }
+                    },
+                }
             }
         })
+    }
+
+    modalSignUpPage() {
+        Navigation.showModal({
+            stack: {
+                children: [{
+                    component: {
+                        name: 'SignUpViewController',
+                        passProps: {
+
+                        },
+                        options: {
+                            topBar: {
+                                visible: false
+                            }
+                        }
+                    }
+                }]
+            }
+        });
     }
 
     render() {
@@ -68,7 +145,7 @@ export default class LogInViewController extends Component{
                         // value = {this.state.searchContent}
                         underlineColorAndroid = {'transparent'}
                         numberOfLines={1}
-                        placeholder = {'Account'}
+                        placeholder = {'Email'}
                         placeholderTextColor={Colors.lightGray}
                         style={{width: ScreenDimensions.width - 40, marginTop: 40,
                             height: buttonHeight, textAlign: 'left', paddingLeft: 8, fontSize: 16,
@@ -103,7 +180,9 @@ export default class LogInViewController extends Component{
                         <Text style={{fontSize: 16, color: Colors.theme,}}>{'Forgot password?'}</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={{width: ScreenDimensions.width - 40,
+                    <TouchableOpacity onPress={() => {
+                        this.signIn()
+                    }} style={{width: ScreenDimensions.width - 40,
                         height: buttonHeight, justifyContent: 'center', alignItems: 'center',
                         backgroundColor: Colors.theme, borderRadius: 4,
                         marginTop: 20
@@ -113,7 +192,9 @@ export default class LogInViewController extends Component{
 
                     <Text style={{fontSize: 16, color: Colors.lightBlack, marginTop: 16}}>{'Are you new with Doc Finder?'}</Text>
 
-                    <TouchableOpacity style={{
+                    <TouchableOpacity onPress={() => {
+                        this.modalSignUpPage()
+                    }} style={{
                         height: 30, justifyContent: 'center', alignItems: 'center',
                     }}>
                         <Text style={{fontSize: 16, color: Colors.theme,}}>{'Create account'}</Text>
@@ -128,6 +209,8 @@ export default class LogInViewController extends Component{
                 }}>
                     <Text style={{fontSize: 16, color: Colors.theme,}}>{'Dismiss'}</Text>
                 </TouchableOpacity>
+
+                <LoadingSpinner visible={this.state.isSpinnerVisible} />
             </View>
         )
     }

@@ -39,8 +39,8 @@ const SearchBarOverlayType = {
 	location: 1,
 }
 
-const NavigationEventName = {
-	dismissAllModals: 'dismissAllModals'
+const DBKey = {
+	userInfo: 'UserInfo'
 }
 
 export {
@@ -50,5 +50,5 @@ export {
 	Gender,
 	SearchBarType,
 	SearchBarOverlayType,
-	NavigationEventName
+	DBKey
 }

@@ -10,13 +10,17 @@ import {
 	Animated,
 	Linking,
 	ScrollView,
-	AppState, TouchableOpacity, Image, Text, RefreshControl,
+	Keyboard, TouchableOpacity, Image, Text, RefreshControl,
 	TextInput
 } from 'react-native'
 import {Colors} from '../../utils/Styles';
 import {NaviBarHeight, ScreenDimensions} from '../../utils/Dimensions';
 import {PLATFORM} from '../../utils/CustomEnums';
 import {Navigation} from 'react-native-navigation';
+import {HTTP} from '../../utils/HttpTools';
+import {API_Register} from '../../utils/API';
+import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
+import Toast from 'react-native-simple-toast'
 
 export default class SignUpViewController extends Component{
 	constructor(props) {
@@ -24,13 +28,61 @@ export default class SignUpViewController extends Component{
 		this.state = {
 			account: '',
 			password: '',
-			code: ''
+			confirmPassword: '',
+			code: '',
+			isSpinnerVisible: false
 		}
 	}
+
+	showSpinner() {
+		this.setState({isSpinnerVisible: true})
+	}
+
+	hideSpinner() {
+		this.setState({isSpinnerVisible: false})
+	}
+
+	getVerificationCode() {
+		if (!this.state.account.length) {
+			Toast.showWithGravity('Email can`t be empty!', Toast.SHORT, Toast.CENTER)
+			return
+		}
+
+		let param = {
+			Email: this.state.account
+		}
+
+		this.showSpinner()
+		HTTP.post(API_Register.sendVerificationCode, param).then((response) => {
+			this.hideSpinner()
+
+			if (!response.code) {
+				Toast.showWithGravity('Verification code has been sent to your email.',
+						Toast.SHORT, Toast.CENTER
+					)
+			}else if (response.code === 4) {
+				Toast.showWithGravity('This email has been registered.',
+					Toast.LONG, Toast.CENTER
+				)
+			}else {
+				Toast.showWithGravity('Send verification failed!',
+					Toast.LONG, Toast.CENTER
+				)
+			}
+		}).catch((error) => {
+			this.hideSpinner()
+			Toast.showWithGravity('Request failed!',
+				Toast.LONG, Toast.CENTER
+			)
+		})
+	}
+
 	render() {
 		let buttonHeight = ScreenDimensions.width*(50.0/375)
 		return(
-			<View style={{flex: 1, backgroundColor: Colors.white,
+			<TouchableOpacity onPress={() => {
+				Keyboard.dismiss()
+			}} activeOpacity={1} style={{flex: 1, backgroundColor: Colors.white,
 				alignItems: 'center', justifyContent: 'space-between'
 			}}>
 				<View style={{flex: 1, backgroundColor: Colors.white,
@@ -54,7 +106,7 @@ export default class SignUpViewController extends Component{
 						// value = {this.state.searchContent}
 						underlineColorAndroid = {'transparent'}
 						numberOfLines={1}
-						placeholder = {'Account'}
+						placeholder = {'Email'}
 						placeholderTextColor={Colors.lightGray}
 						style={{width: ScreenDimensions.width - 40, marginTop: 40,
 							height: buttonHeight, textAlign: 'left', paddingLeft: 8, fontSize: 16,
@@ -80,12 +132,30 @@ export default class SignUpViewController extends Component{
 							borderWidth: 1.0, borderColor: Colors.theme
 						}}/>
 
-					<Text style={{fontSize: 16, color: Colors.lightBlack, marginTop: 8,
+					<TextInput
+						secureTextEntry={true}
+						clearButtonMode={'while-editing'}
+						onChangeText={(text) => {
+							this.setState({confirmPassword: text.trim() + ''})
+						}}
+						selectionColor = {Colors.theme}
+						// value = {this.state.searchContent}
+						underlineColorAndroid = {'transparent'}
+						numberOfLines={1}
+						placeholder = {'Confirm Password'}
+						placeholderTextColor={Colors.lightGray}
+						style={{width: ScreenDimensions.width - 40, marginTop: 20,
+							height: buttonHeight, textAlign: 'left', paddingLeft: 8, fontSize: 16,
+							color: Colors.lightBlack, borderRadius: 4, backgroundColor: Colors.systemGray,
+							borderWidth: 1.0, borderColor: Colors.theme
+						}}/>
+
+					<Text style={{fontSize: 12, color: Colors.lightBlack, marginTop: 8,
 						width: ScreenDimensions.width - 40, textAlign: 'center'
 					}}>{'Your password must be 8-20 characters with uppercase and lowercase letters and numbers\n'}</Text>
 
 					<View style={{width: ScreenDimensions.width - 40, flexDirection: 'row',
-						alignItems: 'center', justifyContent: 'space-between', marginTop: 20
+						alignItems: 'center', justifyContent: 'space-between', marginTop: 8
 					}}>
 						<TextInput
 							keyboardType = {'number-pad'}
@@ -96,7 +166,7 @@ export default class SignUpViewController extends Component{
 							selectionColor = {Colors.theme}
 							underlineColorAndroid = {'transparent'}
 							numberOfLines={1}
-							placeholder = {'Password'}
+							placeholder = {'Verification code'}
 							placeholderTextColor={Colors.lightGray}
 							style={{width: ScreenDimensions.width - 40 - 80 - 16,
 								height: buttonHeight, textAlign: 'left', paddingLeft: 8, fontSize: 16,
@@ -104,9 +174,11 @@ export default class SignUpViewController extends Component{
 								borderWidth: 1.0, borderColor: Colors.theme
 							}}/>
 
-						<TouchableOpacity style={{
+						<TouchableOpacity onPress={() => {
+							this.getVerificationCode()
+						}} style={{
 							height: buttonHeight, justifyContent: 'center', alignItems: 'center',
-							marginTop: 8, color: Colors.theme, width: 80, backgroundColor: Colors.white
+							color: Colors.theme, width: 80, backgroundColor: Colors.theme, borderRadius: 4,
 						}}>
 							<Text style={{fontSize: 16, color: Colors.white, fontWeight: 'bold'}}>{'Get'}</Text>
 						</TouchableOpacity>
@@ -131,7 +203,9 @@ export default class SignUpViewController extends Component{
 				}}>
 					<Text style={{fontSize: 16, color: Colors.theme,}}>{'Dismiss'}</Text>
 				</TouchableOpacity>
-			</View>
+
+				<LoadingSpinner visible={this.state.isSpinnerVisible} />
+			</TouchableOpacity>
 		)
 	}
 }

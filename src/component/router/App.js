@@ -1,27 +1,8 @@
-import HomePageViewController from '../tabbar/home/HomePageViewController'
-import SearchBar from  '../tabbar/home/view/SearchBar'
-import HomePageTitleView from '../tabbar/home/view/HomePageTitleView'
-import PostViewController from '../tabbar/post/PostViewController'
-import MineViewController from '../tabbar/mine/MineViewController'
-import DoctorInfoViewController from '../tabbar/home/DoctorInfoViewController'
-import DoctorSearchResultListViewController from '../tabbar/home/DoctorSearchResultListViewController'
-import SpecialtyViewController from '../tabbar/home/SpecialtyViewController'
-import StateListViewController from '../tabbar/home/StateListViewController'
-import CityListViewController from '../tabbar/home/CityListViewController'
-import SearchFilterOverlay from '../tabbar/home/view/SearchFilterOverlay'
-import GuideViewController from '../tabbar/signInUp/GuideViewController'
-import LogInViewController from '../tabbar/signInUp/LogInViewController'
-import SignUpViewController from '../tabbar/signInUp/SignUpViewController'
-import VerifyAccountViewController from '../tabbar/signInUp/VerifyAccountViewController'
-import ResetPasswordViewController from '../tabbar/signInUp/ResetPasswordViewController'
-import NewPostViewController from '../tabbar/post/NewPostViewController'
-import GalleryViewController from '../tabbar/post/GalleryViewController'
-import PostDetailViewController from '../tabbar/post/PostDetailViewController'
-//
-
-import {Navigation} from 'react-native-navigation'
-import {Colors} from '../utils/Styles';
-import {Text, TextInput} from 'react-native';
+import Storage from 'react-native-storage';
+import {AsyncStorage, Text, TextInput} from 'react-native';
+import {CacheDB} from '../utils/DBTool';
+import {DBKey} from '../utils/CustomEnums';
+import RouterEntry from './RouterEntry';
 
 
 Text.defaultProps = Text.defaultProps || {};
@@ -32,139 +13,33 @@ TextInput.defaultProps.allowFontScaling = false;
 
 console.disableYellowBox = true; //隐藏yellow box
 
+const storage = new Storage({
+	// 最大容量，默认值1000条数据循环存储
+	size: 1000,
+
+	// 存储引擎：对于RN使用AsyncStorage，对于web使用window.localStorage
+	// 如果不指定则数据只会保存在内存中，重启后即丢失
+	storageBackend: AsyncStorage,
+
+	// 数据过期时间，默认一整天（1000 * 3600 * 24 毫秒），设为null则永不过期
+	defaultExpires: null,
+
+	// 读写时在内存中缓存数据。默认启用。
+	enableCache: true,
+})
+global.STORAGE = storage
 
 
-Navigation.registerComponent('HomePageViewController', () => HomePageViewController);
-Navigation.registerComponent('SearchBar', () => SearchBar);
-Navigation.registerComponent('HomePageTitleView', () => HomePageTitleView);
-Navigation.registerComponent('PostViewController', () => PostViewController);
-Navigation.registerComponent('MineViewController', () => MineViewController);
-Navigation.registerComponent('DoctorInfoViewController', () => DoctorInfoViewController)
-Navigation.registerComponent('DoctorSearchResultListViewController', () => DoctorSearchResultListViewController);
-Navigation.registerComponent('SpecialtyViewController', () => SpecialtyViewController);
-Navigation.registerComponent('StateListViewController', () => StateListViewController);
-Navigation.registerComponent('CityListViewController', () => CityListViewController);
-Navigation.registerComponent('SearchFilterOverlay', () => SearchFilterOverlay);
-Navigation.registerComponent('GuideViewController', () => GuideViewController);
-Navigation.registerComponent('LogInViewController', () => LogInViewController);
-Navigation.registerComponent('SignUpViewController', () => SignUpViewController);
-Navigation.registerComponent('VerifyAccountViewController', () => VerifyAccountViewController);
-Navigation.registerComponent('ResetPasswordViewController', () => ResetPasswordViewController);
-Navigation.registerComponent('NewPostViewController', () => NewPostViewController);
-Navigation.registerComponent('GalleryViewController', () => GalleryViewController)
-Navigation.registerComponent('PostDetailViewController', () => PostDetailViewController)
-//
+CacheDB.load(DBKey.userInfo, (userInfo) => {
+	// if (userInfo) {
+	// 	RouterEntry.homePage()
+	// }else {
+		RouterEntry.guide()
+	// }
+}, (error) => {
+	RouterEntry.guide()
+})
 
-Navigation.events().registerAppLaunchedListener(async () => {
-	Navigation.setDefaultOptions({
-		statusBar: {
-			visible: true,
-			style: 'light'
-		},
-		topBar: {
-			background: {
-				color: Colors.theme,
-			},
-			noBorder: true,
-			drawBehind: false,
-			leftButtonColor: Colors.white,
-			rightButtonColor: Colors.white,
-			title: {
-				color: Colors.white,
-				fontWeight: 'bold',
-				fontSize: 16,
-			},
-			backButton: {
-				color: Colors.white,
-				title: ''
-			}
-		},
-		bottomTabs: {
-			visible: true,
-			drawBehind: true,
-		}
-	});
 
-	// Navigation.setRoot({
-	// 	root: {
-	// 		stack: {
-	// 			children: [{
-	// 				component: {
-	// 					name: "GuideViewController"
-	// 				}
-	// 			}],
-	// 			options: {
-	// 				topBar: {
-	// 					visible: false
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// });
 
-	Navigation.setRoot({
-		root: {
-			bottomTabs: {
-				children: [
-					{
-					stack: {
-						children: [{
-							component: {
-								name: 'HomePageViewController',
-								passProps: {
-									text: 'This is tab 1'
-								}
-							}
-						}],
-						options: {
-							bottomTab: {
-								text: 'Finder',
-								icon: require('../../resource/image/doctor.png'),
-								testID: 'FIRST_TAB_BAR_BUTTON'
-							}
-						}
-					}
-				},
-					{
-						stack: {
-							children: [{
-								component: {
-									name: 'PostViewController',
-									passProps: {
-										text: 'This is tab 1'
-									}
-								}
-							}],
-							options: {
-								bottomTab: {
-									text: 'Post',
-									icon: require('../../resource/image/doctor.png'),
-									testID: 'FIRST_TAB_BAR_BUTTON'
-								},
-							}
-						}
-					},
-					{
-						stack: {
-							children: [{
-								component: {
-									name: 'MineViewController',
-									passProps: {
-										text: 'This is tab 1'
-									}
-								}
-							}],
-							options: {
-								bottomTab: {
-									text: 'Mine',
-									icon: require('../../resource/image/doctor.png'),
-									testID: 'FIRST_TAB_BAR_BUTTON'
-								}
-							}
-						}
-					}
-				]
-			}
-		}
-	});
-});
+

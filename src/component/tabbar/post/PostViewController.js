@@ -24,6 +24,16 @@ import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
 import LoadingFooter from '../../BaseComponents/LoadingFooter';
 
 export default class PostViewController extends Component{
+	static options(passProps) {
+		return {
+			topBar: {
+				title: {
+					text: 'Post'
+				},
+			}
+		};
+	}
+
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -35,6 +45,7 @@ export default class PostViewController extends Component{
 
 		this.page = 1
 		this.pageSize = 30
+
 	}
 
 	componentDidMount() {

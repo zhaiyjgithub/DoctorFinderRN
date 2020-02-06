@@ -140,7 +140,7 @@ Navigation.events().registerAppLaunchedListener(async () => {
 									text: 'Post',
 									icon: require('../../resource/image/doctor.png'),
 									testID: 'FIRST_TAB_BAR_BUTTON'
-								}
+								},
 							}
 						}
 					},

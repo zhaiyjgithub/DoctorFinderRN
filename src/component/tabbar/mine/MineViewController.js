@@ -14,6 +14,9 @@ import {
 } from 'react-native';
 import {ScreenDimensions, TabBar} from '../../utils/Dimensions';
 import {Colors} from '../../utils/Styles';
+import RouterEntry from '../../router/RouterEntry';
+import {CacheDB} from '../../utils/DBTool';
+import {DBKey} from '../../utils/CustomEnums';
 
 export default class MineViewController extends Component{
 	constructor(props) {
@@ -37,6 +40,34 @@ export default class MineViewController extends Component{
 					]},
 			]
 		}
+	}
+
+	didSelectedItem(type) {
+		switch (type) {
+			case ItemType.signOut:
+				this.showSignOutAlert()
+
+				break
+			default: ;
+		}
+	}
+
+	showSignOutAlert() {
+		Alert.alert(
+			'Do you want to sign out?',
+			'Sign out.',
+			[
+				{text: 'Okay', onPress: () => {
+						this.signOut()
+					}, style: 'cancel'},
+			],
+			{ cancelable: false }
+		)
+	}
+
+	signOut() {
+		CacheDB.remove(DBKey.userInfo)
+		RouterEntry.guide()
 	}
 
 	renderListHeader() {
@@ -94,7 +125,7 @@ export default class MineViewController extends Component{
 				{this.renderListSectionHeader()}
 
 				<TouchableOpacity onPress={() => {
-
+					this.didSelectedItem(ItemType.signOut)
 				}} style={{width: '100%', height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
 					backgroundColor: Colors.white
 				}}>

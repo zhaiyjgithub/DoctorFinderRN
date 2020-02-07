@@ -17,6 +17,10 @@ import {Colors} from '../../utils/Styles';
 import {NaviBarHeight, ScreenDimensions} from '../../utils/Dimensions';
 import {PLATFORM} from '../../utils/CustomEnums';
 import {Navigation} from 'react-native-navigation';
+import Toast from 'react-native-simple-toast';
+import {HTTP} from '../../utils/HttpTools';
+import {API_Register} from '../../utils/API';
+import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
 
 export default class ResetPasswordViewController extends Component{
 	static defaultProps = {
@@ -27,18 +31,112 @@ export default class ResetPasswordViewController extends Component{
 		this.state = {
 			password: '',
 			confirmPassword: '',
-			code: ''
+			code: '',
+			isSpinnerVisible: false
 		}
 	}
+
+	showSpinner() {
+		this.setState({isSpinnerVisible: true})
+	}
+
+	hideSpinner() {
+		this.setState({isSpinnerVisible: false})
+	}
+
+	getVerificationCode() {
+		if (!this.props.account.length) {
+			Toast.showWithGravity('Email can`t be empty!', Toast.SHORT, Toast.CENTER)
+			return
+		}
+
+		let param = {
+			Email: this.props.account
+		}
+
+		this.showSpinner()
+		HTTP.post(API_Register.sendVerificationCode, param).then((response) => {
+			this.hideSpinner()
+
+			if (!response.code) {
+				Toast.showWithGravity('Verification code has been sent to your email.',
+					Toast.SHORT, Toast.CENTER
+				)
+			}else if (response.code === 4) {
+				Toast.showWithGravity('This email has been registered.',
+					Toast.LONG, Toast.CENTER
+				)
+			}else {
+				Toast.showWithGravity('Send verification failed!',
+					Toast.LONG, Toast.CENTER
+				)
+			}
+		}).catch((error) => {
+			this.hideSpinner()
+			Toast.showWithGravity('Request failed!',
+				Toast.LONG, Toast.CENTER
+			)
+		})
+	}
+
+	resetPassword() {
+		if (!this.state.password.length) {
+			Toast.showWithGravity('Password can`t be empty!', Toast.SHORT, Toast.CENTER)
+			return
+		}
+
+		if (this.state.password !== this.state.confirmPassword) {
+			Toast.showWithGravity('Confirm password is not equal to password!', Toast.SHORT, Toast.CENTER)
+			return
+		}
+
+		if (!this.state.code.length) {
+			Toast.showWithGravity('Verification code can`t be empty!', Toast.SHORT, Toast.CENTER)
+			return
+		}
+
+		let param = {
+			Email: this.props.account,
+			Password: this.state.password,
+			VerificationCode: this.state.code,
+		}
+
+		this.showSpinner()
+		HTTP.post(API_Register.resetPassword, param).then((response) => {
+			this.hideSpinner()
+			if (!response.code) {
+				this.showResetPasswordSuccessAlert()
+			}else {
+				Toast.showWithGravity('Reset failed', Toast.LONG, Toast.CENTER)
+			}
+		}).catch(() => {
+			this.hideSpinner()
+			Toast.showWithGravity('Request failed', Toast.LONG, Toast.CENTER)
+		})
+	}
+
+	showResetPasswordSuccessAlert() {
+		Alert.alert(
+			'Reset successfully',
+			'Please use the newest password to sign in!',
+			[
+				{text: 'Got it', onPress: () => {
+						Navigation.popToRoot(this.props.componentId)
+					}},
+			],
+			{ cancelable: false }
+		)
+	}
+
 	render() {
 		let buttonHeight = ScreenDimensions.width*(50.0/375)
 		return(
 			<View style={{flex: 1, backgroundColor: Colors.white,
-				alignItems: 'center', justifyContent: 'space-between'
+				alignItems: 'center',
 			}}>
 				<Text style={{fontSize: 18, fontWeight: 'bold',
 					color: Colors.lightBlack, marginTop: 30
-				}}>Reset the password with
+				}}>{'Reset your new password to '}
 					<Text style={{fontSize: 18, fontWeight: 'bold',
 						color: Colors.theme, marginTop: 30
 					}}>
@@ -47,10 +145,11 @@ export default class ResetPasswordViewController extends Component{
 				</Text>
 
 				<TextInput
+					secureTextEntry={true}
 					keyboardType = {'email-address'}
 					clearButtonMode={'while-editing'}
 					onChangeText={(text) => {
-						this.setState({account: text.trim() + ''})
+						this.setState({password: text.trim() + ''})
 					}}
 					selectionColor = {Colors.theme}
 					// value = {this.state.searchContent}
@@ -68,13 +167,13 @@ export default class ResetPasswordViewController extends Component{
 					secureTextEntry={true}
 					clearButtonMode={'while-editing'}
 					onChangeText={(text) => {
-						this.setState({password: text.trim() + ''})
+						this.setState({confirmPassword: text.trim() + ''})
 					}}
 					selectionColor = {Colors.theme}
 					// value = {this.state.searchContent}
 					underlineColorAndroid = {'transparent'}
 					numberOfLines={1}
-					placeholder = {'Confirm password again'}
+					placeholder = {'Confirm password'}
 					placeholderTextColor={Colors.lightGray}
 					style={{width: ScreenDimensions.width - 40, marginTop: 20,
 						height: buttonHeight, textAlign: 'left', paddingLeft: 8, fontSize: 16,
@@ -87,7 +186,7 @@ export default class ResetPasswordViewController extends Component{
 				}}>{'Your password must be 8-20 characters with uppercase and lowercase letters and numbers\n'}</Text>
 
 				<View style={{width: ScreenDimensions.width - 40, flexDirection: 'row',
-					alignItems: 'center', justifyContent: 'space-between', marginTop: 20
+					alignItems: 'center', justifyContent: 'space-between', marginTop: 8
 				}}>
 					<TextInput
 						keyboardType = {'number-pad'}
@@ -98,7 +197,7 @@ export default class ResetPasswordViewController extends Component{
 						selectionColor = {Colors.theme}
 						underlineColorAndroid = {'transparent'}
 						numberOfLines={1}
-						placeholder = {'Password'}
+						placeholder = {'Verification code'}
 						placeholderTextColor={Colors.lightGray}
 						style={{width: ScreenDimensions.width - 40 - 80 - 16,
 							height: buttonHeight, textAlign: 'left', paddingLeft: 8, fontSize: 16,
@@ -106,15 +205,19 @@ export default class ResetPasswordViewController extends Component{
 							borderWidth: 1.0, borderColor: Colors.theme
 						}}/>
 
-					<TouchableOpacity style={{
+					<TouchableOpacity onPress={() => {
+						this.getVerificationCode()
+					}} style={{
 						height: buttonHeight, justifyContent: 'center', alignItems: 'center',
-						marginTop: 8, color: Colors.theme, width: 80, backgroundColor: Colors.white
+						 color: Colors.theme, width: 80, backgroundColor: Colors.theme, borderRadius: 4,
 					}}>
 						<Text style={{fontSize: 16, color: Colors.white, fontWeight: 'bold'}}>{'Get'}</Text>
 					</TouchableOpacity>
 				</View>
 
-				<TouchableOpacity style={{width: ScreenDimensions.width - 40,
+				<TouchableOpacity onPress={() => {
+					this.resetPassword()
+				}} style={{width: ScreenDimensions.width - 40,
 					height: buttonHeight, justifyContent: 'center', alignItems: 'center',
 					backgroundColor: Colors.theme, borderRadius: 4,
 					marginTop: 20
@@ -122,6 +225,7 @@ export default class ResetPasswordViewController extends Component{
 					<Text style={{fontSize: 18, color: Colors.white, fontWeight: 'bold'}}>{'Reset'}</Text>
 				</TouchableOpacity>
 
+				<LoadingSpinner visible={this.state.isSpinnerVisible} />
 			</View>
 
 		)

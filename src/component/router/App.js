@@ -31,11 +31,11 @@ global.STORAGE = storage
 
 
 CacheDB.load(DBKey.userInfo, (userInfo) => {
-	// if (userInfo) {
-	// 	RouterEntry.homePage()
-	// }else {
+	if (userInfo) {
+		RouterEntry.homePage()
+	}else {
 		RouterEntry.guide()
-	// }
+	}
 }, (error) => {
 	RouterEntry.guide()
 })

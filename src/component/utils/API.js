@@ -28,7 +28,14 @@ const API_Answer = {
 
 const API_Register = {
 	signIn: 'Register/SignIn',
-	sendVerificationCode: 'Register/SendVerificationCode'
+	sendVerificationCode: 'Register/SendVerificationCode',
+	register: 'Register/Register',
+	verifyEmail: 'Register/VerifyEmail',
+	resetPassword: 'Register/ResetPassword'
+}
+
+const API_User = {
+
 }
 
 
@@ -38,5 +45,6 @@ export {
 	API_Doctor,
 	API_Post,
 	API_Answer,
-	API_Register
+	API_Register,
+	API_User
 }

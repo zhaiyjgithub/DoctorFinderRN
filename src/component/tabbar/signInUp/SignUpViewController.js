@@ -18,7 +18,7 @@ import {NaviBarHeight, ScreenDimensions} from '../../utils/Dimensions';
 import {PLATFORM} from '../../utils/CustomEnums';
 import {Navigation} from 'react-native-navigation';
 import {HTTP} from '../../utils/HttpTools';
-import {API_Register} from '../../utils/API';
+import {API_Register, API_User} from '../../utils/API';
 import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
 import Toast from 'react-native-simple-toast'
 
@@ -77,6 +77,80 @@ export default class SignUpViewController extends Component{
 		})
 	}
 
+	createAccount() {
+		if (!this.state.account.length) {
+			Toast.showWithGravity('Email can`t be empty!', Toast.SHORT, Toast.CENTER)
+			return
+		}
+
+		if (!this.state.password.length) {
+			Toast.showWithGravity('Password can`t be empty!', Toast.SHORT, Toast.CENTER)
+			return
+		}
+
+		if (this.state.password !== this.state.confirmPassword) {
+			Toast.showWithGravity('Confirm password is not equal to password!', Toast.SHORT, Toast.CENTER)
+			return
+		}
+
+		if (!this.state.code.length) {
+			Toast.showWithGravity('Verification code can`t be empty!', Toast.SHORT, Toast.CENTER)
+			return
+		}
+
+		let param = {
+			Email: this.state.account,
+			Password: this.state.password,
+			VerificationCode: this.state.code
+		}
+
+		this.showSpinner()
+		HTTP.post(API_Register.register, param).then((response) => {
+			this.hideSpinner()
+			if (!response.code) {
+				this.showRegisterSuccessAlert()
+			}else {
+				Toast.showWithGravity(response.msg, Toast.LONG, Toast.CENTER)
+			}
+		}).catch((error) => {
+			this.hideSpinner()
+			Toast.showWithGravity('Request failed!', Toast.LONG, Toast.CENTER)
+		})
+	}
+
+	showRegisterSuccessAlert() {
+		Alert.alert(
+			'Congratulate',
+			'Register successfully!',
+			[
+				{text: 'Sign In', onPress: () => {
+					this.modalToLogInPage()
+					}},
+			],
+			{ cancelable: false }
+		)
+	}
+
+	modalToLogInPage() {
+		Navigation.showModal({
+			stack: {
+				children: [{
+					component: {
+						name: 'LogInViewController',
+						passProps: {
+
+						},
+						options: {
+							topBar: {
+								visible: false
+							}
+						}
+					}
+				}]
+			}
+		});
+	}
+
 	render() {
 		let buttonHeight = ScreenDimensions.width*(50.0/375)
 		return(
@@ -97,6 +171,8 @@ export default class SignUpViewController extends Component{
 					}}>Create your account</Text>
 
 					<TextInput
+						autoCorrect={false}
+						autoCapitalize={'none'}
 						keyboardType = {'email-address'}
 						clearButtonMode={'while-editing'}
 						onChangeText={(text) => {
@@ -185,7 +261,9 @@ export default class SignUpViewController extends Component{
 					</View>
 
 
-					<TouchableOpacity style={{width: ScreenDimensions.width - 40,
+					<TouchableOpacity onPress={() => {
+						this.createAccount()
+					}} style={{width: ScreenDimensions.width - 40,
 						height: buttonHeight, justifyContent: 'center', alignItems: 'center',
 						backgroundColor: Colors.theme, borderRadius: 4,
 						marginTop: 20

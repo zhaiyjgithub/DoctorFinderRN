@@ -23,6 +23,7 @@ import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
 import {HTTP} from '../../utils/HttpTools';
 import {API_Answer, API_Register} from '../../utils/API';
 import {CacheDB} from '../../utils/DBTool';
+import RouterEntry from '../../router/RouterEntry';
 
 export default class LogInViewController extends Component{
     constructor(props) {
@@ -64,6 +65,8 @@ export default class LogInViewController extends Component{
             if (!response.code) {
                 let userInfo = Object.assign(response.data.User, {Token: response.data.Token})
                 CacheDB.save(DBKey.userInfo, userInfo)
+
+                RouterEntry.homePage()
             }else {
                 Toast.showWithGravity('Email or password is wrong!', Toast.LONG, Toast.CENTER)
             }
@@ -71,7 +74,6 @@ export default class LogInViewController extends Component{
             this.hideSpinner()
             Toast.showWithGravity('Request failed!', Toast.LONG, Toast.CENTER)
         })
-
     }
 
     pushToVerifyAccountPage() {
@@ -136,6 +138,8 @@ export default class LogInViewController extends Component{
                     }}>Sign in to your account</Text>
 
                     <TextInput
+                        autoCorrect={false}
+                        autoCapitalize={'none'}
                         keyboardType = {'email-address'}
                         clearButtonMode={'while-editing'}
                         onChangeText={(text) => {

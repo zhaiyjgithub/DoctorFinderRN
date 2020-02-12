@@ -3,6 +3,7 @@ import {AsyncStorage, Text, TextInput} from 'react-native';
 import {CacheDB} from '../utils/DBTool';
 import {DBKey} from '../utils/CustomEnums';
 import RouterEntry from './RouterEntry';
+import {Navigation} from 'react-native-navigation';
 
 
 Text.defaultProps = Text.defaultProps || {};
@@ -30,15 +31,18 @@ const storage = new Storage({
 global.STORAGE = storage
 
 
-CacheDB.load(DBKey.userInfo, (userInfo) => {
-	if (userInfo) {
-		RouterEntry.homePage()
-	}else {
+Navigation.events().registerAppLaunchedListener(async () => {
+	CacheDB.load(DBKey.userInfo, (userInfo) => {
+		if (userInfo) {
+			RouterEntry.homePage()
+		}else {
+			RouterEntry.guide()
+		}
+	}, (error) => {
 		RouterEntry.guide()
-	}
-}, (error) => {
-	RouterEntry.guide()
+	})
 })
+
 
 
 

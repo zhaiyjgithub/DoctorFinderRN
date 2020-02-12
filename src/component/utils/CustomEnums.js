@@ -25,8 +25,11 @@ const ErrorCode = {
 const Gender = {
 	male: 'M',
 	female: 'F',
-	unknown: ''
+	unknown: '',
+	maleType: 0,
+	femaleTye: 1,
 }
+
 
 const SearchBarType = {
 	normal: 0,

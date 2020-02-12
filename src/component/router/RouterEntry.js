@@ -84,102 +84,100 @@ const RouterEntry = {
 		});
 	},
 	homePage: () => {
-		Navigation.events().registerAppLaunchedListener(async () => {
-			Navigation.setDefaultOptions({
-				statusBar: {
-					visible: true,
-					style: 'light'
+		Navigation.setDefaultOptions({
+			statusBar: {
+				visible: true,
+				style: 'light'
+			},
+			topBar: {
+				background: {
+					color: Colors.theme,
 				},
-				topBar: {
-					background: {
-						color: Colors.theme,
-					},
-					noBorder: true,
-					drawBehind: false,
-					leftButtonColor: Colors.white,
-					rightButtonColor: Colors.white,
-					title: {
-						color: Colors.white,
-						fontWeight: 'bold',
-						fontSize: 16,
-					},
-					backButton: {
-						color: Colors.white,
-						title: ''
-					}
+				noBorder: true,
+				drawBehind: false,
+				leftButtonColor: Colors.white,
+				rightButtonColor: Colors.white,
+				title: {
+					color: Colors.white,
+					fontWeight: 'bold',
+					fontSize: 16,
 				},
-				bottomTabs: {
-					visible: true,
-					drawBehind: true,
+				backButton: {
+					color: Colors.white,
+					title: ''
 				}
-			});
+			},
+			bottomTabs: {
+				visible: true,
+				drawBehind: true,
+			}
+		});
 
-			Navigation.setRoot({
-				root: {
-					bottomTabs: {
-						children: [
-							{
-								stack: {
-									children: [{
-										component: {
-											name: 'HomePageViewController',
-											passProps: {
-												text: 'This is tab 1'
-											}
-										}
-									}],
-									options: {
-										bottomTab: {
-											text: 'Finder',
-											icon: require('../../resource/image/doctor.png'),
-											testID: 'FIRST_TAB_BAR_BUTTON'
+		Navigation.setRoot({
+			root: {
+				bottomTabs: {
+					children: [
+						{
+							stack: {
+								children: [{
+									component: {
+										name: 'HomePageViewController',
+										passProps: {
+											text: 'This is tab 1'
 										}
 									}
-								}
-							},
-							{
-								stack: {
-									children: [{
-										component: {
-											name: 'PostViewController',
-											passProps: {
-												text: 'This is tab 1'
-											}
-										}
-									}],
-									options: {
-										bottomTab: {
-											text: 'Post',
-											icon: require('../../resource/image/doctor.png'),
-											testID: 'FIRST_TAB_BAR_BUTTON'
-										},
-									}
-								}
-							},
-							{
-								stack: {
-									children: [{
-										component: {
-											name: 'MineViewController',
-											passProps: {
-												text: 'This is tab 1'
-											}
-										}
-									}],
-									options: {
-										bottomTab: {
-											text: 'Mine',
-											icon: require('../../resource/image/doctor.png'),
-											testID: 'FIRST_TAB_BAR_BUTTON'
-										}
+								}],
+								options: {
+									bottomTab: {
+										text: 'Finder',
+										icon: require('../../resource/image/doctor.png'),
+										testID: 'FIRST_TAB_BAR_BUTTON'
 									}
 								}
 							}
-						]
-					}
+						},
+						{
+							stack: {
+								children: [{
+									component: {
+										name: 'PostViewController',
+										passProps: {
+											text: 'This is tab 1'
+										}
+									}
+								}],
+								options: {
+									bottomTab: {
+										text: 'Post',
+										icon: require('../../resource/image/doctor.png'),
+										testID: 'FIRST_TAB_BAR_BUTTON'
+									},
+								}
+							}
+						},
+						{
+							stack: {
+								children: [{
+									component: {
+										name: 'MineViewController',
+										passProps: {
+											text: 'This is tab 1'
+										}
+									}
+								}],
+								options: {
+									bottomTab: {
+										text: 'Mine',
+										icon: require('../../resource/image/doctor.png'),
+										testID: 'FIRST_TAB_BAR_BUTTON'
+									}
+								}
+							}
+						}
+					]
 				}
-			});
-		});
+			}
+		})
 	}
 }
 

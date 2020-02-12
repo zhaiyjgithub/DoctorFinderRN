@@ -10,7 +10,7 @@ import {
     Animated,
     Linking,
     ScrollView,
-    AppState, TouchableOpacity, Image, Text, RefreshControl,
+    Keyboard, TouchableOpacity, Image, Text, RefreshControl,
     TextInput
 } from 'react-native'
 import {Colors} from '../../utils/Styles';
@@ -62,6 +62,7 @@ export default class LogInViewController extends Component{
         this.showSpinner()
         HTTP.post(API_Register.signIn, param).then((response) => {
             this.hideSpinner()
+
             if (!response.code) {
                 let userInfo = Object.assign(response.data.User, {Token: response.data.Token})
                 CacheDB.save(DBKey.userInfo, userInfo)
@@ -123,7 +124,9 @@ export default class LogInViewController extends Component{
         let buttonWidth = (ScreenDimensions.width - 40 - 16)/2.0
         let buttonHeight = ScreenDimensions.width*(50.0/375)
         return(
-            <View style={{flex: 1, backgroundColor: Colors.white,
+            <TouchableOpacity activeOpacity={1} onPress={() => {
+                Keyboard.dismiss()
+            }} style={{flex: 1, backgroundColor: Colors.white,
                 alignItems: 'center', justifyContent: 'space-between'
             }}>
                 <View style={{flex: 1, backgroundColor: Colors.white,
@@ -215,7 +218,7 @@ export default class LogInViewController extends Component{
                 </TouchableOpacity>
 
                 <LoadingSpinner visible={this.state.isSpinnerVisible} />
-            </View>
+            </TouchableOpacity>
         )
     }
 }

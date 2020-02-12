@@ -57,6 +57,9 @@ export default class MineViewController extends Component{
 			'Do you want to sign out?',
 			'Sign out.',
 			[
+				{text: 'Cancel', onPress: () => {
+						// this.signOut()
+					}, style: 'cancel'},
 				{text: 'Okay', onPress: () => {
 						this.signOut()
 					}, style: 'cancel'},

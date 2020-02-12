@@ -31,7 +31,9 @@ const API_Register = {
 	sendVerificationCode: 'Register/SendVerificationCode',
 	register: 'Register/Register',
 	verifyEmail: 'Register/VerifyEmail',
-	resetPassword: 'Register/ResetPassword'
+	resetPassword: 'Register/ResetPassword',
+	headerImg: 'Register/HeaderImg'
+
 }
 
 const API_User = {

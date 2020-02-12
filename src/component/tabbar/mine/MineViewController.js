@@ -17,6 +17,7 @@ import {Colors} from '../../utils/Styles';
 import RouterEntry from '../../router/RouterEntry';
 import {CacheDB} from '../../utils/DBTool';
 import {DBKey} from '../../utils/CustomEnums';
+import {API_Post, API_Register, BaseUrl} from '../../utils/API';
 
 export default class MineViewController extends Component{
 	constructor(props) {
@@ -28,18 +29,30 @@ export default class MineViewController extends Component{
 				]},
 
 				{data:[
-						{title: 'My track', type: ItemType.track},
-						{title: 'My favorite', type: ItemType.favor},
-						{title: 'My post', type: ItemType.post},
+						{title: 'My Track', type: ItemType.track},
+						{title: 'My Favorite', type: ItemType.favor},
+						{title: 'My Post', type: ItemType.post},
 					]},
 
 				{data:[
-						{title: 'Reset password', type: ItemType.resetPassword},
+						{title: 'Reset Password', type: ItemType.resetPassword},
 						{title: 'Feedback', type: ItemType.feedback},
 						{title: 'About', type: ItemType.about},
 					]},
 			]
 		}
+	}
+
+	getUserName() {
+		return UserInfo.Name
+	}
+
+	getHeaderIcon() {
+		return UserInfo.HeaderIcon
+	}
+
+	getUserGender() {
+		return UserInfo.Gender
 	}
 
 	didSelectedItem(type) {
@@ -74,6 +87,12 @@ export default class MineViewController extends Component{
 	}
 
 	renderListHeader() {
+		//HeaderImg
+		let imageURI = require('../../../resource/image/base/avatar.jpg')
+		if (this.getHeaderIcon().length) {
+			imageURI = {uri: BaseUrl + API_Register.headerImg +'?name=' + this.getHeaderIcon()}
+		}
+
 		return(
 			<View style={{width: '100%', backgroundColor: Colors.red, height: 92,}}>
 				<View style={{position: 'absolute', left: 0, right: 0, top: 0, height: 16 + 30, backgroundColor: Colors.theme}}/>
@@ -83,12 +102,12 @@ export default class MineViewController extends Component{
 					borderRadius: 6, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: Colors.white,
 					backgroundColor: Colors.white, overflow: 'hidden'
 				}}>
-					<Image source={require('../../../resource/image/base/avatar.jpg')} style={{width: 60, height: 60,}}/>
+					<Image source={imageURI} style={{width: 60, height: 60,}}/>
 				</TouchableOpacity>
 
 				<Text numberOfLines={1} style={{position: 'absolute', left: 16 + 60 + 8, bottom: 16 + 30, width: (ScreenDimensions.width - (16 + 60 + 8 + 8)),
 						fontSize: 20, fontWeight: 'bold', color: Colors.white
-					}}>{'Zack'}</Text>
+					}}>{this.getUserName()}</Text>
 			</View>
 		)
 	}

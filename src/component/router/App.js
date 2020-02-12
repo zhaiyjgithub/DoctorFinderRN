@@ -34,6 +34,7 @@ global.STORAGE = storage
 Navigation.events().registerAppLaunchedListener(async () => {
 	CacheDB.load(DBKey.userInfo, (userInfo) => {
 		if (userInfo) {
+			global.UserInfo = userInfo
 			RouterEntry.homePage()
 		}else {
 			RouterEntry.guide()

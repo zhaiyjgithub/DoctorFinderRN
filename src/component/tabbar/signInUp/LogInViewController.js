@@ -67,6 +67,8 @@ export default class LogInViewController extends Component{
                 let userInfo = Object.assign(response.data.User, {Token: response.data.Token})
                 CacheDB.save(DBKey.userInfo, userInfo)
 
+                global.UserInfo = userInfo
+
                 RouterEntry.homePage()
             }else {
                 Toast.showWithGravity('Email or password is wrong!', Toast.LONG, Toast.CENTER)
@@ -137,7 +139,7 @@ export default class LogInViewController extends Component{
                     }}>Doctor Finder</Text>
 
                     <Text style={{fontSize: 24, fontWeight: 'bold',
-                        color: Colors.lightBlack, marginTop: 60
+                        color: Colors.lightBlack, marginTop: 30
                     }}>Sign in to your account</Text>
 
                     <TextInput

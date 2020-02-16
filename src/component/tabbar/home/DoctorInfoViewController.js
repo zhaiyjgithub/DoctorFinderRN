@@ -6,7 +6,7 @@ import {Navigation} from 'react-native-navigation';
 import DoctorInfoItem from './view/DoctorInfoItem';
 import {HTTP} from '../../utils/HttpTools';
 import {API_Doctor} from '../../utils/API';
-import {PLATFORM} from '../../utils/CustomEnums';
+import {CollectionType, PLATFORM} from '../../utils/CustomEnums';
 import DoctorInfoHeaderItem from './view/DoctorInfoHeaderItem';
 import DoctorInfoTextItem from './view/DoctorInfoTextItem';
 import DoctorInfoAddressItem from './view/DoctorInfoAddressItem';
@@ -112,6 +112,10 @@ export default class DoctorInfoViewController extends Component{
 		}
 	}
 
+	getUserID() {
+		return UserInfo.UserID
+	}
+
 	setTopBarButtons(isCollected) {
 		Navigation.mergeOptions(this.props.componentId, {
 			topBar: {
@@ -157,8 +161,9 @@ export default class DoctorInfoViewController extends Component{
 
 	getCollectionStatus() {
 		let param = {
-			Npi: this.props.info.Npi,
-			UserId: 1,
+			ObjectId: this.props.info.Npi,
+			ObjectType: CollectionType.doctor,
+			UserId: this.getUserID(),
 		}
 
 		HTTP.post(API_Doctor.getCollectionStatus, param).then((response) => {
@@ -171,8 +176,9 @@ export default class DoctorInfoViewController extends Component{
 
 	addCollection() {
 		let param = {
-			Npi: this.props.info.Npi,
-			UserId: 1,
+			ObjectId: this.props.info.Npi,
+			ObjectType: CollectionType.doctor,
+			UserId: this.getUserID(),
 		}
 
 		HTTP.post(API_Doctor.addCollection, param).then((response) => {
@@ -190,8 +196,9 @@ export default class DoctorInfoViewController extends Component{
 
 	cancelCollection() {
 		let param = {
-			Npi: this.props.info.Npi,
-			UserId: 1,
+			ObjectId: this.props.info.Npi,
+			ObjectType: CollectionType.doctor,
+			UserId: this.getUserID(),
 		}
 
 		HTTP.post(API_Doctor.deleteCollection, param).then((response) => {

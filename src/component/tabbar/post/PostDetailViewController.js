@@ -89,6 +89,10 @@ export default class PostDetailViewController extends Component{
 		this.navigationEventListener && this.navigationEventListener.remove();
 	}
 
+	getUserID() {
+		return UserInfo.UserID
+	}
+
 	addKeyBoardListener() {
 		if (PLATFORM.isIOS) {//keyboardDidShow
 			this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this));
@@ -149,7 +153,7 @@ export default class PostDetailViewController extends Component{
 		}
 
 		let param = {
-			UserID: 1,
+			UserID: this.getUserID(),
 			PostID: this.props.postInfo.PostID,
 			Page: this.page,
 			PageSize: this.pageSize
@@ -199,7 +203,7 @@ export default class PostDetailViewController extends Component{
 
 		let param = {
 			PostID: this.props.postInfo.PostID,
-			UserID: 1,
+			UserID: this.getUserID(),
 			Description: this.state.newAnswer
 		}
 
@@ -398,7 +402,7 @@ export default class PostDetailViewController extends Component{
 	addLikeToAnswer(answerID, cb) {
 		let param = {
 			AnswerID: answerID,
-			UserID: 1,
+			UserID: this.getUserID(),
 		}
 
 		HTTP.post(API_Answer.addAnswerLikes, param).then((response) => {
@@ -414,7 +418,7 @@ export default class PostDetailViewController extends Component{
 
 	addLikeToPost() {
 		let param = {
-			UserID: 1,
+			UserID: this.getUserID(),
 			PostID: this.props.postInfo.PostID
 		}
 
@@ -436,7 +440,7 @@ export default class PostDetailViewController extends Component{
 
 	addFavorToPost() {
 		let param = {
-			UserID: 1,
+			UserID: this.getUserID(),
 			PostID: this.props.postInfo.PostID
 		}
 

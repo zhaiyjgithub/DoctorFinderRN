@@ -46,6 +46,11 @@ const DBKey = {
 	userInfo: 'UserInfo'
 }
 
+const CollectionType = {
+	doctor: 0,
+	post: 1,
+}
+
 export {
 	PLATFORM,
 	Language,
@@ -53,5 +58,6 @@ export {
 	Gender,
 	SearchBarType,
 	SearchBarOverlayType,
-	DBKey
+	DBKey,
+	CollectionType
 }

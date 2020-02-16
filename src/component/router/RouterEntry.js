@@ -17,6 +17,7 @@ import ResetPasswordViewController from '../tabbar/signInUp/ResetPasswordViewCon
 import NewPostViewController from '../tabbar/post/NewPostViewController'
 import GalleryViewController from '../tabbar/post/GalleryViewController'
 import PostDetailViewController from '../tabbar/post/PostDetailViewController'
+import UpdateUserInfoViewController from '../tabbar/mine/UpdateUserInfoViewController'
 //
 
 Navigation.registerComponent('HomePageViewController', () => HomePageViewController);
@@ -38,7 +39,8 @@ Navigation.registerComponent('ResetPasswordViewController', () => ResetPasswordV
 Navigation.registerComponent('NewPostViewController', () => NewPostViewController);
 Navigation.registerComponent('GalleryViewController', () => GalleryViewController)
 Navigation.registerComponent('PostDetailViewController', () => PostDetailViewController)
-
+Navigation.registerComponent('UpdateUserInfoViewController', () => UpdateUserInfoViewController)
+//
 
 import {Navigation} from 'react-native-navigation';
 import {Colors} from '../utils/Styles';

@@ -161,9 +161,9 @@ export default class DoctorInfoViewController extends Component{
 
 	getCollectionStatus() {
 		let param = {
-			ObjectId: this.props.info.Npi,
+			ObjectID: this.props.info.Npi,
 			ObjectType: CollectionType.doctor,
-			UserId: this.getUserID(),
+			UserID: this.getUserID(),
 		}
 
 		HTTP.post(API_Doctor.getCollectionStatus, param).then((response) => {
@@ -176,13 +176,12 @@ export default class DoctorInfoViewController extends Component{
 
 	addCollection() {
 		let param = {
-			ObjectId: this.props.info.Npi,
+			ObjectID: this.props.info.Npi,
 			ObjectType: CollectionType.doctor,
-			UserId: this.getUserID(),
+			UserID: this.getUserID(),
 		}
 
 		HTTP.post(API_Doctor.addCollection, param).then((response) => {
-			console.log(response)
 			if (response.code === 0) {
 				this.isCollected = true
 				this.setTopBarButtons(this.isCollected)
@@ -196,9 +195,9 @@ export default class DoctorInfoViewController extends Component{
 
 	cancelCollection() {
 		let param = {
-			ObjectId: this.props.info.Npi,
+			ObjectID: this.props.info.Npi,
 			ObjectType: CollectionType.doctor,
-			UserId: this.getUserID(),
+			UserID: this.getUserID(),
 		}
 
 		HTTP.post(API_Doctor.deleteCollection, param).then((response) => {

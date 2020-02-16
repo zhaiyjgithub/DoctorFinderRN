@@ -37,7 +37,8 @@ const API_Register = {
 }
 
 const API_User = {
-
+	getUserInfo: 'User/GetUserInfo',
+	updateUserInfo: 'User/UpdateUserInfo'
 }
 
 

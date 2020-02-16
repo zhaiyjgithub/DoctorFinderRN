@@ -69,11 +69,11 @@ export default class PostItem extends Component{
 						</TouchableOpacity>
 					</View>
 
-					<Text style={{fontSize: 12, color: Colors.lightGray, marginLeft: 8, marginTop: 8,}}>
-						{CalcTimeStamp(postInfo.PostDate)}
-					</Text>
+					{/*<Text style={{fontSize: 12, color: Colors.lightGray, marginLeft: 8, marginTop: 8,}}>*/}
+					{/*	{CalcTimeStamp(postInfo.PostDate)}*/}
+					{/*</Text>*/}
 
-					<View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+					<View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 8}}>
 						<Text numberOfLines={1} style={{fontSize: 20, fontWeight: 'bold', color: Colors.black,
 							width: ScreenDimensions.width - 32 - (postInfo.URLs.length ? 50 : 0), paddingHorizontal: 8, backgroundColor: Colors.white
 						}}>{postInfo.Title}</Text>

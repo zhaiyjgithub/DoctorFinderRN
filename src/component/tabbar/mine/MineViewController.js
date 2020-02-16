@@ -17,7 +17,12 @@ import {Colors} from '../../utils/Styles';
 import RouterEntry from '../../router/RouterEntry';
 import {CacheDB} from '../../utils/DBTool';
 import {DBKey} from '../../utils/CustomEnums';
-import {API_Post, API_Register, BaseUrl} from '../../utils/API';
+import {API_Post, API_Register, API_User, BaseUrl} from '../../utils/API';
+import {Navigation} from 'react-native-navigation';
+import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
+import {UpdateUserInfoType} from './UpdateUserInfoViewController';
+import {HTTP} from '../../utils/HttpTools';
+import Toast from "react-native-simple-toast"
 
 export default class MineViewController extends Component{
 	constructor(props) {
@@ -39,7 +44,8 @@ export default class MineViewController extends Component{
 						{title: 'Feedback', type: ItemType.feedback},
 						{title: 'About', type: ItemType.about},
 					]},
-			]
+			],
+			userName: this.getUserName()
 		}
 	}
 
@@ -55,12 +61,24 @@ export default class MineViewController extends Component{
 		return UserInfo.Gender
 	}
 
+	getUserEmail() {
+		return UserInfo.Email
+	}
+
+	getUserID() {
+		return UserInfo.UserID
+	}
+
 	didSelectedItem(type) {
 		switch (type) {
 			case ItemType.signOut:
 				this.showSignOutAlert()
+				break
+
+			case ItemType.email:
 
 				break
+
 			default: ;
 		}
 	}
@@ -81,13 +99,52 @@ export default class MineViewController extends Component{
 		)
 	}
 
+	pushToUpdateUserInfoPage(item, type, title) {
+		Navigation.push(this.props.componentId, {
+			component: {
+				name: 'UpdateUserInfoViewController',
+				passProps: {
+					type: type,
+					item: item,
+					placeholder: 'User Name',
+					updateUserInfoCB:() => {
+						this.getUserInfo()
+					}
+				},
+				options: BaseNavigatorOptions(title)
+			}
+		})
+	}
+
 	signOut() {
 		CacheDB.remove(DBKey.userInfo)
 		RouterEntry.guide()
 	}
 
+	getUserInfo() {
+		let param = {
+			UserID: this.getUserID()
+		}
+
+		HTTP.post(API_User.getUserInfo, param).then((response) => {
+			if (response.code || !response.data) {
+				Toast.showWithGravity("Get User Information failed")
+				return
+			}
+
+			CacheDB.load(DBKey.userInfo, (cacheUserInfo) => {
+				let token = cacheUserInfo.Token
+				let newUserInfo = Object.assign({Token: token}, response.data)
+
+				CacheDB.save(DBKey.userInfo, newUserInfo)
+				this.setState({userName: newUserInfo.Name})
+			})
+		}).catch((error) => {
+			console.log(error)
+		})
+	}
+
 	renderListHeader() {
-		//HeaderImg
 		let imageURI = require('../../../resource/image/base/avatar.jpg')
 		if (this.getHeaderIcon().length) {
 			imageURI = {uri: BaseUrl + API_Register.headerImg +'?name=' + this.getHeaderIcon()}
@@ -98,24 +155,28 @@ export default class MineViewController extends Component{
 				<View style={{position: 'absolute', left: 0, right: 0, top: 0, height: 16 + 30, backgroundColor: Colors.theme}}/>
 				<View style={{position: 'absolute', left: 0, right: 0, bottom: 0, height: 16 + 30, backgroundColor: Colors.systemGray}}/>
 
-				<TouchableOpacity style={{position: 'absolute', left: 16, top: 16, width: 60, height: 60,
+				<TouchableOpacity activeOpacity={1} style={{position: 'absolute', left: 16, top: 16, width: 60, height: 60,
 					borderRadius: 6, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: Colors.white,
 					backgroundColor: Colors.white, overflow: 'hidden'
 				}}>
 					<Image source={imageURI} style={{width: 60, height: 60,}}/>
 				</TouchableOpacity>
 
-				<Text numberOfLines={1} style={{position: 'absolute', left: 16 + 60 + 8, bottom: 16 + 30, width: (ScreenDimensions.width - (16 + 60 + 8 + 8)),
+				<Text onPress={() => {
+					this.pushToUpdateUserInfoPage(this.getUserName(), UpdateUserInfoType.name, "Update Name")
+				}} numberOfLines={1} style={{position: 'absolute', left: 16 + 60 + 8, bottom: 16 + 30, width: (ScreenDimensions.width - (16 + 60 + 8 + 8)),
 						fontSize: 20, fontWeight: 'bold', color: Colors.white
-					}}>{this.getUserName()}</Text>
+					}}>{this.state.userName}</Text>
 			</View>
 		)
 	}
 
 	renderItem(item) {
 		return(
-			<TouchableOpacity onPress={() => {
-
+			<TouchableOpacity activeOpacity={item.type === ItemType.email ? 1 : 0.2} onPress={() => {
+				if (item.type !== ItemType.email) {
+					this.didSelectedItem(item.type)
+				}
 			}} style={{width: '100%', height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
 				backgroundColor: Colors.white
 			}}>
@@ -123,7 +184,11 @@ export default class MineViewController extends Component{
 					{item.title}
 				</Text>
 
-				<Image source={require('../../../resource/image/base/right_arrow.png')} style={{width: 8, height: 14, marginRight: 16,}}/>
+				{item.type === ItemType.email ? <Text style={{width: ScreenDimensions.width - 32 - 60, fontSize: 16,
+					color: Colors.lightGray, marginRight: 16, textAlign: "right",
+				}}>
+					{this.getUserEmail()}
+				</Text> : <Image source={require('../../../resource/image/base/right_arrow.png')} style={{width: 8, height: 14, marginRight: 16,}}/>}
 
 				<View style={{position: 'absolute', left: 0, right: 0, bottom: 0, height: 1.0, backgroundColor: Colors.lineColor}}/>
 			</TouchableOpacity>

@@ -109,7 +109,6 @@ export default class PostViewController extends Component{
 		})
 	}
 
-
 	pushToNewPostPage() {
 		Navigation.push(this.props.componentId, {
 			component: {

@@ -50,7 +50,7 @@ const CalcTimeStamp = (dateString) => {
 			return parseInt(timeStamp/(3600*24)) + ' days before'
 		}
 
-		return hour + ':' + min + ' ' + month + '/' + day + '/' + year
+		return hour + ':' + min + ' ' + month + '/' + day //+ '/' + year
 	}
 }
 

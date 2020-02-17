@@ -23,6 +23,7 @@ import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 import {UpdateUserInfoType} from './UpdateUserInfoViewController';
 import {HTTP} from '../../utils/HttpTools';
 import Toast from "react-native-simple-toast"
+import MyFavorViewController from './MyFavorViewController';
 
 export default class MineViewController extends Component{
 	constructor(props) {
@@ -76,7 +77,10 @@ export default class MineViewController extends Component{
 				break
 
 			case ItemType.email:
+				break
 
+			case ItemType.favor:
+				this.pushToFavorPage()
 				break
 
 			default: ;
@@ -112,6 +116,17 @@ export default class MineViewController extends Component{
 					}
 				},
 				options: BaseNavigatorOptions(title)
+			}
+		})
+	}
+
+	pushToFavorPage() {
+		Navigation.push(this.props.componentId, {
+			component: {
+				name: 'MyFavorViewController',
+				passProps: {
+				},
+				options: BaseNavigatorOptions('')
 			}
 		})
 	}

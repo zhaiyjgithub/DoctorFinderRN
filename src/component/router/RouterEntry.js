@@ -18,6 +18,8 @@ import NewPostViewController from '../tabbar/post/NewPostViewController'
 import GalleryViewController from '../tabbar/post/GalleryViewController'
 import PostDetailViewController from '../tabbar/post/PostDetailViewController'
 import UpdateUserInfoViewController from '../tabbar/mine/UpdateUserInfoViewController'
+import SegmentTabView from '../BaseComponents/SegmentTabView'
+import MyFavorViewController from '../tabbar/mine/MyFavorViewController'
 //
 
 Navigation.registerComponent('HomePageViewController', () => HomePageViewController);
@@ -40,6 +42,8 @@ Navigation.registerComponent('NewPostViewController', () => NewPostViewControlle
 Navigation.registerComponent('GalleryViewController', () => GalleryViewController)
 Navigation.registerComponent('PostDetailViewController', () => PostDetailViewController)
 Navigation.registerComponent('UpdateUserInfoViewController', () => UpdateUserInfoViewController)
+Navigation.registerComponent('SegmentTabView', () => SegmentTabView)
+Navigation.registerComponent('MyFavorViewController', () => MyFavorViewController)
 //
 
 import {Navigation} from 'react-native-navigation';

@@ -4,7 +4,6 @@ const API_Doctor = {
 	getHotSearchDoctors: 'Doctor/GetHotSearchDoctors',
 	getDoctorInfoWithNpi: 'Doctor/GetDoctorInfoWithNpi',
 	getRelatedDoctors: 'Doctor/GetRelatedDoctors',
-	addCollection: 'Doctor/AddCollection',
 	getCollectionStatus: 'Doctor/GetCollectionStatus',
 	deleteCollection: 'Doctor/DeleteCollection',
 	searchDoctorByPage: 'Doctor/SearchDoctorByPage',
@@ -38,7 +37,9 @@ const API_Register = {
 
 const API_User = {
 	getUserInfo: 'User/GetUserInfo',
-	updateUserInfo: 'User/UpdateUserInfo'
+	updateUserInfo: 'User/UpdateUserInfo',
+	getMyFavorite: 'User/GetMyFavorite',
+	addFavorite: 'User/AddFavorite',
 }
 
 

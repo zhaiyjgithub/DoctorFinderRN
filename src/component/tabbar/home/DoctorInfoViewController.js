@@ -5,7 +5,7 @@ import {ScreenDimensions} from '../../utils/Dimensions';
 import {Navigation} from 'react-native-navigation';
 import DoctorInfoItem from './view/DoctorInfoItem';
 import {HTTP} from '../../utils/HttpTools';
-import {API_Doctor} from '../../utils/API';
+import {API_Doctor, API_User} from '../../utils/API';
 import {CollectionType, PLATFORM} from '../../utils/CustomEnums';
 import DoctorInfoHeaderItem from './view/DoctorInfoHeaderItem';
 import DoctorInfoTextItem from './view/DoctorInfoTextItem';
@@ -181,7 +181,7 @@ export default class DoctorInfoViewController extends Component{
 			UserID: this.getUserID(),
 		}
 
-		HTTP.post(API_Doctor.addCollection, param).then((response) => {
+		HTTP.post(API_User.addFavorite, param).then((response) => {
 			if (response.code === 0) {
 				this.isCollected = true
 				this.setTopBarButtons(this.isCollected)

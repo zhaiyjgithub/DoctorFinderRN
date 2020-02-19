@@ -20,7 +20,6 @@ export default class HomePageViewController extends Component{
 
 		this.state = {
 			dataSource: [{section: 0, data: [{section: 0,}]}],
-			filterOverlayVisible: false
 		}
 
 		this.setTopBarView(false)
@@ -225,19 +224,17 @@ export default class HomePageViewController extends Component{
 	}
 
 	showQuestionAlert() {
-		// Alert.alert(
-		// 	'Information is incorrect?',
-		// 	'Thank you very much for the feedback you can provide us and other users.',
-		// 	[
-		// 		{text: 'Cancel', onPress: () => {}, style: 'cancel'},
-		// 		{text: 'Feedback', onPress: () => {
-		//
-		// 			}},
-		// 	],
-		// 	{ cancelable: false }
-		// )
+		Alert.alert(
+			'Information is incorrect?',
+			'Thank you very much for the feedback you can provide us and other users.',
+			[
+				{text: 'Cancel', onPress: () => {}, style: 'cancel'},
+				{text: 'Feedback', onPress: () => {
 
-		this.setState({filterOverlayVisible: true})
+					}},
+			],
+			{ cancelable: false }
+		)
 	}
 
 	pushToDoctorInfoPage(item) {

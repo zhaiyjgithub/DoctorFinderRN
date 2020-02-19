@@ -10,17 +10,20 @@ import {
 	Animated,
 	Linking,
 	ScrollView,
-	AppState, TouchableOpacity, Image, Text, RefreshControl, SectionList,
+	AppState, TouchableOpacity, Image, Text, RefreshControl, SectionList, ImageBackground,
 } from 'react-native';
 import {Colors} from '../../utils/Styles';
 import {NaviBarHeight, ScreenDimensions, TabBar} from '../../utils/Dimensions';
-import {Gender, PLATFORM, SearchBarType} from '../../utils/CustomEnums';
+import {CollectionType, EventName, Gender, PLATFORM, SearchBarType} from '../../utils/CustomEnums';
 import {Navigation} from 'react-native-navigation';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 import {HTTP} from '../../utils/HttpTools';
-import {API_Post} from '../../utils/API';
+import {API_Post, API_User} from '../../utils/API';
 import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
 import LoadingFooter from '../../BaseComponents/LoadingFooter';
+import DoctorInfoItem from '../home/view/DoctorInfoItem';
+import PostItem from '../post/view/PostItem';
+import Swiper from "react-native-swiper";
 
 export default class MyFavorViewController extends Component{
 	static options(passProps) {
@@ -33,17 +36,31 @@ export default class MyFavorViewController extends Component{
 		};
 	}
 
+	getUserID() {
+		return UserInfo.UserID
+	}
+
 	constructor(props) {
 		super(props)
 		this.state = {
-			dataSource: [],
+			doctorList: [],
+			isDoctorListTotal: false,
+			isDoctorListRefreshing: false,
+
+			postList: [],
+			isPostListTotal: false,
+			isPostListRefreshing: false,
+
+			selectedType: CollectionType.doctor,
 			isSpinnerVisible: false,
-			isTotal: false,
-			isRefreshing: false
 		}
 
-		this.page = 1
-		this.pageSize = 30
+		this.doctorPage = 1
+		this.doctorPageSize = 30
+		this.postPage = 1
+		this.postPageSize = 30
+		this.isHasFinishDoctorsRefresh = false
+		this.isHasFinishPostsRefresh = false
 		this.setTitleView()
 	}
 
@@ -54,9 +71,11 @@ export default class MyFavorViewController extends Component{
 					component: {
 						name: 'SegmentTabView',
 						passProps:{
-							menus: ['Post', 'Doctor'],
-							handleIndexChange: (index) => {
-
+							menus: ['Doctor', 'Post'],
+							handleIndexChange: (type) => {
+								this.setState({selectedType: type})
+								let x = (type === CollectionType.doctor ? 0 : ScreenDimensions.width)
+								this._scrollView && this._scrollView.scrollTo({x: x, y: 0, animated: true})
 							}
 						}
 					}
@@ -66,44 +85,8 @@ export default class MyFavorViewController extends Component{
 	}
 
 	componentDidMount() {
-		this.refresh()
-	}
-
-	refresh() {
-		this.page = 1
-		this.getPostList(true)
-	}
-
-	loadMore() {
-		this.page = this.page + 1
-		this.getPostList(false)
-	}
-
-	getPostList(isRefresh) {
-		let param = {
-			Type: 0,
-			Page: this.page,
-			PageSize: this.pageSize,
-		}
-
-		if (isRefresh) {
-			this.setState({isRefreshing: true})
-		}
-
-		HTTP.post(API_Post.getPostByPage, param).then((response) => {
-			if (isRefresh) {
-				this.setState({dataSource: response.data,
-					isTotal: response.data.length < this.pageSize,
-					isRefreshing: false
-				})
-			}else {
-				this.setState({dataSource: this.state.dataSource.concat(response.data),
-					isTotal: response.data.length < this.pageSize
-				})
-			}
-		}).catch((error) => {
-
-		})
+		this.refreshDoctorList()
+		this.refreshPostList()
 	}
 
 	showSpinner() {
@@ -113,7 +96,118 @@ export default class MyFavorViewController extends Component{
 	hideSpinner() {
 		this.setState({isSpinnerVisible: false})
 	}
-	//
+
+	updateSegmentTab(index) {
+		DeviceEventEmitter.emit(EventName.other.segmentTab, {index: index})
+	}
+
+	refreshDoctorList() {
+		this.doctorPage = 1
+		this.getDoctorList(true)
+	}
+
+	loadMoreDoctorList() {
+		this.doctorPage = this.doctorPage + 1
+		this.getDoctorList(false)
+	}
+
+	getDoctorList(isRefresh) {
+		let param = {
+			UserID: this.getUserID(),
+			Type: CollectionType.doctor,
+			Page: this.doctorPage,
+			PageSize: this.doctorPageSize,
+		}
+
+		if (isRefresh) {
+			this.isHasFinishDoctorsRefresh = false
+			this.setState({isDoctorListRefreshing: true})
+		}
+
+		HTTP.post(API_User.getMyFavorite, param).then((response) => {
+			this.setState({
+				doctorList: isRefresh ? response.data : this.state.doctorList.concat(response.data),
+				isDoctorListTotal: response.data.length < this.doctorPageSize,
+				isDoctorListRefreshing: false
+			})
+
+			setTimeout(() => {
+				this.isHasFinishDoctorsRefresh = true
+			}, 200)
+		}).catch((error) => {
+			if (isRefresh) {
+				this.setState({isDoctorListRefreshing: false})
+			}
+		})
+	}
+
+	refreshPostList() {
+		this.postPage = 1
+		this.getPostList(true)
+	}
+
+	loadMorePostList() {
+		this.postPage = this.postPage + 1
+		this.getPostList(false)
+	}
+
+	getPostList(isRefresh) {
+		let param = {
+			UserID: this.getUserID(),
+			Type: CollectionType.post,
+			Page: this.postPage,
+			PageSize: this.postPageSize,
+		}
+
+		if (isRefresh) {
+			this.isHasFinishPostsRefresh = false
+			this.setState({isPostListRefreshing: true})
+		}
+
+		HTTP.post(API_User.getMyFavorite, param).then((response) => {
+			this.setState({
+				postList: isRefresh ? response.data : this.state.postList.concat(response.data),
+				isPostListTotal: response.data.length < this.postPageSize,
+				isPostListRefreshing: false
+			})
+
+			setTimeout(() => {
+				this.isHasFinishPostsRefresh = true
+			}, 200)
+		}).catch((error) => {
+			if (isRefresh) {
+				this.setState({isPostListRefreshing: false})
+			}
+		})
+	}
+
+
+	showQuestionAlert() {
+		Alert.alert(
+			'Information is incorrect?',
+			'Thank you very much for the feedback you can provide us and other users.',
+			[
+				{text: 'Cancel', onPress: () => {}, style: 'cancel'},
+				{text: 'Feedback', onPress: () => {
+
+					}},
+			],
+			{ cancelable: false }
+		)
+	}
+
+	pushToDoctorInfoPage(item) {
+		Navigation.push(this.props.componentId, {
+			component: {
+				name: 'DoctorInfoViewController',
+				passProps: {
+					info: item,
+				},
+				options: BaseNavigatorOptions()
+			}
+		})
+	}
+
 	pushToPostDetailPage(item) {
 		Navigation.push(this.props.componentId, {
 			component: {
@@ -138,18 +232,32 @@ export default class MyFavorViewController extends Component{
 		})
 	}
 
-
-
 	renderItem(item) {
-		return(
-			<View
-				id={item.PostID}
-				postInfo = {item}
-				didSelectedItem={() => {
-					this.pushToPostDetailPage(item)
-				}}
-			/>
-		)
+		if (this.state.selectedType === CollectionType.doctor) {
+			return(
+				<DoctorInfoItem
+					id = {item.Npi}
+					info = {item}
+					didSelectedItem = {() => {
+						this.pushToDoctorInfoPage(item)
+					}}
+
+					questionAction = {() => {
+						this.showQuestionAlert()
+					}}
+				/>
+			)
+		}else {
+			return(
+				<PostItem
+					id={item.PostID}
+					postInfo = {item}
+					didSelectedItem={() => {
+						this.pushToPostDetailPage(item)
+					}}
+				/>
+			)
+		}
 	}
 
 	renderHeader() {
@@ -158,71 +266,128 @@ export default class MyFavorViewController extends Component{
 		)
 	}
 
-	renderFabButton() {
+	renderListFooter() {
+		if (this.state.selectedType === CollectionType.doctor) {
+			return(
+				<View style={{paddingBottom: TabBar.height}}>
+					<LoadingFooter isDoctorListTotal={this.state.isDoctorListTotal}
+								   isLoading={this.state.doctorList.length}
+					/>
+				</View>
+			)
+		}else {
+			return(
+				<View style={{paddingBottom: TabBar.height}}>
+					<LoadingFooter isDoctorListTotal={this.state.isPostListTotal}
+								   isLoading={this.state.postList.length}
+					/>
+				</View>
+			)
+		}
+	}
+
+	renderDoctorList() {
 		return(
-			<TouchableOpacity onPress={() => {
-				this.pushToNewPostPage()
-			}} style={{position: 'absolute', right: 16, bottom: TabBar.height + 32, backgroundColor: Colors.theme,
-				borderRadius: 25, width: 50, height: 50, justifyContent: 'center', alignItems: 'center',
-				shadowRadius: 8,
-				shadowColor: Colors.theme,
-				shadowOpacity: 0.5,
-				shadowOffset: {width: 0, height: 0},
-				elevation: 2,
-			}}>
-				<Image source={require('../../../resource/image/post/add.png')} style={{width: 25, height: 25, }}/>
-			</TouchableOpacity>
+			<FlatList
+				style={{flex: 1}}
+				renderItem={({item}) => this.renderItem(item)}
+				data={this.state.doctorList}
+				keyExtractor={(item, index) => {
+					return 'key' + item.key + index
+				}}
+
+				ListHeaderComponent={() => {
+					return this.renderHeader()
+				}}
+
+				refreshControl={
+					<RefreshControl
+						refreshing={this.state.isDoctorListRefreshing}
+						enabled = {true}
+						onRefresh={() => {
+							this.refreshDoctorList()
+						}
+						}
+					/>
+				}
+				onEndReachedThreshold = {0.1}
+				onEndReached = {() => {
+					if (this.isHasFinishDoctorsRefresh) {
+						this.loadMoreDoctorList()
+					}
+				}}
+
+				ListFooterComponent={() => {
+					return this.renderListFooter()
+				}}
+
+			/>
+
 		)
 	}
 
-	renderListFooter() {
+	renderPostList() {
 		return(
-			<View style={{paddingBottom: TabBar.height}}>
-				<LoadingFooter isTotal={this.state.isTotal}
-							   isLoading={this.state.dataSource.length}
-				/>
-			</View>
+			<FlatList
+				style={{flex: 1}}
+				renderItem={({item}) => this.renderItem(item)}
+				data={this.state.postList}
+				keyExtractor={(item, index) => {
+					return 'key' + item.key + index
+				}}
+
+				ListHeaderComponent={() => {
+					return this.renderHeader()
+				}}
+
+				refreshControl={
+					<RefreshControl
+						refreshing={this.state.isPostListRefreshing}
+						enabled = {true}
+						onRefresh={() => {
+							this.refreshPostList()
+						}
+						}
+					/>
+				}
+				onEndReachedThreshold = {0.1}
+				onEndReached = {() => {
+					if (this.isHasFinishPostsRefresh) {
+						this.loadMorePostList()
+					}
+				}}
+
+				ListFooterComponent={() => {
+					return this.renderListFooter()
+				}}
+
+			/>
+
 		)
+	}
+
+	onAnimationEnd(e){
+		const offSetX = e.nativeEvent.contentOffset.x
+		const currentPage = offSetX / (ScreenDimensions.width)
+
+		this.updateSegmentTab((parseInt(currentPage) === 0) ? CollectionType.doctor : CollectionType.post)
+		this.setState({selectedType: (parseInt(currentPage) === 0) ? CollectionType.doctor : CollectionType.post})
 	}
 
 	render() {
 		return(
 			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
-				<FlatList
-					style={{flex: 1}}
-					renderItem={({item}) => this.renderItem(item)}
-					data={this.state.dataSource}
-					keyExtractor={(item, index) => {
-						return 'key' + item.key + index
-					}}
-
-					ListHeaderComponent={() => {
-						return this.renderHeader()
-					}}
-
-					refreshControl={
-						<RefreshControl
-							refreshing={this.state.isRefreshing}
-							enabled = {true}
-							onRefresh={() => {
-								this.refresh()
-							}
-							}
-						/>
-					}
-					onEndReachedThreshold = {1}
-					onEndReached = {() => {
-						this.loadMore()
-					}}
-
-					ListFooterComponent={() => {
-						return this.renderListFooter()
-					}}
-
-				/>
-
-				{this.renderFabButton()}
-
+				<ScrollView scrollEnabled= {(PLATFORM.isIOS)} showsHorizontalScrollIndicator={false} ref = {(o) => {
+					this._scrollView = o
+				}} onMomentumScrollEnd={(e) => {
+					this.onAnimationEnd(e)
+				}} style={{
+					flex: 1,
+					backgroundColor: Colors.systemGray
+				}} horizontal={true} pagingEnabled={true}>
+					{this.renderDoctorList()}
+					{this.renderPostList()}
+				</ScrollView>
 				<LoadingSpinner visible={this.state.isSpinnerVisible} />
 			</View>
 		)

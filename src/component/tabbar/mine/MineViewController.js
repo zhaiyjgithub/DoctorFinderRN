@@ -46,7 +46,7 @@ export default class MineViewController extends Component{
 						{title: 'About', type: ItemType.about},
 					]},
 			],
-			userName: this.getUserName()
+			userName: ''
 		}
 	}
 
@@ -68,6 +68,12 @@ export default class MineViewController extends Component{
 
 	getUserID() {
 		return UserInfo.UserID
+	}
+
+	componentDidMount() {
+		this.setState({
+			userName: this.getUserName()
+		})
 	}
 
 	didSelectedItem(type) {

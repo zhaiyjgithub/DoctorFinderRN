@@ -14,12 +14,12 @@ import {
 } from 'react-native';
 import {Colors} from '../../utils/Styles';
 import {NaviBarHeight, ScreenDimensions, TabBar} from '../../utils/Dimensions';
-import {Gender, PLATFORM} from '../../utils/CustomEnums';
+import {CollectionType, Gender, PLATFORM} from '../../utils/CustomEnums';
 import PostItem from './view/PostItem';
 import {Navigation} from 'react-native-navigation';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 import {HTTP} from '../../utils/HttpTools';
-import {API_Answer, API_Post, BaseUrl} from '../../utils/API';
+import {API_Answer, API_Doctor, API_Post, API_User, BaseUrl} from '../../utils/API';
 import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
 import LoadingFooter from '../../BaseComponents/LoadingFooter';
 import Toast from 'react-native-simple-toast'
@@ -38,19 +38,19 @@ export default class PostDetailViewController extends Component{
 			topBar: {
 				rightButtons: [
 					{
-						id: 'more',
+						id: 'share',
 						enabled: true,
 						disableIconTint: false,
 						color: Colors.white,
-						icon: require('../../../resource/image/post/more.png'),
+						icon: require('../../../resource/image/home/share.png'),
 					},
-					// {
-					// 	id: 'star',
-					// 	enabled: true,
-					// 	disableIconTint: false,
-					// 	color: Colors.white,
-					// 	icon: require('../../../resource/image/home/star.png'),
-					// },
+					{
+						id: 'star',
+						enabled: true,
+						disableIconTint: false,
+						color: Colors.white,
+						icon: require('../../../resource/image/home/star.png'),
+					},
 				]
 			},
 			bottomTabs: {
@@ -82,6 +82,7 @@ export default class PostDetailViewController extends Component{
 
 	componentDidMount() {
 		this.refresh()
+		this.getCollectionStatus()
 	}
 
 	componentWillUnmount() {
@@ -120,9 +121,97 @@ export default class PostDetailViewController extends Component{
 	}
 
 	navigationButtonPressed({ buttonId }) {
-		if (buttonId === 'more') {
-			this.showActionSheet()
+		if (buttonId === 'share') {
+			const shareOptions = {
+				title: 'Share file',
+				url: 'http://www.google.com',
+				failOnCancel: false,
+				message: 'Your description...'
+			}
+
+			ShareTool(shareOptions)
+		}else if (buttonId === 'star') {
+			if (this.isCollected) {
+				this.cancelCollection()
+			}else {
+				this.addCollection()
+			}
 		}
+	}
+
+	getCollectionStatus() {
+		let param = {
+			ObjectID: this.props.postInfo.PostID,
+			ObjectType: CollectionType.post,
+			UserID: this.getUserID(),
+		}
+
+		HTTP.post(API_Doctor.getCollectionStatus, param).then((response) => {
+			this.isCollected = response.data
+			this.setTopBarButtons(this.isCollected)
+		}).catch(() => {
+
+		})
+	}
+
+	addCollection() {
+		let param = {
+			ObjectID: this.props.postInfo.PostID,
+			ObjectType: CollectionType.post,
+			UserID: this.getUserID(),
+		}
+
+		HTTP.post(API_User.addFavorite, param).then((response) => {
+			if (response.code === 0) {
+				this.isCollected = true
+				this.setTopBarButtons(this.isCollected)
+			}else {
+
+			}
+		}).catch(() => {
+
+		})
+	}
+
+	cancelCollection() {
+		let param = {
+			ObjectID: this.props.postInfo.PostID,
+			ObjectType: CollectionType.post,
+			UserID: this.getUserID(),
+		}
+
+		HTTP.post(API_Doctor.deleteCollection, param).then((response) => {
+			console.log(response)
+			if (response.code === 0) {
+				this.isCollected = false
+				this.setTopBarButtons(this.isCollected)
+			}
+		}).catch(() => {
+
+		})
+	}
+
+	setTopBarButtons(isCollected) {
+		Navigation.mergeOptions(this.props.componentId, {
+			topBar: {
+				rightButtons: [
+					{
+						id: 'share',
+						enabled: true,
+						disableIconTint: false,
+						color: Colors.white,
+						icon: require('../../../resource/image/home/share.png'),
+					},
+					{
+						id: 'star',
+						enabled: true,
+						disableIconTint: false,
+						color: Colors.white,
+						icon: isCollected ?   require('../../../resource/image/home/star_selected.png') : require('../../../resource/image/home/star.png'),
+					},
+				]
+			}
+		})
 	}
 
 	showActionSheet = () => {

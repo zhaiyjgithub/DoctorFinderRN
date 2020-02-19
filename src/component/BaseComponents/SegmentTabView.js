@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
-import {Text,
+import {
+	Text,
 	View,
 	Image,
-	TouchableOpacity
+	TouchableOpacity, DeviceEventEmitter,
 } from 'react-native';
 import {Colors} from '../utils/Styles';
 import Spinner from "react-native-spinkit";
 import SegmentedControlTab from 'react-native-segmented-control-tab';
+import {EventName} from '../utils/CustomEnums';
 
 export default class SegmentTabView extends Component{
 	static defaultProps = {
@@ -19,6 +21,18 @@ export default class SegmentTabView extends Component{
 		this.state = {
 			selectedIndex: 0
 		}
+
+		this.addEventListener()
+	}
+
+	addEventListener() {
+		this.updateSegmentTabEventListener = DeviceEventEmitter.addListener(EventName.other.segmentTab, (info) => {
+			this.setState({selectedIndex: info.index})
+		})
+	}
+
+	componentWillUnmount() {
+		this.updateSegmentTabEventListener && this.updateSegmentTabEventListener.remove()
 	}
 
 	render() {

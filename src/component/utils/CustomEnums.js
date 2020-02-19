@@ -51,6 +51,12 @@ const CollectionType = {
 	post: 1,
 }
 
+const EventName = {
+	other: {
+		segmentTab: 'segmentTab'
+	}
+}
+
 export {
 	PLATFORM,
 	Language,
@@ -59,5 +65,6 @@ export {
 	SearchBarType,
 	SearchBarOverlayType,
 	DBKey,
-	CollectionType
+	CollectionType,
+	EventName
 }

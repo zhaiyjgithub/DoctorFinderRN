@@ -23,7 +23,7 @@ import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
 import LoadingFooter from '../../BaseComponents/LoadingFooter';
 import DoctorInfoItem from '../home/view/DoctorInfoItem';
 import PostItem from '../post/view/PostItem';
-import Swiper from "react-native-swiper";
+import {ShareTool} from '../../utils/ShareTool';
 
 export default class MyFavorViewController extends Component{
 	static options(passProps) {
@@ -32,6 +32,15 @@ export default class MyFavorViewController extends Component{
 				title: {
 					text: 'Post'
 				},
+				rightButtons: [
+					{
+						id: 'edit',
+						enabled: true,
+						disableIconTint: false,
+						color: Colors.white,
+						text: 'Edit',
+					},
+				]
 			}
 		};
 	}
@@ -53,6 +62,7 @@ export default class MyFavorViewController extends Component{
 
 			selectedType: CollectionType.doctor,
 			isSpinnerVisible: false,
+			isEditDoctor: false
 		}
 
 		this.doctorPage = 1
@@ -62,6 +72,14 @@ export default class MyFavorViewController extends Component{
 		this.isHasFinishDoctorsRefresh = false
 		this.isHasFinishPostsRefresh = false
 		this.setTitleView()
+
+		this.navigationEventListener = Navigation.events().bindComponent(this);
+	}
+
+	navigationButtonPressed({ buttonId }) {
+		if (buttonId === 'edit') {
+			this.setState({isEditDoctor: !this.state.isEditDoctor})
+		}
 	}
 
 	setTitleView() {
@@ -85,8 +103,14 @@ export default class MyFavorViewController extends Component{
 	}
 
 	componentDidMount() {
-		this.refreshDoctorList()
-		this.refreshPostList()
+		setTimeout(() => {
+			this.refreshDoctorList()
+			this.refreshPostList()
+		}, 800)
+	}
+
+	componentWillUnmount() {
+		this.navigationEventListener && this.navigationEventListener.remove();
 	}
 
 	showSpinner() {
@@ -184,7 +208,7 @@ export default class MyFavorViewController extends Component{
 
 	showQuestionAlert() {
 		Alert.alert(
-			'Information is incorrect?',
+			'Information is incorrect ?',
 			'Thank you very much for the feedback you can provide us and other users.',
 			[
 				{text: 'Cancel', onPress: () => {}, style: 'cancel'},
@@ -232,32 +256,32 @@ export default class MyFavorViewController extends Component{
 		})
 	}
 
-	renderItem(item) {
-		if (this.state.selectedType === CollectionType.doctor) {
-			return(
-				<DoctorInfoItem
-					id = {item.Npi}
-					info = {item}
-					didSelectedItem = {() => {
-						this.pushToDoctorInfoPage(item)
-					}}
+	renderDoctorItem(item) {
+		return(
+			<DoctorInfoItem
+				id = {item.Npi}
+				info = {item}
+				isEdit={this.state.isEditDoctor}
+				didSelectedItem = {() => {
+					this.pushToDoctorInfoPage(item)
+				}}
+				questionAction = {() => {
+					this.showQuestionAlert()
+				}}
+			/>
+		)
+	}
 
-					questionAction = {() => {
-						this.showQuestionAlert()
-					}}
-				/>
-			)
-		}else {
-			return(
-				<PostItem
-					id={item.PostID}
-					postInfo = {item}
-					didSelectedItem={() => {
-						this.pushToPostDetailPage(item)
-					}}
-				/>
-			)
-		}
+	renderPostItem(item) {
+		return(
+			<PostItem
+				id={item.PostID}
+				postInfo = {item}
+				didSelectedItem={() => {
+					this.pushToPostDetailPage(item)
+				}}
+			/>
+		)
 	}
 
 	renderHeader() {
@@ -270,7 +294,7 @@ export default class MyFavorViewController extends Component{
 		if (this.state.selectedType === CollectionType.doctor) {
 			return(
 				<View style={{paddingBottom: TabBar.height}}>
-					<LoadingFooter isDoctorListTotal={this.state.isDoctorListTotal}
+					<LoadingFooter isTotal={this.state.isDoctorListTotal}
 								   isLoading={this.state.doctorList.length}
 					/>
 				</View>
@@ -278,7 +302,7 @@ export default class MyFavorViewController extends Component{
 		}else {
 			return(
 				<View style={{paddingBottom: TabBar.height}}>
-					<LoadingFooter isDoctorListTotal={this.state.isPostListTotal}
+					<LoadingFooter isTotal={this.state.isPostListTotal}
 								   isLoading={this.state.postList.length}
 					/>
 				</View>
@@ -289,8 +313,8 @@ export default class MyFavorViewController extends Component{
 	renderDoctorList() {
 		return(
 			<FlatList
-				style={{flex: 1}}
-				renderItem={({item}) => this.renderItem(item)}
+				style={{flex: 1, width: ScreenDimensions.width}}
+				renderItem={({item}) => this.renderDoctorItem(item)}
 				data={this.state.doctorList}
 				keyExtractor={(item, index) => {
 					return 'key' + item.key + index
@@ -329,8 +353,8 @@ export default class MyFavorViewController extends Component{
 	renderPostList() {
 		return(
 			<FlatList
-				style={{flex: 1}}
-				renderItem={({item}) => this.renderItem(item)}
+				style={{flex: 1, width: ScreenDimensions.width}}
+				renderItem={({item}) => this.renderPostItem(item)}
 				data={this.state.postList}
 				keyExtractor={(item, index) => {
 					return 'key' + item.key + index
@@ -374,6 +398,20 @@ export default class MyFavorViewController extends Component{
 		this.setState({selectedType: (parseInt(currentPage) === 0) ? CollectionType.doctor : CollectionType.post})
 	}
 
+	renderButtonActonBar() {
+		return(
+			<View style={{width: ScreenDimensions.width, height: 50 + (PLATFORM.isIPhoneX ? 34 : 0),
+				backgroundColor: Colors.bottom_bar, alignItems: 'center'
+			}}>
+				<View style={{position: 'absolute', left: 0, top: 0, right: 0, height: 1, backgroundColor: Colors.lineColor}}/>
+
+				<TouchableOpacity>
+					<Text style={{fontSize: 16, color: Colors.black, marginTop: 16}}>{'Delete'}</Text>
+				</TouchableOpacity>
+			</View>
+		)
+	}
+
 	render() {
 		return(
 			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
@@ -388,6 +426,8 @@ export default class MyFavorViewController extends Component{
 					{this.renderDoctorList()}
 					{this.renderPostList()}
 				</ScrollView>
+
+				{this.renderButtonActonBar()}
 				<LoadingSpinner visible={this.state.isSpinnerVisible} />
 			</View>
 		)

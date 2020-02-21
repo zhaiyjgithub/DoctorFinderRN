@@ -50,7 +50,7 @@ export default class DoctorSearchResultListViewController extends Component{
 				title: {
 					component: {
 						name: 'SearchBar',
-						passProps:{
+						passProps: {
 							type: SearchBarType.min,
 							searchContent: searchContent,
 							onSubmitEditing: (searchContent) => {
@@ -66,7 +66,7 @@ export default class DoctorSearchResultListViewController extends Component{
 					}
 				}
 			}
-		});
+		})
 	}
 
 	searchDoctors(isRefresh) {

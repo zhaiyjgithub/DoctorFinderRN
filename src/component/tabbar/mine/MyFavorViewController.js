@@ -22,7 +22,8 @@ import {API_Post, API_User} from '../../utils/API';
 import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
 import LoadingFooter from '../../BaseComponents/LoadingFooter';
 import DoctorInfoItem from '../home/view/DoctorInfoItem';
-import PostItem from '../post/view/PostItem';
+import PostItem from '../post/view/PostItem'
+import Toast from 'react-native-simple-toast'
 
 export default class MyFavorViewController extends Component{
 	static options(passProps) {
@@ -461,25 +462,58 @@ export default class MyFavorViewController extends Component{
 	}
 
 	deleteSelectedItem() {
+		let deleteIdList = []
 		if (this.state.selectedType === CollectionType.doctor) {
 			let filterList = this.state.doctorList.filter((item) => {
+				if (item.isSelected) {
+					deleteIdList.push(item.Npi)
+				}
 				return !item.isSelected
 			})
 
-			this.setState({doctorList: filterList})
-			this.finishEdit()
+			if (deleteIdList.length) {
+				this.setState({doctorList: filterList})
+				this.finishEdit()
+				this.deleteSelectFromNet(deleteIdList)
+			}else {
+				Toast.showWithGravity('Please select at least one!', Toast.SHORT, Toast.CENTER)
+			}
 		}else {
 			let filterList = this.state.postList.filter((item) => {
+				if (item.isSelected) {
+					deleteIdList.push(item.PostID)
+				}
 				return !item.isSelected
 			})
 
-			this.setState({postList: filterList})
-			this.finishEdit()
+			if (deleteIdList.length) {
+				this.setState({postList: filterList})
+				this.finishEdit()
+				this.deleteSelectFromNet(deleteIdList)
+			}else {
+				Toast.showWithGravity('Please select at least one!', Toast.SHORT, Toast.CENTER)
+			}
 		}
 	}
 
-	deleteSelectFromServer() {
+	deleteSelectFromNet(ids) {
+		let param = {
+			UserID: this.getUserID(),
+			ObjectIDs: ids
+		}
 
+		this.showSpinner()
+		HTTP.post(API_User.deleteMyFavorite, param).then((response) => {
+			this.hideSpinner()
+			if (!response.code) {
+				Toast.showWithGravity('Delete success!', Toast.SHORT, Toast.CENTER)
+			}else {
+				Toast.showWithGravity('Delete failed!', Toast.SHORT, Toast.CENTER)
+			}
+		}).catch(() => {
+			this.hideSpinner()
+			Toast.showWithGravity('Delete failed!', Toast.SHORT, Toast.CENTER)
+		})
 	}
 
 	renderButtonActonBar() {

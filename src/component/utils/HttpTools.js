@@ -26,8 +26,8 @@ const checkStatus = (response) => {
 
 const request = (url, options) => {
 	const requestUrl = `${BaseUrl}${url}`;
-	console.log(url + '\n')
-	console.log(JSON.stringify(options) + '\n')
+	console.log(requestUrl + '\n')
+	console.log(JSON.stringify(options.body) + '\n')
 	return fetch(requestUrl, Object.assign({}, {
 			credentials: 'include',
 			headers: {

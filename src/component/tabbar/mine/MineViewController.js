@@ -89,6 +89,10 @@ export default class MineViewController extends Component{
 				this.pushToFavorPage()
 				break
 
+			case ItemType.post:
+				this.pushToPostPage()
+				break
+
 			default: ;
 		}
 	}
@@ -136,6 +140,18 @@ export default class MineViewController extends Component{
 			}
 		})
 	}
+
+	pushToPostPage() {
+		Navigation.push(this.props.componentId, {
+			component: {
+				name: 'MyPostListController',
+				passProps: {
+				},
+				options: BaseNavigatorOptions('My Post')
+			}
+		})
+	}
+	//
 
 	signOut() {
 		CacheDB.remove(DBKey.userInfo)

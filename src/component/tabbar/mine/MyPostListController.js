@@ -13,27 +13,17 @@ import {
 	AppState, TouchableOpacity, Image, Text, RefreshControl, SectionList,
 } from 'react-native';
 import {Colors} from '../../utils/Styles';
+import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
 import {NaviBarHeight, ScreenDimensions, TabBar} from '../../utils/Dimensions';
 import {Gender, PLATFORM} from '../../utils/CustomEnums';
-import PostItem from './view/PostItem';
+import PostItem from './../post/view/PostItem';
 import {Navigation} from 'react-native-navigation';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 import {HTTP} from '../../utils/HttpTools';
 import {API_Post} from '../../utils/API';
-import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
 import LoadingFooter from '../../BaseComponents/LoadingFooter';
 
-export default class PostViewController extends Component{
-	static options(passProps) {
-		return {
-			topBar: {
-				title: {
-					text: 'Post'
-				},
-			}
-		};
-	}
-
+export default class MyPostListController extends Component{
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -52,6 +42,10 @@ export default class PostViewController extends Component{
 		this.refresh()
 	}
 
+	getUserID() {
+		return UserInfo.UserID
+	}
+
 	refresh() {
 		this.page = 1
 		this.getPostList(true)
@@ -64,7 +58,7 @@ export default class PostViewController extends Component{
 
 	getPostList(isRefresh) {
 		let param = {
-			Type: 0,
+			UserID: this.getUserID(),
 			Page: this.page,
 			PageSize: this.pageSize,
 		}
@@ -74,7 +68,7 @@ export default class PostViewController extends Component{
 			this.setState({isRefreshing: true})
 		}
 
-		HTTP.post(API_Post.getPostByPage, param).then((response) => {
+		HTTP.post(API_Post.getMyPostByPage, param).then((response) => {
 			this.setState({dataSource: isRefresh ? response.data : this.state.dataSource.concat(response.data),
 				isTotal: response.data.length < this.pageSize,
 				isRefreshing: false
@@ -104,25 +98,12 @@ export default class PostViewController extends Component{
 				name: 'PostDetailViewController',
 				passProps: {
 					postInfo: item,
+					isAppendPost: true
 				},
 				options: BaseNavigatorOptions('Post Detail')
 			}
 		})
 	}
-
-	pushToNewPostPage() {
-		Navigation.push(this.props.componentId, {
-			component: {
-				name: 'NewPostViewController',
-				passProps: {
-
-				},
-				options: BaseNavigatorOptions('New Post')
-			}
-		})
-	}
-
-
 
 	renderItem(item) {
 		return(
@@ -139,23 +120,6 @@ export default class PostViewController extends Component{
 	renderHeader() {
 		return(
 			<View style={{width: '100%', height: 16, backgroundColor: Colors.clear}}/>
-		)
-	}
-
-	renderFabButton() {
-		return(
-			<TouchableOpacity onPress={() => {
-				this.pushToNewPostPage()
-			}} style={{position: 'absolute', right: 16, bottom: TabBar.height + 32, backgroundColor: Colors.theme,
-				borderRadius: 25, width: 50, height: 50, justifyContent: 'center', alignItems: 'center',
-				shadowRadius: 8,
-				shadowColor: Colors.theme,
-				shadowOpacity: 0.5,
-				shadowOffset: {width: 0, height: 0},
-				elevation: 2,
-			}}>
-				<Image source={require('../../../resource/image/post/add.png')} style={{width: 25, height: 25, }}/>
-			</TouchableOpacity>
 		)
 	}
 
@@ -200,13 +164,11 @@ export default class PostViewController extends Component{
 							this.loadMore()
 						}
 					}}
-
 					ListFooterComponent={() => {
 						return this.renderListFooter()
 					}}
-				/>
 
-				{this.renderFabButton()}
+				/>
 
 				<LoadingSpinner visible={this.state.isSpinnerVisible} />
 			</View>

@@ -30,7 +30,8 @@ import {CalcTimeStamp} from '../../utils/Utils';
 
 export default class PostDetailViewController extends Component{
 	static defaultProps = {
-		postInfo: null
+		postInfo: null,
+		isAppendPost: false
 	}
 
 	static options(passProps) {
@@ -69,7 +70,8 @@ export default class PostDetailViewController extends Component{
 			isRefreshing: false,
 			isTotal: false,
 			postLikes: props.postInfo ? props.postInfo.Likes : 0,
-			totalAnswerCount: props.postInfo ? props.postInfo.AnswerCount : 0
+			totalAnswerCount: props.postInfo ? props.postInfo.AnswerCount : 0,
+			appendText: ''
 		}
 
 		this.page = 1
@@ -81,7 +83,10 @@ export default class PostDetailViewController extends Component{
 	}
 
 	componentDidMount() {
-		this.refresh()
+		if (!this.props.isAppendPost) {
+			this.refresh()
+		}
+
 		this.getCollectionStatus()
 	}
 
@@ -318,14 +323,18 @@ export default class PostDetailViewController extends Component{
 	renderListFooter() {
 		return(
 			<View style={{width: '100%', paddingBottom: 44 + 10 + (PLATFORM.isIPhoneX ? 34 : 0)}}>
-				<LoadingFooter isTotal={this.state.isTotal}
-							   isLoading={this.state.dataSource.length}
-				/>
+				{!this.props.isAppendPost ? (<LoadingFooter isTotal={this.state.isTotal}
+														   isLoading={this.state.dataSource.length}
+				/>) : null}
 			</View>
 		)
 	}
 
 	renderAttachments(postInfo) {
+		if (!postInfo.URLs.length) {
+			return null
+		}
+
 		let size = (ScreenDimensions.width - 32 - 10)/2.0
 		let imgUrl = BaseUrl + API_Post.imgPost +'?name='
 		return(
@@ -352,6 +361,16 @@ export default class PostDetailViewController extends Component{
 	}
 
 	renderAddAnswerView() {
+		let placeHolder = ''
+		let sendButtonTile = ''
+		if (!this.props.isAppendPost) {
+			placeHolder = 'Write your comment...'
+			sendButtonTile = 'Send'
+		}else {
+			placeHolder = 'Write your appending text...'
+			sendButtonTile = 'Append'
+		}
+
 		return(
 			<Animated.View style={{
 				backgroundColor: Colors.white,
@@ -377,14 +396,18 @@ export default class PostDetailViewController extends Component{
 						numberOfLines={1}
 						multiline={true}
 						underlineColorAndroid={'transparent'}
-						placeholder = {'Write your comment...'}
+						placeholder = {placeHolder}
 						placeholderTextColor={Colors.lightGray}
 						onChangeText={(text) => {
-							this.setState({newAnswer: text.trim() + ''})
+							if (!this.props.isAppendPost) {
+								this.setState({newAnswer: text.trim() + ''})
+							}else {
+								this.setState({appendText: text.trim() + ''})
+							}
 						}}
 						defaultValue ={this.state.newAnswer}
 						style={{
-							width: ScreenDimensions.width - 32 - 50 - 8,
+							width: ScreenDimensions.width - 32 - 60 - 8,
 							height: 44,
 							backgroundColor: Colors.searchBar,
 							marginLeft: 16,
@@ -395,11 +418,15 @@ export default class PostDetailViewController extends Component{
 						}} />
 
 					<TouchableOpacity onPress={() => {
-						this.createNewAnswer()
-					}} style={{width: 50, height: 30, borderRadius: 4, backgroundColor: Colors.theme,
+						if (!this.props.isAppendPost) {
+							this.createNewAnswer()
+						}else {
+
+						}
+					}} style={{width: 60, height: 30, borderRadius: 4, backgroundColor: Colors.theme,
 						justifyContent: 'center', alignItems: 'center', marginRight: 16,
 					}}>
-						<Text style={{fontSize: 14, color: Colors.white,}}>{'Send'}</Text>
+						<Text style={{fontSize: 14, color: Colors.white,}}>{sendButtonTile}</Text>
 					</TouchableOpacity>
 
 				</View>
@@ -461,15 +488,23 @@ export default class PostDetailViewController extends Component{
 	}
 
 	renderSectionHeader(){
-		if (!this.props.postInfo) {
+		let postInfo = this.props.postInfo
+		if (!postInfo) {
 			return null
+		}
+
+		let title = ''
+		if (!this.props.isAppendPost) {
+			title = this.state.totalAnswerCount + ' replies totally'
+		}else {
+			title = '2 appends totally'
 		}
 
 		return(
 			<View style={{width: '100%', height: 30, flexDirection: 'row', alignItems: 'center',
-				backgroundColor: Colors.systemGray, marginTop: 20,
+				backgroundColor: Colors.systemGray, marginTop: postInfo.URLs.length ? 20 : 0,
 			}}>
-				<Text style={{fontSize: 14, color: Colors.black, marginLeft: 16,}}>{this.state.totalAnswerCount + ' replies totally'}</Text>
+				<Text style={{fontSize: 14, color: Colors.black, marginLeft: 16,}}>{title}</Text>
 			</View>
 		)
 	}
@@ -582,14 +617,18 @@ export default class PostDetailViewController extends Component{
 							refreshing={this.state.isRefreshing}
 							enabled = {true}
 							onRefresh={() => {
-								this.refresh()
+								if (!this.props.isAppendPost) {
+									this.refresh()
+								}
 							}
 							}
 						/>
 					}
-					onEndReachedThreshold = {1}
+					onEndReachedThreshold = {0.1}
 					onEndReached = {() => {
-						this.loadMore()
+						if (!this.props.isAppendPost) {
+							this.loadMore()
+						}
 					}}
 
 					ListFooterComponent={() => {

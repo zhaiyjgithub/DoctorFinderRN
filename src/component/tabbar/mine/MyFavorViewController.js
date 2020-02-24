@@ -23,7 +23,6 @@ import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
 import LoadingFooter from '../../BaseComponents/LoadingFooter';
 import DoctorInfoItem from '../home/view/DoctorInfoItem';
 import PostItem from '../post/view/PostItem';
-import {ShareTool} from '../../utils/ShareTool';
 
 export default class MyFavorViewController extends Component{
 	static options(passProps) {
@@ -62,7 +61,7 @@ export default class MyFavorViewController extends Component{
 
 			selectedType: CollectionType.doctor,
 			isSpinnerVisible: false,
-			isEditDoctor: false
+			isEdit: false
 		}
 
 		this.doctorPage = 1
@@ -78,8 +77,18 @@ export default class MyFavorViewController extends Component{
 
 	navigationButtonPressed({ buttonId }) {
 		if (buttonId === 'edit') {
-			this.setState({isEditDoctor: !this.state.isEditDoctor})
+			if (this.state.isEdit) {
+				this.setState({isEdit: false})
+				this.sendUpdateSegmentTabEnableStatusNoti(true)
+			}else {
+				this.setState({isEdit: true})
+				this.sendUpdateSegmentTabEnableStatusNoti(false)
+			}
 		}
+	}
+
+	sendUpdateSegmentTabEnableStatusNoti(isEnable) {
+		DeviceEventEmitter.emit(EventName.other.segmentTabEnable, {isEnabled: isEnable})
 	}
 
 	setTitleView() {
@@ -126,11 +135,17 @@ export default class MyFavorViewController extends Component{
 	}
 
 	refreshDoctorList() {
+		if (this.state.isEdit) {
+			return
+		}
 		this.doctorPage = 1
 		this.getDoctorList(true)
 	}
 
 	loadMoreDoctorList() {
+		if (this.state.isEdit) {
+			return
+		}
 		this.doctorPage = this.doctorPage + 1
 		this.getDoctorList(false)
 	}
@@ -149,9 +164,13 @@ export default class MyFavorViewController extends Component{
 		}
 
 		HTTP.post(API_User.getMyFavorite, param).then((response) => {
+			let mergerList = response.data.map((item) => {
+				return Object.assign({isSelected: false}, item)
+			})
+
 			this.setState({
-				doctorList: isRefresh ? response.data : this.state.doctorList.concat(response.data),
-				isDoctorListTotal: response.data.length < this.doctorPageSize,
+				doctorList: isRefresh ? mergerList : this.state.doctorList.concat(mergerList),
+				isDoctorListTotal: mergerList.length < this.doctorPageSize,
 				isDoctorListRefreshing: false
 			})
 
@@ -166,11 +185,17 @@ export default class MyFavorViewController extends Component{
 	}
 
 	refreshPostList() {
+		if (this.state.isEdit) {
+			return
+		}
 		this.postPage = 1
 		this.getPostList(true)
 	}
 
 	loadMorePostList() {
+		if (this.state.isEdit) {
+			return
+		}
 		this.postPage = this.postPage + 1
 		this.getPostList(false)
 	}
@@ -189,9 +214,12 @@ export default class MyFavorViewController extends Component{
 		}
 
 		HTTP.post(API_User.getMyFavorite, param).then((response) => {
+			let mergerList = response.data.map((item) => {
+				return Object.assign({isSelected: false}, item)
+			})
 			this.setState({
-				postList: isRefresh ? response.data : this.state.postList.concat(response.data),
-				isPostListTotal: response.data.length < this.postPageSize,
+				postList: isRefresh ? mergerList : this.state.postList.concat(mergerList),
+				isPostListTotal: mergerList.length < this.postPageSize,
 				isPostListRefreshing: false
 			})
 
@@ -221,6 +249,10 @@ export default class MyFavorViewController extends Component{
 	}
 
 	pushToDoctorInfoPage(item) {
+		if (this.state.isEdit) {
+			return
+		}
+
 		Navigation.push(this.props.componentId, {
 			component: {
 				name: 'DoctorInfoViewController',
@@ -233,6 +265,10 @@ export default class MyFavorViewController extends Component{
 	}
 
 	pushToPostDetailPage(item) {
+		if (this.state.isEdit) {
+			return
+		}
+
 		Navigation.push(this.props.componentId, {
 			component: {
 				name: 'PostDetailViewController',
@@ -244,29 +280,27 @@ export default class MyFavorViewController extends Component{
 		})
 	}
 
-	pushToNewPostPage() {
-		Navigation.push(this.props.componentId, {
-			component: {
-				name: 'NewPostViewController',
-				passProps: {
-
-				},
-				options: BaseNavigatorOptions('New Post')
-			}
-		})
-	}
-
 	renderDoctorItem(item) {
 		return(
 			<DoctorInfoItem
 				id = {item.Npi}
 				info = {item}
-				isEdit={this.state.isEditDoctor}
+				isEdit={this.state.isEdit}
+				isSelected = {item.isSelected}
 				didSelectedItem = {() => {
 					this.pushToDoctorInfoPage(item)
 				}}
 				questionAction = {() => {
 					this.showQuestionAlert()
+				}}
+				clickSelectedButton={() => {
+					let doctorList = this.state.doctorList
+					let index = doctorList.findIndex((data) => {
+						return data.Npi === item.Npi
+					})
+
+					doctorList[index].isSelected = !doctorList[index].isSelected
+					this.setState({doctorList: doctorList})
 				}}
 			/>
 		)
@@ -277,8 +311,19 @@ export default class MyFavorViewController extends Component{
 			<PostItem
 				id={item.PostID}
 				postInfo = {item}
+				isEdit={this.state.isEdit}
+				isSelected = {item.isSelected}
 				didSelectedItem={() => {
 					this.pushToPostDetailPage(item)
+				}}
+				clickSelectedButton={() => {
+					let postList = this.state.postList
+					let index = postList.findIndex((data) => {
+						return data.PostID === item.PostID
+					})
+
+					postList[index].isSelected = !postList[index].isSelected
+					this.setState({doctorList: postList})
 				}}
 			/>
 		)
@@ -398,15 +443,67 @@ export default class MyFavorViewController extends Component{
 		this.setState({selectedType: (parseInt(currentPage) === 0) ? CollectionType.doctor : CollectionType.post})
 	}
 
+	finishEdit() {
+		this.setState({isEdit: false})
+		this.sendUpdateSegmentTabEnableStatusNoti(true)
+	}
+
+	deleteAction() {
+		Alert.alert(
+			'Are sure to delete ?',
+			'Delete the selected items.',
+			[
+				{text: 'OK', onPress: () => {this.deleteSelectedItem()}},
+				{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+			],
+			{ cancelable: false }
+		)
+	}
+
+	deleteSelectedItem() {
+		if (this.state.selectedType === CollectionType.doctor) {
+			let filterList = this.state.doctorList.filter((item) => {
+				return !item.isSelected
+			})
+
+			this.setState({doctorList: filterList})
+			this.finishEdit()
+		}else {
+			let filterList = this.state.postList.filter((item) => {
+				return !item.isSelected
+			})
+
+			this.setState({postList: filterList})
+			this.finishEdit()
+		}
+	}
+
+	deleteSelectFromServer() {
+
+	}
+
 	renderButtonActonBar() {
+		if (!this.state.isEdit) {
+			return null
+		}
+
 		return(
 			<View style={{width: ScreenDimensions.width, height: 50 + (PLATFORM.isIPhoneX ? 34 : 0),
-				backgroundColor: Colors.bottom_bar, alignItems: 'center'
+				backgroundColor: Colors.bottom_bar, justifyContent: 'space-between', flexDirection: 'row',
+				paddingHorizontal: 16,
 			}}>
 				<View style={{position: 'absolute', left: 0, top: 0, right: 0, height: 1, backgroundColor: Colors.lineColor}}/>
 
-				<TouchableOpacity>
-					<Text style={{fontSize: 16, color: Colors.black, marginTop: 16}}>{'Delete'}</Text>
+				<TouchableOpacity onPress={() => {
+					this.finishEdit()
+				}}>
+					<Text style={{fontSize: 16, color: Colors.theme, marginTop: 16, fontWeight: 'bold'}}>{'Cancel'}</Text>
+				</TouchableOpacity>
+
+				<TouchableOpacity onPress={() => {
+					this.deleteAction()
+				}}>
+					<Text style={{fontSize: 16, color: Colors.red, marginTop: 16, fontWeight: 'bold'}}>{'Delete'}</Text>
 				</TouchableOpacity>
 			</View>
 		)
@@ -415,7 +512,7 @@ export default class MyFavorViewController extends Component{
 	render() {
 		return(
 			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
-				<ScrollView scrollEnabled= {(PLATFORM.isIOS)} showsHorizontalScrollIndicator={false} ref = {(o) => {
+				<ScrollView scrollEnabled={!this.state.isEdit} showsHorizontalScrollIndicator={false} ref = {(o) => {
 					this._scrollView = o
 				}} onMomentumScrollEnd={(e) => {
 					this.onAnimationEnd(e)

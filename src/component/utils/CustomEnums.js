@@ -53,7 +53,8 @@ const CollectionType = {
 
 const EventName = {
 	other: {
-		segmentTab: 'segmentTab'
+		segmentTab: 'segmentTab',
+		segmentTabEnable: 'segmentTabEnable'
 	}
 }
 

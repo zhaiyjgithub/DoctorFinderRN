@@ -19,7 +19,8 @@ export default class SegmentTabView extends Component{
 	constructor(props) {
 		super(props)
 		this.state = {
-			selectedIndex: 0
+			selectedIndex: 0,
+			isEnabled: true
 		}
 
 		this.addEventListener()
@@ -29,10 +30,15 @@ export default class SegmentTabView extends Component{
 		this.updateSegmentTabEventListener = DeviceEventEmitter.addListener(EventName.other.segmentTab, (info) => {
 			this.setState({selectedIndex: info.index})
 		})
+
+		this.updateSegmentTabEnabledEventListener = DeviceEventEmitter.addListener(EventName.other.segmentTabEnable, (info) => {
+			this.setState({isEnabled: info.isEnabled})
+		})
 	}
 
 	componentWillUnmount() {
 		this.updateSegmentTabEventListener && this.updateSegmentTabEventListener.remove()
+		this.updateSegmentTabEnabledEventListener && this.updateSegmentTabEnabledEventListener.remove()
 	}
 
 	render() {
@@ -43,10 +49,11 @@ export default class SegmentTabView extends Component{
 				}}
 				values={this.props.menus}
 				onTabPress={(index) => {
-					this.setState({selectedIndex: index})
-					this.props.handleIndexChange && this.props.handleIndexChange(index)
+						this.setState({selectedIndex: index})
+						this.props.handleIndexChange && this.props.handleIndexChange(index)
+					}
 				}
-				}
+				enabled={this.state.isEnabled}
 				selectedIndex={this.state.selectedIndex}
 				tabTextStyle = {{color: Colors.white}}
 				tabStyle = {{borderColor: Colors.white, backgroundColor: Colors.theme}}

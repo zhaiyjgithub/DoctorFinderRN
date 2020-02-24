@@ -14,7 +14,8 @@ export default class DoctorInfoItem extends Component{
 		this.state = {
 			id: props.id,
 			info: props.info,
-			isEdit: props.isEdit
+			isEdit: props.isEdit,
+			isSelected: props.isSelected
 		}
 	}
 
@@ -22,12 +23,15 @@ export default class DoctorInfoItem extends Component{
 		this.setState({
 			id: props.id,
 			info: props.info,
-			isEdit: props.isEdit
+			isEdit: props.isEdit,
+			isSelected: props.isSelected
 		})
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
-		return (nextProps.id !== this.state.id || nextProps.isEdit !== this.state.isEdit)
+		return (nextProps.id !== this.state.id || nextProps.isEdit !== this.state.isEdit ||
+			nextProps.isSelected !== this.state.isSelected
+		)
 	}
 
 	render() {
@@ -45,13 +49,14 @@ export default class DoctorInfoItem extends Component{
 				backgroundColor: Colors.systemGray,
 				paddingVertical: 8,
 			}}>
-				<View style={{position: 'absolute', left: 0, top: 8, width: 60, bottom: 8,
-					backgroundColor: Colors.red,
+				<TouchableOpacity  onPress={() => {
+					this.props.clickSelectedButton && this.props.clickSelectedButton()
+				}} style={{position: 'absolute', left: 0, top: 8, width: 60, bottom: 8,
+					backgroundColor: Colors.white,
 					justifyContent: 'center', alignItems: 'center',
 				}}>
-					<TouchableOpacity style={{width: 30, height: 30, backgroundColor: Colors.theme}}>
-					</TouchableOpacity>
-				</View>
+					<Image style={{width: 20, height: 20,}} source={this.state.isSelected ? require('../../../../resource/image/register/checkbox-selected.png') : require('../../../../resource/image/register/checkbox-unselected.png')}/>
+				</TouchableOpacity>
 
 				<View style={{flex: 1, width: ScreenDimensions.width,
 					marginLeft: this.state.isEdit ? 60 : 0,

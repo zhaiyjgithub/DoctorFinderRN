@@ -85,6 +85,8 @@ export default class PostDetailViewController extends Component{
 	componentDidMount() {
 		if (!this.props.isAppendPost) {
 			this.refresh()
+		}else {
+			this.getMyAppendList()
 		}
 
 		this.getCollectionStatus()
@@ -219,10 +221,6 @@ export default class PostDetailViewController extends Component{
 		})
 	}
 
-	showActionSheet = () => {
-		this._actionSheet.show()
-	}
-
 	showSpinner() {
 		this.setState({isSpinnerVisible: true})
 	}
@@ -289,6 +287,22 @@ export default class PostDetailViewController extends Component{
 		})
 	}
 
+	getMyAppendList() {
+		let param = {
+			PostID: this.props.postInfo.PostID
+		}
+
+		this.setState({isRefreshing: true})
+		HTTP.post(API_Post.getAppendByPostID, param).then((response) => {
+			this.setState({isRefreshing: false})
+			if (!response.code) {
+				this.setState({dataSource: response.data})
+			}
+		}).catch(() => {
+			this.setState({isRefreshing: false})
+		})
+	}
+
 	createNewAnswer() {
 		if (!this.state.newAnswer.length) {
 			Toast.showWithGravity("Your comment can`t be empty!", Toast.LONG, Toast.CENTER)
@@ -311,13 +325,41 @@ export default class PostDetailViewController extends Component{
 
 			if (!response.code) {
 				this.setState({totalAnswerCount: this.state.totalAnswerCount + 1})
-				Toast.showWithGravity("Add successfully", Toast.LONG, Toast.CENTER)
+				Toast.showWithGravity("Add success", Toast.LONG, Toast.CENTER)
+
+				this.refresh()
 			}else {
 				Toast.showWithGravity("Add failed", Toast.LONG, Toast.CENTER)
 			}
 		}).catch((error) => {
 			this.hideSpinner()
 		})
+	}
+
+	addAppendingToPost() {
+		if (!this.state.appendText.length) {
+			Toast.showWithGravity("Your appending text can`t be empty!", Toast.LONG, Toast.CENTER)
+			return
+		}
+
+		let param = {
+			PostID: this.props.postInfo.PostID,
+			Append: this.state.appendText,
+		}
+
+		this.showSpinner()
+		HTTP.post(API_Post.addAppendToPost, param).then((response) => {
+			this.hideSpinner()
+			if (!response.code) {
+				Toast.showWithGravity("Append success!", Toast.LONG, Toast.CENTER)
+			}else {
+				Toast.showWithGravity("Append failed!", Toast.LONG, Toast.CENTER)
+			}
+		}).catch(() => {
+			this.hideSpinner()
+			Toast.showWithGravity("Request failed!", Toast.LONG, Toast.CENTER)
+		})
+
 	}
 
 	renderListFooter() {
@@ -421,7 +463,7 @@ export default class PostDetailViewController extends Component{
 						if (!this.props.isAppendPost) {
 							this.createNewAnswer()
 						}else {
-
+							this.addAppendingToPost()
 						}
 					}} style={{width: 60, height: 30, borderRadius: 4, backgroundColor: Colors.theme,
 						justifyContent: 'center', alignItems: 'center', marginRight: 16,
@@ -497,7 +539,7 @@ export default class PostDetailViewController extends Component{
 		if (!this.props.isAppendPost) {
 			title = this.state.totalAnswerCount + ' replies totally'
 		}else {
-			title = '2 appends totally'
+			title = this.state.dataSource.length +  ' appends totally'
 		}
 
 		return(
@@ -554,7 +596,7 @@ export default class PostDetailViewController extends Component{
 			}else {
 				this.props.postInfo.Likes = this.props.postInfo.Likes + 1
 				this.setState({postLikes: this.props.postInfo.Likes})
-				Toast.showWithGravity('Add successfully', Toast.LONG, Toast.CENTER)
+				Toast.showWithGravity('Add success', Toast.LONG, Toast.CENTER)
 			}
 		}).catch(() => {
 			this.hideSpinner()
@@ -574,7 +616,7 @@ export default class PostDetailViewController extends Component{
 			if (response.code) {
 				Toast.showWithGravity('Add failed' , Toast.LONG, Toast.CENTER)
 			}else {
-				Toast.showWithGravity('Add successfully', Toast.LONG, Toast.CENTER)
+				Toast.showWithGravity('Add success', Toast.LONG, Toast.CENTER)
 			}
 		}).catch(() => {
 			this.hideSpinner()
@@ -586,18 +628,33 @@ export default class PostDetailViewController extends Component{
 		if (item.type === 0) {
 			return this.renderHeader()
 		}else {
-			return <AnswerItem
-				id= {item.ID}
-				likes={item.Likes}
-				answerInfo= {item}
-				clickLike ={() => {
-					this.likeAction(item)
-				}}
-				clickReply ={() => {
-					this.setState({newAnswer: '@' + item.UserName + ' '})
-					this._answerTextInput && this._answerTextInput.focus()
-				}}
-			/>
+			if (!this.props.isAppendPost) {
+				return <AnswerItem
+					id= {item.ID}
+					likes={item.Likes}
+					answerInfo= {item}
+					clickLike ={() => {
+						this.likeAction(item)
+					}}
+					clickReply ={() => {
+						this.setState({newAnswer: '@' + item.UserName + ' '})
+						this._answerTextInput && this._answerTextInput.focus()
+					}}
+				/>
+			}else {
+				return (
+					<View style={{backgroundColor: Colors.white}}>
+						<Text style={{marginLeft: 16, marginTop: 8, marginRight: 8,
+							fontSize: 14, color: Colors.lightGray
+						}}>{'Update at: ' + CalcTimeStamp(item.CreatedAt)}</Text>
+						<Text  style={{marginLeft: 32, marginTop: 8, marginRight: 8,
+							fontSize: 16, color: Colors.black, marginBottom: 8
+						}}>{item.Content}</Text>
+
+						<View style={{position: 'absolute', left: 0, right: 0, bottom: 0, height: 1, backgroundColor: Colors.lineColor}}/>
+					</View>
+				)
+			}
 		}
 	}
 
@@ -638,30 +695,6 @@ export default class PostDetailViewController extends Component{
 				/>
 
 				{this.renderAddAnswerView()}
-
-				<ActionSheet
-					ref={o => this._actionSheet = o}
-					title={'Do you want to ?'}
-					options={['Share This Post', 'Star This Post', 'Report This Post', 'Cancel']}
-					destructiveButtonIndex={3}
-					onPress={(index) => {
-						if (index === 0) {
-							const shareOptions = {
-								title: 'Share file',
-								url: 'http://www.google.com',
-								failOnCancel: false,
-								message: 'Your description...'
-							}
-
-							ShareTool(shareOptions)
-						}else if (index === 1) {
-							this.addFavorToPost()
-						}else if (index === 2) {
-							alert('Report it')
-						}
-					}}
-				/>
-
 				<LoadingSpinner visible={this.state.isSpinnerVisible} />
 			</View>
 		)

@@ -17,7 +17,9 @@ const API_Post = {
 	addAnswerToPost: 'Post/AddAnswerToPost',
 	addFavor: 'Post/AddFavor',
 	addLikes: 'Post/AddLikes',
-	getMyPostByPage: 'Post/GetMyPostByPage'
+	getMyPostByPage: 'Post/GetMyPostByPage',
+	addAppendToPost: 'Post/AddAppendToPost',
+	getAppendByPostID: 'Post/GetAppendByPostID'
 }
 
 const API_Answer = {

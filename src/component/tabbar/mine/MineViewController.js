@@ -43,7 +43,6 @@ export default class MineViewController extends Component{
 				{data:[
 						{title: 'Reset Password', type: ItemType.resetPassword},
 						{title: 'Feedback', type: ItemType.feedback},
-						{title: 'About', type: ItemType.about},
 					]},
 			],
 			userName: ''
@@ -91,6 +90,10 @@ export default class MineViewController extends Component{
 
 			case ItemType.post:
 				this.pushToPostPage()
+				break
+
+			case ItemType.feedback:
+				this.pushToFeedBackPage()
 				break
 
 			default: ;
@@ -152,6 +155,16 @@ export default class MineViewController extends Component{
 		})
 	}
 	//
+	pushToFeedBackPage() {
+		Navigation.push(this.props.componentId, {
+			component: {
+				name: 'FeedbackViewController',
+				passProps: {
+				},
+				options: BaseNavigatorOptions('FeedBack')
+			}
+		})
+	}
 
 	signOut() {
 		CacheDB.remove(DBKey.userInfo)

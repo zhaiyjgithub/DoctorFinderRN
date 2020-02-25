@@ -79,7 +79,7 @@ export default class PostDetailViewController extends Component{
 		this.addAnswerViewBottom = new Animated.Value(0)
 		this.isCollected = false
 		this.addKeyBoardListener()
-		this.navigationEventListener = Navigation.events().bindComponent(this);
+		this.navigationEventListener = Navigation.events().bindComponent(this)
 	}
 
 	componentDidMount() {

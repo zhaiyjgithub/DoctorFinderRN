@@ -22,6 +22,7 @@ import SegmentTabView from '../BaseComponents/SegmentTabView'
 import MyFavorViewController from '../tabbar/mine/MyFavorViewController'
 import MyPostListController from '../tabbar/mine/MyPostListController'
 import FeedbackViewController from '../tabbar/mine/FeedbackViewController'
+import UpdatePasswordViewController from '../tabbar/mine/UpdatePasswordViewController'
 //
 
 Navigation.registerComponent('HomePageViewController', () => HomePageViewController);
@@ -48,6 +49,7 @@ Navigation.registerComponent('SegmentTabView', () => SegmentTabView)
 Navigation.registerComponent('MyFavorViewController', () => MyFavorViewController)
 Navigation.registerComponent('MyPostListController', () => MyPostListController)
 Navigation.registerComponent('FeedbackViewController', () => FeedbackViewController)
+Navigation.registerComponent('UpdatePasswordViewController', () => UpdatePasswordViewController)
 //
 
 import {Navigation} from 'react-native-navigation';

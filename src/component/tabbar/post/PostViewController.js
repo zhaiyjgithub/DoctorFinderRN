@@ -115,7 +115,9 @@ export default class PostViewController extends Component{
 			component: {
 				name: 'NewPostViewController',
 				passProps: {
-
+					refreshPostListCB:() => {
+						this.refresh()
+					}
 				},
 				options: BaseNavigatorOptions('New Post')
 			}

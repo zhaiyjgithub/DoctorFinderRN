@@ -44,7 +44,8 @@ const API_User = {
 	getMyFavorite: 'User/GetMyFavorite',
 	addFavorite: 'User/AddFavorite',
 	deleteMyFavorite: 'User/DeleteMyFavorite',
-	addNewFeedback: 'User/AddNewFeedback'
+	addNewFeedback: 'User/AddNewFeedback',
+	updatePassword: 'User/UpdatePassword'
 }
 
 

@@ -37,7 +37,7 @@ export default class NewPostViewController extends Component{
 						enabled: true,
 						disableIconTint: false,
 						color: Colors.white,
-						icon: require('../../../resource/image/post/post.png'),
+						icon: require('../../../resource/image/mine/send.png'),
 					},
 				]
 			},
@@ -111,6 +111,16 @@ export default class NewPostViewController extends Component{
 	}
 
 	createNewPost() {
+		if (!this.state.title.length) {
+			SimpleToast.showWithGravity("Your title text can`t be empty!", SimpleToast.LONG, SimpleToast.CENTER)
+			return
+		}
+
+		if (!this.state.description.length) {
+			SimpleToast.showWithGravity("Your description text can`t be empty!", SimpleToast.LONG, SimpleToast.CENTER)
+			return
+		}
+
 		let files = []
 		let imageUriCount = 0
 
@@ -182,11 +192,13 @@ export default class NewPostViewController extends Component{
 		HTTP.post(API_Post.createPost, param).then((response) => {
 			this.hideSpinner()
 
+			Keyboard.dismiss()
 			SimpleToast.show("Create successfully", SimpleToast.LONG, SimpleToast.CENTER)
 
 			setTimeout(() => {
 				Navigation.pop(this.props.componentId)
-			}, 500)
+				this.props.refreshPostListCB && this.props.refreshPostListCB()
+			}, 1000)
 		}).catch((error) => {
 			SimpleToast.show("Create fail", SimpleToast.LONG, SimpleToast.CENTER)
 			this.hideSpinner()

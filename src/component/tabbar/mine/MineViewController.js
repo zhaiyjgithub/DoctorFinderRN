@@ -96,6 +96,10 @@ export default class MineViewController extends Component{
 				this.pushToFeedBackPage()
 				break
 
+			case ItemType.resetPassword:
+				this.pushToUpdatePasswordPage()
+				break
+
 			default: ;
 		}
 	}
@@ -154,7 +158,7 @@ export default class MineViewController extends Component{
 			}
 		})
 	}
-	//
+
 	pushToFeedBackPage() {
 		Navigation.push(this.props.componentId, {
 			component: {
@@ -162,6 +166,17 @@ export default class MineViewController extends Component{
 				passProps: {
 				},
 				options: BaseNavigatorOptions('FeedBack')
+			}
+		})
+	}
+
+	pushToUpdatePasswordPage() {
+		Navigation.push(this.props.componentId, {
+			component: {
+				name: 'UpdatePasswordViewController',
+				passProps: {
+				},
+				options: BaseNavigatorOptions('Reset Password')
 			}
 		})
 	}

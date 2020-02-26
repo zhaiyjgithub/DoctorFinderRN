@@ -71,7 +71,8 @@ export default class PostDetailViewController extends Component{
 			isTotal: false,
 			postLikes: props.postInfo ? props.postInfo.Likes : 0,
 			totalAnswerCount: props.postInfo ? props.postInfo.AnswerCount : 0,
-			appendText: ''
+			appendText: '',
+			appendingList: []
 		}
 
 		this.page = 1
@@ -85,10 +86,8 @@ export default class PostDetailViewController extends Component{
 	componentDidMount() {
 		if (!this.props.isAppendPost) {
 			this.refresh()
-		}else {
-			this.getMyAppendList()
 		}
-
+		this.getMyAppendList()
 		this.getCollectionStatus()
 	}
 
@@ -292,14 +291,14 @@ export default class PostDetailViewController extends Component{
 			PostID: this.props.postInfo.PostID
 		}
 
-		this.setState({isRefreshing: true})
+		this.showSpinner()
 		HTTP.post(API_Post.getAppendByPostID, param).then((response) => {
-			this.setState({isRefreshing: false})
+			this.hideSpinner()
 			if (!response.code) {
-				this.setState({dataSource: response.data})
+				this.setState({appendingList: response.data})
 			}
 		}).catch(() => {
-			this.setState({isRefreshing: false})
+			this.hideSpinner()
 		})
 	}
 
@@ -524,10 +523,36 @@ export default class PostDetailViewController extends Component{
 
 				{this.renderAttachments(postInfo)}
 
+				{this.renderAppendingText()}
 				{this.renderSectionHeader()}
 			</View>
 		)
 	}
+
+	renderAppendingText() {
+		return(
+			<View style={{
+				marginHorizontal:16, marginVertical: 8
+			}}>
+				<View style={{width: ScreenDimensions.width - 32, height: 3, backgroundColor: Colors.lineColor,
+					marginVertical: 16}}/>
+
+				{this.state.appendingList.map((item) => {
+					return(
+						<View style={{paddingBottom: 8}}>
+							<Text style={{fontSize: 14, backgroundColor: '#FDBD4E', color: Colors.black,
+								paddingHorizontal: 8, fontStyle: 'italic', paddingTop: 8, fontWeight: 'bold'
+							}}>{'Append at: ' + CalcTimeStamp(item.CreatedAt)}</Text>
+							<Text style={{fontSize: 16, backgroundColor: '#FDBD4E', color: Colors.black,
+								paddingHorizontal: 16, fontStyle: 'italic', paddingVertical: 8
+							}}>{item.Content}</Text>
+						</View>
+					)
+				})}
+			</View>
+		)
+	}
+
 
 	renderSectionHeader(){
 		let postInfo = this.props.postInfo
@@ -659,12 +684,13 @@ export default class PostDetailViewController extends Component{
 	}
 
 	render() {
+		let dataSource = (!this.props.isAppendPost ? this.state.dataSource : this.state.appendingList)
 		return(
 			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
 				<SectionList
 					style={{flex: 1}}
 					renderItem={({item}) => this.renderItem(item)}
-					sections={[{data: [{type: 0}]}, {data: this.state.dataSource,}]}
+					sections={[{data: [{type: 0}]}, {data: dataSource,}]}
 					keyExtractor={(item, index) => {
 						return 'key' + index
 					}}

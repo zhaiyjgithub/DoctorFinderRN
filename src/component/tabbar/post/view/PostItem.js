@@ -6,7 +6,7 @@ import {Text,
 } from 'react-native';
 import {Colors} from '../../../utils/Styles';
 import {ScreenDimensions} from '../../../utils/Dimensions';
-import {Gender} from '../../../utils/CustomEnums';
+import {Gender, PostTagType} from '../../../utils/CustomEnums';
 import {CalcTimeStamp} from '../../../utils/Utils';
 import {API_Post, BaseUrl} from '../../../utils/API';
 
@@ -46,6 +46,16 @@ export default class PostItem extends Component{
 		}
 
 		let imgPostUrlPrefix = BaseUrl + API_Post.imgPost +'?name='
+		let tag = 'Q&A'
+		let tagColor = Colors.green
+		if (postInfo.Type === PostTagType.qa) {
+			tag = 'Q&A'
+			tagColor = Colors.green
+		}else if (postInfo.Type === PostTagType.hot) {
+			tag = 'Hot'
+			tagColor = Colors.red
+		}
+
 		return(
 			<View style={{
 				width: ScreenDimensions.width,
@@ -79,8 +89,8 @@ export default class PostItem extends Component{
 								<Text numberOfLines={1} style={{fontSize: 14, color: Colors.black, marginLeft: 5, maxWidth: 150,}}>{postInfo.UserName}</Text>
 								<Text style={{marginLeft: 8, backgroundColor: Colors.systemGray, borderRadius: 10,
 									paddingHorizontal: 5, paddingVertical: 3,
-									color: Colors.green, fontWeight: 'bold',
-								}}>{'tag'}</Text>
+									color: tagColor, fontWeight: 'bold', fontStyle: 'italic'
+								}}>{tag}</Text>
 							</View>
 
 							<TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', marginRight: 8}}>

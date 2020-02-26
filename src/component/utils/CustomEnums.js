@@ -58,6 +58,11 @@ const EventName = {
 	}
 }
 
+const PostTagType = {
+	qa: 0,
+	hot: 1,
+}
+
 export {
 	PLATFORM,
 	Language,
@@ -67,5 +72,6 @@ export {
 	SearchBarOverlayType,
 	DBKey,
 	CollectionType,
-	EventName
+	EventName,
+	PostTagType
 }

@@ -1,3 +1,4 @@
+import MD5 from 'crypto-js/md5'
 
 const FormatPhone = (phone) => {
 	let formatedPhone = phone
@@ -60,8 +61,14 @@ const VerifyEmail = (email) => {
 	return (pattern.test(email))
 }
 
+const MD5Encrypt = (text) => {
+	return MD5(text).toString()
+}
+
+
 export {
 	FormatPhone,
 	CalcTimeStamp,
-	VerifyEmail
+	VerifyEmail,
+	MD5Encrypt
 }

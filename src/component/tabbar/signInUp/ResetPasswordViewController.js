@@ -21,6 +21,7 @@ import Toast from 'react-native-simple-toast';
 import {HTTP} from '../../utils/HttpTools';
 import {API_Register} from '../../utils/API';
 import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
+import {MD5Encrypt} from '../../utils/Utils';
 
 export default class ResetPasswordViewController extends Component{
 	static defaultProps = {
@@ -95,9 +96,10 @@ export default class ResetPasswordViewController extends Component{
 			return
 		}
 
+		let encryptPwd = MD5Encrypt(this.state.account.toLowerCase() + this.state.password.toLowerCase())
 		let param = {
 			Email: this.props.account,
-			Password: this.state.password,
+			Password: encryptPwd,
 			VerificationCode: this.state.code,
 		}
 

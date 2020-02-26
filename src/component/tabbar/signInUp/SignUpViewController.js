@@ -21,7 +21,7 @@ import {HTTP} from '../../utils/HttpTools';
 import {API_Register, API_User} from '../../utils/API';
 import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
 import Toast from 'react-native-simple-toast'
-import {VerifyEmail} from '../../utils/Utils';
+import {MD5Encrypt, VerifyEmail} from '../../utils/Utils';
 
 export default class SignUpViewController extends Component{
 	constructor(props) {
@@ -141,10 +141,11 @@ export default class SignUpViewController extends Component{
 		}
 
 		let emailSplitArray = this.state.account.split('@')
+		let encryptPwd = MD5Encrypt(this.state.account.toLowerCase() + this.state.password.toLowerCase())
 
 		let param = {
 			Email: this.state.account,
-			Password: this.state.password,
+			Password: encryptPwd,
 			VerificationCode: this.state.code,
 			Name: emailSplitArray[0],
 			Gender: this.state.gender

@@ -24,6 +24,7 @@ import {HTTP} from '../../utils/HttpTools';
 import {API_Answer, API_Register} from '../../utils/API';
 import {CacheDB} from '../../utils/DBTool';
 import RouterEntry from '../../router/RouterEntry';
+import {MD5Encrypt} from '../../utils/Utils';
 
 export default class LogInViewController extends Component{
     constructor(props) {
@@ -54,11 +55,15 @@ export default class LogInViewController extends Component{
             return
         }
 
+
+        let encryptPwd = MD5Encrypt(this.state.account.toLowerCase() + this.state.password.toLowerCase())
+
         let param = {
             Email: this.state.account,
-            Password: this.state.password
+            Password: encryptPwd
         }
 
+        console.log(encryptPwd)
         this.showSpinner()
         HTTP.post(API_Register.signIn, param).then((response) => {
             this.hideSpinner()
@@ -123,7 +128,6 @@ export default class LogInViewController extends Component{
     }
 
     render() {
-        let buttonWidth = (ScreenDimensions.width - 40 - 16)/2.0
         let buttonHeight = ScreenDimensions.width*(50.0/375)
         return(
             <TouchableOpacity activeOpacity={1} onPress={() => {

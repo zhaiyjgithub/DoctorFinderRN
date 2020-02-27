@@ -187,11 +187,23 @@ export default class DoctorSearchResultListViewController extends Component{
 			[
 				{text: 'Cancel', onPress: () => {}, style: 'cancel'},
 				{text: 'Feedback', onPress: () => {
-
+						this.pushFeedbackViewController()
 					}},
 			],
 			{ cancelable: false }
 		)
+	}
+
+	pushFeedbackViewController() {
+		Navigation.push(this.props.componentId, {
+			component: {
+				name: 'FeedbackViewController',
+				passProps: {
+
+				},
+				options: BaseNavigatorOptions('Feedback')
+			}
+		});
 	}
 
 	pushToDoctorInfoPage(item) {

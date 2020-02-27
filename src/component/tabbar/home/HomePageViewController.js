@@ -10,7 +10,6 @@ import {API_Doctor} from '../../utils/API';
 import {ErrorCode, SearchBarType} from '../../utils/CustomEnums';
 import SearchBar from './view/SearchBar';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
-import SearchFilterOverlay from './view/SearchFilterOverlay';
 
 const BannerScale = (375.0/190.0)
 
@@ -128,26 +127,43 @@ export default class HomePageViewController extends Component{
 		)
 	}
 
+	didSelectSpecialty(specialty) {
+		if (specialty === 'More') {
+
+		}
+	}
+	// 儿科
+	// 手术
+	// 皮肤科
+	// 止痛药
+	// 家庭医学
+	// 骨科
+	// 内科
+	// 耳鼻喉科
+	// 过敏与免疫学
+	// 眼科
+	// 泌尿科
+
 	renderSpecialty() {
 		let topSpecialtyListLine1 = [
-			'Internal Medicine',
-			'OB/GYN',
 			'Pediatrics',
-			'Cardiology',
+			'Surgery',
+			'Dermatology',
+			'Pain Medicine',
 		]
 
 		let topSpecialtyListLine2 = [
-			'Dermatology',
-			'Nephrology',
-			'Urology',
-			'Ophthalmology',
+			'Family Medicine',
+			'Orthopaedic',
+			'Internal Medicine',
+			'Obstetrics & Gynecology',
 
 		]
 
 		let topSpecialtyListLine3 = [
-			'Orthopedic Surgery',
-			'Otolaryngology ENT',
-			'Oncology',
+			'Allergy & Immunology',
+			'Chiropractor',
+			'Urology',
 			'More',
 		]
 
@@ -167,7 +183,7 @@ export default class HomePageViewController extends Component{
 								alignItems: 'center'
 							}}>
 								<Image style={{width: 40, height: 40, borderRadius: 20, backgroundColor: Colors.blue}}/>
-								<Text  style={{maxWidth: containerWidth, fontSize: 14,
+								<Text  style={{maxWidth: containerWidth, fontSize: 12,
 									marginTop: 8,
 									textAlign: 'center',
 									color: Colors.black}}>{item}</Text>
@@ -189,7 +205,7 @@ export default class HomePageViewController extends Component{
 								alignItems: 'center'
 							}}>
 								<Image style={{width: 40, height: 40, borderRadius: 20, backgroundColor: Colors.blue}}/>
-								<Text numberOfLines={2} style={{maxWidth: containerWidth, fontSize: 14,
+								<Text numberOfLines={2} style={{maxWidth: containerWidth, fontSize: 12,
 									marginTop: 8,
 									textAlign: 'center',
 									color: Colors.black}}>{item}</Text>
@@ -211,7 +227,7 @@ export default class HomePageViewController extends Component{
 								alignItems: 'center'
 							}}>
 								<Image source={require('../../../resource/image/home/fei.png')} style={{width: 25, height: 25,}}/>
-								<Text numberOfLines={2} style={{maxWidth: containerWidth, fontSize: 14,
+								<Text numberOfLines={2} style={{maxWidth: containerWidth, fontSize: 12,
 									marginTop: 8,
 									textAlign: 'center',
 									color: Colors.black}}>{item}</Text>
@@ -230,11 +246,23 @@ export default class HomePageViewController extends Component{
 			[
 				{text: 'Cancel', onPress: () => {}, style: 'cancel'},
 				{text: 'Feedback', onPress: () => {
-
+						this.pushFeedbackViewController()
 					}},
 			],
 			{ cancelable: false }
 		)
+	}
+
+	pushFeedbackViewController() {
+		Navigation.push(this.props.componentId, {
+			component: {
+				name: 'FeedbackViewController',
+				passProps: {
+
+				},
+				options: BaseNavigatorOptions('Feedback')
+			}
+		});
 	}
 
 	pushToDoctorInfoPage(item) {

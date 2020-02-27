@@ -218,11 +218,23 @@ export default class DoctorInfoViewController extends Component{
 			[
 				{text: 'Cancel', onPress: () => {}, style: 'cancel'},
 				{text: 'Feedback', onPress: () => {
-
+						this.pushFeedbackViewController()
 					}},
 			],
 			{ cancelable: false }
 		)
+	}
+
+	pushFeedbackViewController() {
+		Navigation.push(this.props.componentId, {
+			component: {
+				name: 'FeedbackViewController',
+				passProps: {
+
+				},
+				options: BaseNavigatorOptions('Feedback')
+			}
+		});
 	}
 
 	pushToDoctorInfoPage(item) {
@@ -254,6 +266,9 @@ export default class DoctorInfoViewController extends Component{
 					<DoctorInfoHeaderItem
 						id = {10}
 						info = {this.props.info}
+						questionAction = {() => {
+							this.showQuestionAlert()
+						}}
 					/>
 				)
 			}else if (type === menuType.summary) {

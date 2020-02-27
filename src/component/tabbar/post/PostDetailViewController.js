@@ -350,7 +350,9 @@ export default class PostDetailViewController extends Component{
 		HTTP.post(API_Post.addAppendToPost, param).then((response) => {
 			this.hideSpinner()
 			if (!response.code) {
+				Keyboard.dismiss()
 				Toast.showWithGravity("Append success!", Toast.LONG, Toast.CENTER)
+				this.getMyAppendList()
 			}else {
 				Toast.showWithGravity("Append failed!", Toast.LONG, Toast.CENTER)
 			}
@@ -530,6 +532,9 @@ export default class PostDetailViewController extends Component{
 	}
 
 	renderAppendingText() {
+		if (!this.state.appendingList.length) {
+			return null
+		}
 		return(
 			<View style={{
 				marginHorizontal:16, marginVertical: 8
@@ -556,16 +561,11 @@ export default class PostDetailViewController extends Component{
 
 	renderSectionHeader(){
 		let postInfo = this.props.postInfo
-		if (!postInfo) {
+		if (!postInfo || this.props.isAppendPost) {
 			return null
 		}
 
-		let title = ''
-		if (!this.props.isAppendPost) {
-			title = this.state.totalAnswerCount + ' replies totally'
-		}else {
-			title = this.state.dataSource.length +  ' appends totally'
-		}
+		let title = this.state.totalAnswerCount + ' replies totally'
 
 		return(
 			<View style={{width: '100%', height: 30, flexDirection: 'row', alignItems: 'center',
@@ -683,42 +683,56 @@ export default class PostDetailViewController extends Component{
 		}
 	}
 
+	renderMyPostView() {
+		return(
+			<ScrollView style={{flex:1, backgroundColor: Colors.systemGray}}>
+				{this.renderHeader()}
+				<View style={{width: '100%', height: 44 + 10 + (PLATFORM.isIPhoneX ? 34 : 0) + 50}}/>
+			</ScrollView>
+		)
+	}
+
+	renderSectionList() {
+		return(
+			<SectionList
+				style={{flex: 1,}}
+				renderItem={({item}) => this.renderItem(item)}
+				sections={[{data: [{type: 0}]}, {data: this.state.dataSource}]}
+				keyExtractor={(item, index) => {
+					return 'key' + index
+				}}
+
+				refreshControl={
+					<RefreshControl
+						refreshing={this.state.isRefreshing}
+						enabled = {true}
+						onRefresh={() => {
+							if (!this.props.isAppendPost) {
+								this.refresh()
+							}
+						}
+						}
+					/>
+				}
+				onEndReachedThreshold = {0.1}
+				onEndReached = {() => {
+					if (!this.props.isAppendPost) {
+						this.loadMore()
+					}
+				}}
+
+				ListFooterComponent={() => {
+					return this.renderListFooter()
+				}}
+
+			/>
+		)
+	}
+
 	render() {
-		let dataSource = (!this.props.isAppendPost ? this.state.dataSource : this.state.appendingList)
 		return(
 			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
-				<SectionList
-					style={{flex: 1}}
-					renderItem={({item}) => this.renderItem(item)}
-					sections={[{data: [{type: 0}]}, {data: dataSource,}]}
-					keyExtractor={(item, index) => {
-						return 'key' + index
-					}}
-
-					refreshControl={
-						<RefreshControl
-							refreshing={this.state.isRefreshing}
-							enabled = {true}
-							onRefresh={() => {
-								if (!this.props.isAppendPost) {
-									this.refresh()
-								}
-							}
-							}
-						/>
-					}
-					onEndReachedThreshold = {0.1}
-					onEndReached = {() => {
-						if (!this.props.isAppendPost) {
-							this.loadMore()
-						}
-					}}
-
-					ListFooterComponent={() => {
-						return this.renderListFooter()
-					}}
-
-				/>
+				{!this.props.isAppendPost ? this.renderSectionList() : this.renderMyPostView()}
 
 				{this.renderAddAnswerView()}
 				<LoadingSpinner visible={this.state.isSpinnerVisible} />

@@ -20,13 +20,13 @@ export default class DoctorSearchResultListViewController extends Component{
 		this.state = {
 			dataSource: [],
 			gender: 0,
-			specialty: '',
+			specialty: props.specialty ? props.specialty : '',
 			city: 'BIRMINGHAM',
 			State: 'AL',
 			searchContent: props.searchContent,
 			isRefreshing: true,
 			filterOverlayVisible: false,
-			lastSpecialty: '',
+			lastSpecialty: props.specialty ? props.specialty : '',
 			lastCity: 'BIRMINGHAM',
 			lastState: 'AL',
 			isTotal: false,
@@ -36,6 +36,7 @@ export default class DoctorSearchResultListViewController extends Component{
 		this.page = 1
 		this.pageSize = 30
 		this.isScrollToTop = false
+		this.isHasFinishRefresh = false
 	}
 
 	componentDidMount() {
@@ -75,7 +76,7 @@ export default class DoctorSearchResultListViewController extends Component{
 			LastName: this.state.searchContent,
 			FirstName: this.state.searchContent,
 			Gender: genderType[this.state.gender],
-			Specialty: this.state.lastSpecialty,// (this.state.lastSpecialty && this.state.lastSpecialty.length ? this.state.lastSpecialty : this.state.searchContent),
+			Specialty: this.state.lastSpecialty,
 			City: this.state.lastCity,
 			State: this.state.lastState,
 			Page: this.page,
@@ -83,33 +84,28 @@ export default class DoctorSearchResultListViewController extends Component{
 		}
 
 		if (isRefresh) {
+			this.isHasFinishRefresh = false
 			this.setState({isRefreshing: true})
 		}
 
 		HTTP.post(API_Doctor.searchDoctorByPage, param).then((response) => {
-			if (isRefresh) {
-				this.setState({isRefreshing: false})
-			}
+			let data = isRefresh ? response.data : this.state.dataSource.concat(response.data)
+			this.setState({
+				dataSource: data,
+				isRefreshing: false ,
+				isTotal: response.data.length < this.pageSize,
+				isNoData: false,
+			}, () => {
+				if (this.isScrollToTop) {
+					this.isScrollToTop = false
+					this.scrollsToTop()
+				}
+			})
 
-			if (!response) {
-				return;
-			}
-
 			if (isRefresh) {
-				this.setState({dataSource: response.data, isRefreshing: false ,
-					isTotal: response.data < this.pageSize,
-					isNoData: false,
-				}, () => {
-					if (this.isScrollToTop) {
-						this.isScrollToTop = false
-						this.scrollsToTop()
-					}
-				})
-			}else {
-				this.setState({dataSource: this.state.dataSource.concat(response.data),
-					isTotal: response.data < this.pageSize,
-					isNoData: false,
-				})
+				setTimeout(() => {
+					this.isHasFinishRefresh = true
+				}, 200)
 			}
 		}).catch(() => {
 			this.isScrollToTop = true
@@ -320,7 +316,9 @@ export default class DoctorSearchResultListViewController extends Component{
 					}
 					onEndReachedThreshold = {1}
 					onEndReached = {() => {
-						this.loadMore()
+						if (this.isHasFinishRefresh) {
+							this.loadMore()
+						}
 					}}
 
 					ListFooterComponent={() => {

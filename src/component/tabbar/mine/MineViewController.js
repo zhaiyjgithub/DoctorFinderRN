@@ -24,6 +24,7 @@ import {UpdateUserInfoType} from './UpdateUserInfoViewController';
 import {HTTP} from '../../utils/HttpTools';
 import Toast from "react-native-simple-toast"
 import MyFavorViewController from './MyFavorViewController';
+import {Version} from '../../utils/Config';
 
 export default class MineViewController extends Component{
 	constructor(props) {
@@ -268,6 +269,14 @@ export default class MineViewController extends Component{
 		)
 	}
 
+	renderVersionNumber() {
+		return(
+			<View style={{width: '100%', alignItems: 'center', marginTop: 20,}}>
+				<Text style={{fontSize: 12, color: Colors.lightGray}}>{'Version: ' + Version.Number}</Text>
+			</View>
+		)
+	}
+
 	renderListFooter() {
 		let item = {title: 'Sign out', type: ItemType.signOut}
 		return (
@@ -286,6 +295,8 @@ export default class MineViewController extends Component{
 					</Text>
 					<View style={{position: 'absolute', left: 0, right: 0, bottom: 0, height: 1.0, backgroundColor: Colors.lineColor}}/>
 				</TouchableOpacity>
+
+				{this.renderVersionNumber()}
 			</View>
 		)
 	}

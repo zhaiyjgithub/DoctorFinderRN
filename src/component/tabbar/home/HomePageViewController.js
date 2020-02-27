@@ -39,12 +39,13 @@ export default class HomePageViewController extends Component{
 		})
 	}
 
-	goToSearch(searchContent) {
+	goToSearch(searchContent, specialty) {
 		Navigation.push(this.props.componentId, {
 			component: {
 				name: 'DoctorSearchResultListViewController',
 				passProps: {
-					searchContent: searchContent ? searchContent : ''
+					searchContent: searchContent ? searchContent : '',
+					specialty: specialty
 				},
 				options: BaseNavigatorOptions()
 			}
@@ -62,7 +63,7 @@ export default class HomePageViewController extends Component{
 							passProps:{
 								type: SearchBarType.max,
 								onSubmitEditing: (searchContent) => {
-									this.goToSearch(searchContent)
+									this.goToSearch(searchContent, '')
 								}
 							}
 						}
@@ -90,7 +91,7 @@ export default class HomePageViewController extends Component{
 			<SearchBar
 				type = {SearchBarType.normal}
 				onSubmitEditing={(searchContent) => {
-					this.goToSearch(searchContent)
+					this.goToSearch(searchContent, '')
 				}}
 			/>
 		)
@@ -129,8 +130,31 @@ export default class HomePageViewController extends Component{
 
 	didSelectSpecialty(specialty) {
 		if (specialty === 'More') {
-
+			this.pushToSpecialtyListPage()
+		}else {
+			this.goToSearch('', specialty)
 		}
+	}
+
+	pushToSpecialtyListPage() {
+		Navigation.showModal({
+			stack: {
+				children: [{
+					component: {
+						name: 'SpecialtyViewController',
+						passProps: {
+							selectedSpecialty: this.state.specialty,
+							didSelectedSpecialty: (specialty) => {
+								setTimeout(() => {
+									this.goToSearch('', specialty)
+								}, 600)
+							}
+						},
+						options: BaseNavigatorOptions('Specialty')
+					}
+				}]
+			}
+		});
 	}
 	// 儿科
 	// 手术
@@ -177,7 +201,9 @@ export default class HomePageViewController extends Component{
 				}}>
 					{topSpecialtyListLine1.map((item, index) => {
 						return (
-							<TouchableOpacity key={index} style={{
+							<TouchableOpacity onPress={() => {
+								this.didSelectSpecialty(item)
+							}} key={index} style={{
 								width: containerWidth,
 								marginTop: 10,
 								alignItems: 'center'
@@ -199,7 +225,9 @@ export default class HomePageViewController extends Component{
 				}}>
 					{topSpecialtyListLine2.map((item, index) => {
 						return (
-							<TouchableOpacity key={index} style={{
+							<TouchableOpacity onPress={() => {
+								this.didSelectSpecialty(item)
+							}} key={index} style={{
 								width: containerWidth,
 								marginTop: 10,
 								alignItems: 'center'
@@ -221,7 +249,9 @@ export default class HomePageViewController extends Component{
 				}}>
 					{topSpecialtyListLine3.map((item, index) => {
 						return (
-							<TouchableOpacity key={index} style={{
+							<TouchableOpacity onPress={() => {
+								this.didSelectSpecialty(item)
+							}} key={index} style={{
 								width: containerWidth,
 								marginTop: 10,
 								alignItems: 'center'

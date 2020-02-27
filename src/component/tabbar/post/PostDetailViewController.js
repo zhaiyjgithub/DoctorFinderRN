@@ -629,26 +629,6 @@ export default class PostDetailViewController extends Component{
 		})
 	}
 
-	addFavorToPost() {
-		let param = {
-			UserID: this.getUserID(),
-			PostID: this.props.postInfo.PostID
-		}
-
-		this.showSpinner()
-		HTTP.post(API_Post.addFavor, param).then((response) => {
-			this.hideSpinner()
-			if (response.code) {
-				Toast.showWithGravity('Add failed' , Toast.LONG, Toast.CENTER)
-			}else {
-				Toast.showWithGravity('Add success', Toast.LONG, Toast.CENTER)
-			}
-		}).catch(() => {
-			this.hideSpinner()
-			Toast.showWithGravity('Add failed')
-		})
-	}
-
 	renderItem(item) {
 		if (item.type === 0) {
 			return this.renderHeader()

@@ -24,7 +24,7 @@ const checkStatus = (response) => {
 	throw error;
 }
 
-const request = (url, options) => {
+const  request = (url, options) => {
 	const requestUrl = `${BaseUrl}${url}`;
 	console.log(requestUrl + '\n')
 	console.log(JSON.stringify(options.body) + '\n')

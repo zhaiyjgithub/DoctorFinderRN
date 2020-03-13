@@ -10,6 +10,8 @@ import {API_Doctor} from '../../utils/API';
 import {ErrorCode, SearchBarType} from '../../utils/CustomEnums';
 import SearchBar from './view/SearchBar';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
+import Permissions from 'react-native-permissions'
+import GeoLocation from "@react-native-community/geolocation";
 
 const BannerScale = (375.0/190.0)
 
@@ -26,6 +28,70 @@ export default class HomePageViewController extends Component{
 	}
 
 	componentDidMount() {
+		this.checkLocationPermission()
+		this.getHotSearchDoctors()
+	}
+
+	checkLocationPermission() {
+		Permissions.check('location')
+		.then(response => {
+			switch (response) {
+				case 'authorized':
+					this.updateUserPosition()
+					break;
+				case 'denied':
+					break;
+				case 'restricted':
+					break;
+				case 'undetermined':
+					this.requestLocationPermission();
+					break;
+				default:
+					break;
+			}
+		}).catch(() => {
+			this.requestLocationPermission();
+		});
+	}
+
+	requestLocationPermission() {
+		Permissions.request('location')
+		.then(response => {
+			switch (response) {
+				case 'authorized':
+					this.updateUserPosition()
+					break;
+				default:
+					break
+			}
+		}).catch(() => {
+		});
+	}
+
+	updateUserPosition() {
+		this.getCurrentPosition((info) => {
+			if (info && info.coords) {
+				UserPosition.lat = info.coords.latitude
+				UserPosition.lng = info.coords.longitude
+			}
+		})
+	}
+
+	getCurrentPosition(onSuccess, onError, error3) {
+		GeoLocation.getCurrentPosition(
+			(position) => onSuccess(position),
+			(err) => {
+				if (err.code === 3 && !error3) {
+					this.getCurrentPosition(onSuccess, onError, true);
+				} else {
+					onError && onError(err);
+				}
+			},
+			{ enableHighAccuracy: !error3, timeout: 1000 },
+		)
+	}
+
+	getHotSearchDoctors() {
 		HTTP.post(API_Doctor.getHotSearchDoctors, null).then((response) => {
 			if (response.code === ErrorCode.Ok) {
 				let list = response.data.map((item, index) => {
@@ -156,38 +222,27 @@ export default class HomePageViewController extends Component{
 			}
 		});
 	}
-	// 儿科
-	// 手术
-	// 皮肤科
-	// 止痛药
-	// 家庭医学
-	// 骨科
-	// 内科
-	// 耳鼻喉科
-	// 过敏与免疫学
-	// 眼科
-	// 泌尿科
 
 	renderSpecialty() {
 		let topSpecialtyListLine1 = [
+			'Internal Medicine',
+			'Family Medicine',
 			'Pediatrics',
-			'Surgery',
-			'Dermatology',
-			'Pain Medicine',
+			'Chiropractor',
 		]
 
 		let topSpecialtyListLine2 = [
-			'Family Medicine',
-			'Orthopaedic',
-			'Internal Medicine',
+			'Optometrist',
+			'Psychiatry & Neurology',
+			'Emergency Medicine',
 			'Obstetrics & Gynecology',
 
 		]
 
 		let topSpecialtyListLine3 = [
-			'Allergy & Immunology',
-			'Chiropractor',
-			'Urology',
+			'Radiology',
+			'Anesthesiology',
+			'Surgery',
 			'More',
 		]
 

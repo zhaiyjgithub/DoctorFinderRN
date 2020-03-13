@@ -79,6 +79,8 @@ export default class DoctorSearchResultListViewController extends Component{
 			Specialty: this.state.lastSpecialty,
 			City: this.state.lastCity,
 			State: this.state.lastState,
+			Lat: UserPosition.lat,
+			Lng: UserPosition.lng,
 			Page: this.page,
 			PageSize: this.pageSize
 		}
@@ -264,7 +266,6 @@ export default class DoctorSearchResultListViewController extends Component{
 				didSelectedItem = {() => {
 					this.pushToDoctorInfoPage(item)
 				}}
-
 				questionAction = {() => {
 					this.showQuestionAlert()
 				}}

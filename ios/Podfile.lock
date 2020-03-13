@@ -59,6 +59,8 @@ PODS:
   - React-jsinspector (0.60.3)
   - react-native-camera-kit (8.0.4):
     - React
+  - react-native-geolocation (2.0.2):
+    - React
   - react-native-maps (0.26.1):
     - React
   - react-native-simple-toast (1.0.0):
@@ -92,6 +94,8 @@ PODS:
     - React-fishhook (= 0.60.3)
   - ReactNativeNavigation (3.2.0):
     - React
+  - ReactNativePermissions (1.0.6):
+    - React
   - rn-fetch-blob (0.12.0):
     - React-Core
   - RNCAsyncStorage (1.7.1):
@@ -114,6 +118,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-camera-kit (from `../node_modules/react-native-camera-kit`)
+  - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-simple-toast (from `../node_modules/react-native-simple-toast`)
   - react-native-spinkit (from `../node_modules/react-native-spinkit`)
@@ -128,6 +133,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-RCTWebSocket (from `../node_modules/react-native/Libraries/WebSocket`)
   - ReactNativeNavigation (from `../node_modules/react-native-navigation/ReactNativeNavigation.podspec`)
+  - ReactNativePermissions (from `../node_modules/react-native-permissions`)
   - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - RNShare (from `../node_modules/react-native-share`)
@@ -163,6 +169,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-camera-kit:
     :path: "../node_modules/react-native-camera-kit"
+  react-native-geolocation:
+    :path: "../node_modules/@react-native-community/geolocation"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
   react-native-simple-toast:
@@ -191,6 +199,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/WebSocket"
   ReactNativeNavigation:
     :podspec: "../node_modules/react-native-navigation/ReactNativeNavigation.podspec"
+  ReactNativePermissions:
+    :path: "../node_modules/react-native-permissions"
   rn-fetch-blob:
     :path: "../node_modules/rn-fetch-blob"
   RNCAsyncStorage:
@@ -214,6 +224,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: d9023c5c199114d2b6f38ec861a4d923c73d0735
   React-jsinspector: 817b64f3c8a807f09d78620f4f505868d89b26f3
   react-native-camera-kit: ded127598a48890a360fbf5e26cf7c44fcc5b873
+  react-native-geolocation: cbd9d6bd06bac411eed2671810f454d4908484a8
   react-native-maps: 6e499eee4eabf422ba8b6f94e993cc768bf35153
   react-native-simple-toast: 9c2f5979dfe555d0aa7b084348a06fd6ef7a6f55
   react-native-spinkit: da294fd828216ad211fe36a5c14c1e09f09e62db
@@ -228,12 +239,13 @@ SPEC CHECKSUMS:
   React-RCTVibration: 5d9ed4a968e9d42880ddcc7c29bee3417c745408
   React-RCTWebSocket: 69d8565d66043f244b4129f3d7154c5689fb7d3e
   ReactNativeNavigation: aad255980f20cc5d2001ed37972319f3789fea70
+  ReactNativePermissions: a25615ebfd785b7a081dff3dec88bf191a7d7c42
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
   RNCAsyncStorage: 8539fc80a0075fcc9c8e2dff84cd22dc5bf1dacf
   RNShare: 8b171d4b43c1d886917fdd303bf7a4b87167b05c
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   yoga: 843fe25849b56131275bf3e5da2c468e96f68aff
 
-PODFILE CHECKSUM: d8e4c40ee86248b1e4e55f0d469997976cc5f9a4
+PODFILE CHECKSUM: 5d0ad5508838511a33f98bd68da1db308e55b775
 
 COCOAPODS: 1.8.0.beta.2

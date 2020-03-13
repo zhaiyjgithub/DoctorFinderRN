@@ -35,14 +35,16 @@ export default class DoctorInfoItem extends Component{
 	}
 
 	render() {
-		let doctorName = 'Dr. ' + this.state.info.FirstName + ' ' + this.state.info.LastName + ' '
-		let credential = this.state.info.Credential
-		let specialty = this.state.info.Specialty
-		let subSpecialty = this.state.info.SubSpectialty
-		let address = this.state.info.Address +'\n' + this.state.info.City + ' City\n'
-			+ this.state.info.State + ' ' + this.state.info.Zip
-		let gender = this.state.info.Gender
-
+		let info = this.state.info
+		let doctorName = 'Dr. ' + info.FirstName + ' ' + info.LastName + ' '
+		let credential = info.Credential
+		let specialty = info.Specialty
+		let subSpecialty = info.SubSpectialty
+		let address = info.Address +'\n' + info.City + ' City\n'
+			+ info.State + ' ' + info.Zip
+		let gender = info.Gender
+		let distanceInMi = (((info.Distance)*0.6213).toFixed(2) + 'mi')
+		
 		return(
 			<View style={{
 				width: ScreenDimensions.width,
@@ -94,6 +96,7 @@ export default class DoctorInfoItem extends Component{
 								/>
 							</TouchableOpacity>
 						</View>
+
 						<View style={{
 							width: ScreenDimensions.width - 32 - 16 - 10 - 50,
 						}}>
@@ -116,10 +119,15 @@ export default class DoctorInfoItem extends Component{
 
 							{subSpecialty ? <Text style={{fontSize: 16, color: Colors.lightGray,}}>{subSpecialty}</Text> : null}
 
-							<Text style={{fontSize: 14, color: Colors.black,
-								marginTop: 6,
-								lineHeight: 14*1.4
-							}}>{address}</Text>
+							<View style = {{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+								<Text style={{fontSize: 14, color: Colors.black,
+									marginTop: 6,
+									lineHeight: 14*1.4,
+									width: '50%'
+								}}>{address}</Text>
+
+								<Text style={{fontSize: 16, color: Colors.lightGray, marginRight: 8}}>{distanceInMi}</Text>
+							</View>
 						</View>
 					</TouchableOpacity>
 				</View>

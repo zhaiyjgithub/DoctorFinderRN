@@ -29,6 +29,7 @@ const storage = new Storage({
 	enableCache: true,
 })
 global.STORAGE = storage
+global.UserPosition = {lat: 33.506493, lng: -86.77556}
 
 
 Navigation.events().registerAppLaunchedListener(async () => {

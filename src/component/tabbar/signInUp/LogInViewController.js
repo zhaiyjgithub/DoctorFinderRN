@@ -63,7 +63,6 @@ export default class LogInViewController extends Component{
             Password: encryptPwd
         }
 
-        console.log(encryptPwd)
         this.showSpinner()
         HTTP.post(API_Register.signIn, param).then((response) => {
             this.hideSpinner()

@@ -12,6 +12,8 @@ import SearchBar from './view/SearchBar';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 import Permissions from 'react-native-permissions'
 import GeoLocation from "@react-native-community/geolocation";
+import {UserTrack} from '../../utils/UserTrack';
+import {DLogger} from '../../utils/Utils';
 
 const BannerScale = (375.0/190.0)
 
@@ -22,6 +24,7 @@ export default class HomePageViewController extends Component{
 		this.state = {
 			dataSource: [{section: 0, data: [{section: 0,}]}],
 		}
+		this.addGlobalScreenEventListener()
 
 		this.setTopBarView(false)
 		this.isHasShowTopBarSearchBar = false
@@ -30,6 +33,14 @@ export default class HomePageViewController extends Component{
 	componentDidMount() {
 		this.checkLocationPermission()
 		this.getHotSearchDoctors()
+	}
+
+	componentWillUnmount() {
+		this.screenEventListener && this.screenEventListener.remove()
+		this.screenEventListener = null
+
+		this.ScreenDisappearListener && this.ScreenDisappearListener.remove()
+		this.ScreenDisappearListener = null
 	}
 
 	checkLocationPermission() {
@@ -89,6 +100,27 @@ export default class HomePageViewController extends Component{
 			},
 			{ enableHighAccuracy: !error3, timeout: 1000 },
 		)
+	}
+
+	addGlobalScreenEventListener() {
+		// Subscribe
+		this.beginTime = (new Date()).toISOString()
+
+		this.ScreenDisappearListener = Navigation.events().registerComponentDidDisappearListener(({ componentId, componentName }) => {
+			DLogger('Did Disappear: ' + componentId + ' - ' + componentName + ' - ')
+			this.endTime = (new Date()).toISOString()
+
+			DLogger(this.beginTime + ' - ' + this.endTime)
+			UserTrack.trackView(componentName, this.beginTime, this.endTime)
+
+			UserTrack.uploadTrackEvents()
+		});
+
+		this.screenEventListener = Navigation.events().registerComponentDidAppearListener(({ componentId, componentName, passProps }) => {
+			DLogger('Did Appear: ' + componentId + ' - ' + componentName + ' - ')
+			this.currentComponentName = componentName
+			this.beginTime = (new Date()).toISOString()
+		});
 	}
 
 	getHotSearchDoctors() {
@@ -195,6 +227,9 @@ export default class HomePageViewController extends Component{
 	}
 
 	didSelectSpecialty(specialty) {
+		let eventName = this.currentComponentName + '-' + 'specialty' + '-' + specialty
+		UserTrack.trackAction(eventName)
+
 		if (specialty === 'More') {
 			this.pushToSpecialtyListPage()
 		}else {
@@ -223,6 +258,26 @@ export default class HomePageViewController extends Component{
 		});
 	}
 
+	renderSpecialtyItem(item, index) {
+		let containerWidth = (ScreenDimensions.width - 32 - 3*8)/4.0
+
+		return (
+			<TouchableOpacity onPress={() => {
+				this.didSelectSpecialty(item)
+			}} key={index} style={{
+				width: containerWidth,
+				marginTop: 10,
+				alignItems: 'center'
+			}}>
+				<Image style={{width: 40, height: 40, borderRadius: 20, backgroundColor: Colors.blue}}/>
+				<Text numberOfLines={2} style={{maxWidth: containerWidth, fontSize: 12,
+					marginTop: 8,
+					textAlign: 'center',
+					color: Colors.black}}>{item}</Text>
+			</TouchableOpacity>
+		)
+	}
+
 	renderSpecialty() {
 		let topSpecialtyListLine1 = [
 			'Internal Medicine',
@@ -246,7 +301,6 @@ export default class HomePageViewController extends Component{
 			'More',
 		]
 
-		let containerWidth = (ScreenDimensions.width - 32 - 3*8)/4.0
 		return(
 			<View style={{backgroundColor: Colors.white, paddingBottom: 10,}}>
 				<View style={{width: ScreenDimensions.width, paddingHorizontal: 16,
@@ -255,21 +309,7 @@ export default class HomePageViewController extends Component{
 					flexWrap: 'wrap',
 				}}>
 					{topSpecialtyListLine1.map((item, index) => {
-						return (
-							<TouchableOpacity onPress={() => {
-								this.didSelectSpecialty(item)
-							}} key={index} style={{
-								width: containerWidth,
-								marginTop: 10,
-								alignItems: 'center'
-							}}>
-								<Image style={{width: 40, height: 40, borderRadius: 20, backgroundColor: Colors.blue}}/>
-								<Text  style={{maxWidth: containerWidth, fontSize: 12,
-									marginTop: 8,
-									textAlign: 'center',
-									color: Colors.black}}>{item}</Text>
-							</TouchableOpacity>
-						)
+						return this.renderSpecialtyItem(item, index)
 					})}
 				</View>
 
@@ -279,21 +319,7 @@ export default class HomePageViewController extends Component{
 					flexWrap: 'wrap'
 				}}>
 					{topSpecialtyListLine2.map((item, index) => {
-						return (
-							<TouchableOpacity onPress={() => {
-								this.didSelectSpecialty(item)
-							}} key={index} style={{
-								width: containerWidth,
-								marginTop: 10,
-								alignItems: 'center'
-							}}>
-								<Image style={{width: 40, height: 40, borderRadius: 20, backgroundColor: Colors.blue}}/>
-								<Text numberOfLines={2} style={{maxWidth: containerWidth, fontSize: 12,
-									marginTop: 8,
-									textAlign: 'center',
-									color: Colors.black}}>{item}</Text>
-							</TouchableOpacity>
-						)
+						return this.renderSpecialtyItem(item, index)
 					})}
 				</View>
 
@@ -303,21 +329,7 @@ export default class HomePageViewController extends Component{
 					flexWrap: 'wrap'
 				}}>
 					{topSpecialtyListLine3.map((item, index) => {
-						return (
-							<TouchableOpacity onPress={() => {
-								this.didSelectSpecialty(item)
-							}} key={index} style={{
-								width: containerWidth,
-								marginTop: 10,
-								alignItems: 'center'
-							}}>
-								<Image source={require('../../../resource/image/home/fei.png')} style={{width: 25, height: 25,}}/>
-								<Text numberOfLines={2} style={{maxWidth: containerWidth, fontSize: 12,
-									marginTop: 8,
-									textAlign: 'center',
-									color: Colors.black}}>{item}</Text>
-							</TouchableOpacity>
-						)
+						return this.renderSpecialtyItem(item, index)
 					})}
 				</View>
 			</View>

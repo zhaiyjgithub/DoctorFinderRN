@@ -48,6 +48,9 @@ const API_User = {
 	updatePassword: 'User/UpdatePassword'
 }
 
+const API_Track = {
+	addEvent: 'Track/AddEvent'
+}
 
 
 export {
@@ -56,5 +59,6 @@ export {
 	API_Post,
 	API_Answer,
 	API_Register,
-	API_User
+	API_User,
+	API_Track
 }

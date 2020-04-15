@@ -1,4 +1,7 @@
 import {Version} from './Config';
+import {HTTP} from './HttpTools';
+import {API_Track, API_User} from './API';
+import {DLogger} from './Utils';
 
 const UserTrack = {
 	actionEvents: [],
@@ -15,7 +18,7 @@ const UserTrack = {
 		}
 
 		this.actionEvents.push(param)
-		console.log('action param: ' + JSON.stringify(param))
+		DLogger('action param: ' + JSON.stringify(param))
 	},
 	trackView(viewName, beginTime, endTime) {
 		let param = {
@@ -30,10 +33,24 @@ const UserTrack = {
 		}
 
 		this.viewEvents.push(param)
-		console.log('action param: ' + JSON.stringify(param))
+		DLogger('action param: ' + JSON.stringify(param))
 	},
 	uploadTrackEvents() {
+		DLogger(JSON.stringify(this.actionEvents))
+		DLogger(JSON.stringify(this.viewEvents))
 
+		let param = {
+			Actions: this.actionEvents,
+			Views: this.viewEvents
+		}
+
+		HTTP.post(API_Track.addEvent, param).then((response) => {
+			DLogger(response)
+			this.actionEvents = []
+			this.viewEvents = []
+		}).catch((error) => {
+			DLogger(error)
+		})
 	}
 }
 

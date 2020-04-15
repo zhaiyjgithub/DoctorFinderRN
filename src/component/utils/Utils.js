@@ -65,10 +65,15 @@ const MD5Encrypt = (text) => {
 	return MD5(text).toString()
 }
 
+const DLogger = (msg) => {
+	console.log(msg)
+}
+
 
 export {
 	FormatPhone,
 	CalcTimeStamp,
 	VerifyEmail,
-	MD5Encrypt
+	MD5Encrypt,
+	DLogger
 }

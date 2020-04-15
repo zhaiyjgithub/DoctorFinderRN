@@ -102,7 +102,7 @@ export default class FeedbackViewController extends Component{
 	render() {
 		return(
 			<View style={{flex: 1, backgroundColor: Colors.white, alignItems: 'center'}}>
-				<Text style={{color: Colors.black, fontsize: 16, marginHorizontal: 16,
+				<Text style={{color: Colors.black, fontSize: 16, marginHorizontal: 16,
 					marginTop: 8,
 				}}>{'We are very appreciate you can send any feedback to us. ' +
 				'You can send the feedback below or email via '}

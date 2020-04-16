@@ -2,6 +2,7 @@
  * Created by zack on 2018/3/14.
  */
 import {BaseUrl} from './API'
+import {DLogger} from './Utils';
 // import {//LoginTools } from './UserTools';
 
 const parseJSON = (response) => {
@@ -26,13 +27,16 @@ const checkStatus = (response) => {
 
 const  request = (url, options) => {
 	const requestUrl = `${BaseUrl}${url}`;
-	console.log(requestUrl + '\n')
-	console.log(JSON.stringify(options.body) + '\n')
+	DLogger(requestUrl + '\n')
+	DLogger(JSON.stringify(options.body) + '\n')
+
+	let token = (global.UserInfo.Token ? global.UserInfo.Token : '')
+	DLogger('Token: ' + token)
 	return fetch(requestUrl, Object.assign({}, {
 			credentials: 'include',
 			headers: {
 				'Content-Type': 'application/json',
-			    // 'Authorization': "Bearer " + (global.token ? global.token : ''),
+			    'Authorization': "Bearer " + token,
 				// 'X-GBmono-Language': global.userSelectedLanguage === 'zh-tw' ? 'zh-tw' : 'zh-cn',
 				// 'x-gbmono-user-lon': (global.userRegion.lon + ''),
 				// 'x-gbmono-user-lat': (global.userRegion.lat + ''),

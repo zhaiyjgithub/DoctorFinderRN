@@ -30,18 +30,17 @@ const storage = new Storage({
 })
 global.STORAGE = storage
 global.UserPosition = {lat: 33.506493, lng: -86.77556}
-
+global.UserInfo = {}
 
 Navigation.events().registerAppLaunchedListener(async () => {
 	CacheDB.load(DBKey.userInfo, (userInfo) => {
 		if (userInfo) {
 			global.UserInfo = userInfo
-			RouterEntry.homePage()
-		}else {
-			RouterEntry.guide()
 		}
+
+		RouterEntry.homePage()
 	}, (error) => {
-		RouterEntry.guide()
+		RouterEntry.homePage()
 	})
 })
 

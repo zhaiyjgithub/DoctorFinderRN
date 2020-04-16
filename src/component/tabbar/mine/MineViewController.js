@@ -101,6 +101,10 @@ export default class MineViewController extends Component{
 				this.pushToUpdatePasswordPage()
 				break
 
+			case ItemType.signIn:
+				this.signIn()
+				break
+
 			default: ;
 		}
 	}
@@ -110,11 +114,11 @@ export default class MineViewController extends Component{
 			'Do you want to sign out?',
 			'Sign out.',
 			[
-				{text: 'Cancel', onPress: () => {
-						// this.signOut()
-					}, style: 'cancel'},
 				{text: 'Okay', onPress: () => {
 						this.signOut()
+					}, style: 'Cancel'},
+				{text: 'Cancel', onPress: () => {
+						// this.signOut()
 					}, style: 'cancel'},
 			],
 			{ cancelable: false }
@@ -187,6 +191,26 @@ export default class MineViewController extends Component{
 		RouterEntry.guide()
 	}
 
+	signIn() {
+		Navigation.showModal({
+			stack: {
+				children: [{
+					component: {
+						name: 'GuideViewController',
+						passProps: {
+
+						},
+						options: {
+							topBar: {
+								visible: false
+							}
+						}
+					}
+				}]
+			}
+		});
+	}
+
 	getUserInfo() {
 		let param = {
 			UserID: this.getUserID()
@@ -212,7 +236,7 @@ export default class MineViewController extends Component{
 
 	renderListHeader() {
 		let imageURI = require('../../../resource/image/base/avatar.jpg')
-		if (this.getHeaderIcon().length) {
+		if (this.getHeaderIcon()) {
 			imageURI = {uri: BaseUrl + API_Register.headerImg +'?name=' + this.getHeaderIcon()}
 		}
 
@@ -278,7 +302,7 @@ export default class MineViewController extends Component{
 	}
 
 	renderListFooter() {
-		let item = {title: 'Sign out', type: ItemType.signOut}
+		let item = UserInfo.Token ? {title: 'Sign out', type: ItemType.signOut} : {title: 'Sign In', type: ItemType.signIn}
 		return (
 			<View style={{width: ScreenDimensions.width,
 				paddingBottom: TabBar.height + 16,
@@ -286,7 +310,7 @@ export default class MineViewController extends Component{
 				{this.renderListSectionHeader()}
 
 				<TouchableOpacity onPress={() => {
-					this.didSelectedItem(ItemType.signOut)
+					this.didSelectedItem(item.type)
 				}} style={{width: '100%', height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
 					backgroundColor: Colors.white
 				}}>
@@ -343,4 +367,5 @@ const ItemType = {
 	feedback: 5,
 	about: 6,
 	signOut: 7,
+	signIn: 8,
 }

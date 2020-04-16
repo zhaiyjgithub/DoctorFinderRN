@@ -19,6 +19,57 @@ import {Navigation} from 'react-native-navigation';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 
 export default class GuideViewController extends Component{
+    static options(passProps) {
+        return {
+            statusBar: {
+                visible: true,
+                style: 'light'
+            },
+            topBar: {
+                visible: false,
+                background: {
+                    color: Colors.theme,
+                },
+                noBorder: true,
+                drawBehind: false,
+                leftButtonColor: Colors.theme,
+                rightButtonColor: Colors.theme,
+                title: {
+                    color: Colors.white,
+                    fontWeight: 'bold',
+                    fontSize: 16,
+                },
+                backButton: {
+                    color: Colors.white,
+                    title: ''
+                },
+            },
+        }
+    }
+
+    componentDidMount(): void {
+
+    }
+
+    renderDismissLeftButton() {
+        return(
+            <TouchableOpacity style={{
+                position: 'absolute',
+                left: 20,
+                top: NaviBarHeight.height,
+                width: 30,
+                height: 30,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }} onPress={() => {
+                Navigation.dismissModal(this.props.componentId);
+            }}>
+                <Image style={{tintColor: Colors.theme,  width: 20,
+                    height: 20,}} source={require('../../../resource/image/base/cancel.png')} />
+            </TouchableOpacity>
+        )
+    }
+
     modalToLogInPage() {
         Navigation.showModal({
             stack: {
@@ -93,6 +144,8 @@ export default class GuideViewController extends Component{
                         <Text style={{fontSize: 18, color: Colors.white, fontWeight: 'bold'}}>{'Sign in'}</Text>
                     </TouchableOpacity>
                 </View>
+
+                {this.renderDismissLeftButton()}
             </View>
         )
     }

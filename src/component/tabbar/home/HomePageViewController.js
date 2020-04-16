@@ -118,6 +118,7 @@ export default class HomePageViewController extends Component{
 
 		this.screenEventListener = Navigation.events().registerComponentDidAppearListener(({ componentId, componentName, passProps }) => {
 			DLogger('Did Appear: ' + componentId + ' - ' + componentName + ' - ')
+			
 			this.currentComponentName = componentName
 			this.beginTime = (new Date()).toISOString()
 		});

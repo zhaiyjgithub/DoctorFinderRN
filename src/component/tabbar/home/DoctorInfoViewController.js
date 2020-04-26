@@ -104,6 +104,11 @@ export default class DoctorInfoViewController extends Component{
 
 			ShareTool(shareOptions)
 		}else if (buttonId === 'star') {
+			if (!UserInfo.Token) {
+				alert('sign in first')
+				return
+			}
+
 			if (this.isCollected) {
 				this.cancelCollection()
 			}else {

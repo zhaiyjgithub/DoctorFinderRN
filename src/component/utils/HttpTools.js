@@ -37,11 +37,11 @@ const  request = (url, options) => {
 			headers: {
 				'Content-Type': 'application/json',
 			    'Authorization': "Bearer " + token,
-				// 'X-GBmono-Language': global.userSelectedLanguage === 'zh-tw' ? 'zh-tw' : 'zh-cn',
-				// 'x-gbmono-user-lon': (global.userRegion.lon + ''),
-				// 'x-gbmono-user-lat': (global.userRegion.lat + ''),
-				// 'x-gbmono-user-id' : global.userId ? global.userId + '' : '',
-				// 'x-gbmono-source' :'Globalbusiness.mono.App'
+				// 'X-Language': global.userSelectedLanguage === 'zh-tw' ? 'zh-tw' : 'zh-cn',
+				// 'x-user-lon': (global.userRegion.lon + ''),
+				// 'x-user-lat': (global.userRegion.lat + ''),
+				// 'x-user-id' : global.userId ? global.userId + '' : '',
+				// 'x-source' :'Globalbusiness.mono.App'
 			},
 	}, options))
 		.then(checkStatus)

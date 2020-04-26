@@ -66,6 +66,7 @@ export default class SearchFilterOverlay extends Component{
 
 	renderSearchBarView() {
 		let width = MainViewWidth - 16
+		let placeHolder = 'Text Doctor\'s Last Name...'
 		return(
 			<View style={{marginTop: 8, height: 50, justifyContent: 'center'}}>
 				<TextInput
@@ -81,7 +82,7 @@ export default class SearchFilterOverlay extends Component{
 					value = {this.state.searchContent}
 					underlineColorAndroid = {'transparent'}
 					numberOfLines={1}
-					placeholder = {'e.g. Dr. Fei or Pediatrics'}
+					placeholder = {placeHolder}
 					placeholderTextColor={Colors.lightGray}
 					style={{
 						width: width,

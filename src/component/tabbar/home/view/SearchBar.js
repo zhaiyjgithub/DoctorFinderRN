@@ -19,6 +19,7 @@ export default class SearchBar extends Component {
 
 	render() {
 		let props = this.props
+		let placeHolder = 'Text Doctor\'s Last Name...'
 		if (props.type === SearchBarType.max) {
 			let width = (ScreenDimensions.width - 32)
 			return(
@@ -35,7 +36,7 @@ export default class SearchBar extends Component {
 					value = {this.state.searchContent}
 					underlineColorAndroid = {'transparent'}
 					numberOfLines={1}
-					placeholder = {'e.g. Dr. Fei or Pediatrics'}
+					placeholder = {placeHolder}
 					placeholderTextColor={Colors.lightGray}
 					style={{
 						width: width,
@@ -64,7 +65,7 @@ export default class SearchBar extends Component {
 						clearButtonMode={'while-editing'}
 						numberOfLines={1}
 						underlineColorAndroid={'transparent'}
-						placeholder = {'e.g. Dr. Fei or Pediatrics'}
+						placeholder = {placeHolder}
 						placeholderTextColor={Colors.lightGray}
 						onSubmitEditing = {(event) => {
 							this.props.onSubmitEditing && this.props.onSubmitEditing(this.state.searchContent)
@@ -103,7 +104,7 @@ export default class SearchBar extends Component {
 						clearButtonMode={'while-editing'}
 						numberOfLines={1}
 						underlineColorAndroid={'transparent'}
-						placeholder = {'e.g. Dr. Fei or Pediatrics'}
+						placeholder = {placeHolder}
 						placeholderTextColor={Colors.lightGray}
 						onSubmitEditing = {(event) => {
 							this.props.onSubmitEditing && this.props.onSubmitEditing(this.state.searchContent)

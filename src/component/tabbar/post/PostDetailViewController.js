@@ -1,32 +1,30 @@
-import React, {Component} from 'react'
+import React, {Component} from 'react';
 import {
-	FlatList,
-	View,
-	StyleSheet,
-	Platform,
 	Alert,
-	DeviceEventEmitter,
-	NativeModules,
 	Animated,
-	Linking,
+	Image,
+	Keyboard,
+	RefreshControl,
 	ScrollView,
-	AppState, TouchableOpacity, Image, Text, RefreshControl, SectionList, Keyboard, TextInput,
+	SectionList,
+	Text,
+	TextInput,
+	TouchableOpacity,
+	View,
 } from 'react-native';
 import {Colors} from '../../utils/Styles';
-import {NaviBarHeight, ScreenDimensions, TabBar} from '../../utils/Dimensions';
-import {CollectionType, Gender, PLATFORM} from '../../utils/CustomEnums';
-import PostItem from './view/PostItem';
+import {ScreenDimensions} from '../../utils/Dimensions';
+import {CollectionType, PLATFORM} from '../../utils/CustomEnums';
 import {Navigation} from 'react-native-navigation';
-import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 import {HTTP} from '../../utils/HttpTools';
 import {API_Answer, API_Doctor, API_Post, API_User, BaseUrl} from '../../utils/API';
 import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
 import LoadingFooter from '../../BaseComponents/LoadingFooter';
-import Toast from 'react-native-simple-toast'
+import Toast from 'react-native-simple-toast';
 import AnswerItem from './view/AnswerItem';
 import {ShareTool} from '../../utils/ShareTool';
-import ActionSheet from 'react-native-actionsheet';
 import {CalcTimeStamp} from '../../utils/Utils';
+import RouterEntry from '../../router/RouterEntry';
 
 export default class PostDetailViewController extends Component{
 	static defaultProps = {
@@ -137,6 +135,11 @@ export default class PostDetailViewController extends Component{
 
 			ShareTool(shareOptions)
 		}else if (buttonId === 'star') {
+			if (!UserInfo.Token) {
+				this.showNotSignUpAlert()
+				return
+			}
+
 			if (this.isCollected) {
 				this.cancelCollection()
 			}else {
@@ -360,7 +363,20 @@ export default class PostDetailViewController extends Component{
 			this.hideSpinner()
 			Toast.showWithGravity("Request failed!", Toast.LONG, Toast.CENTER)
 		})
+	}
 
+	showNotSignUpAlert() {
+		Alert.alert(
+			'Not Sign In',
+			'Oh... You are not sign in now. ',
+			[
+				{text: 'Cancel', onPress: () => console.log('Cancel Pressed')},
+				{text: 'Sign In', onPress: () => {
+						RouterEntry.modalSignUp()
+					}},
+			],
+			{ cancelable: false }
+		)
 	}
 
 	renderListFooter() {
@@ -461,6 +477,11 @@ export default class PostDetailViewController extends Component{
 						}} />
 
 					<TouchableOpacity onPress={() => {
+						if (!UserInfo.Token) {
+							this.showNotSignUpAlert()
+							return
+						}
+
 						if (!this.props.isAppendPost) {
 							this.createNewAnswer()
 						}else {

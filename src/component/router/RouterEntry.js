@@ -59,7 +59,7 @@ const RouterEntry = {
 	guide: () => {
 		Navigation.setDefaultOptions({
 			statusBar: {
-				visible: true,
+				visible: false,
 				style: 'light'
 			},
 			topBar: {
@@ -190,6 +190,28 @@ const RouterEntry = {
 				}
 			}
 		})
+	},
+	modalSignUp() {
+		Navigation.showModal({
+			stack: {
+				children: [{
+					component: {
+						name: 'GuideViewController',
+						passProps: {
+							isToSignUp: true
+						},
+						topBar: {
+							visible: true,
+							background: {
+								color: Colors.theme,
+							},
+							noBorder: true,
+							drawBehind: true,
+						},
+					}
+				}]
+			}
+		});
 	}
 }
 

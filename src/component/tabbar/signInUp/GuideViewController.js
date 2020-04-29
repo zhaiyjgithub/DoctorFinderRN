@@ -19,10 +19,12 @@ import {Navigation} from 'react-native-navigation';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 
 export default class GuideViewController extends Component{
+    static defaultProps = {
+        isToSignUp: false
+    }
     static options(passProps) {
         return {
             statusBar: {
-                visible: true,
                 style: 'light'
             },
             topBar: {
@@ -31,18 +33,7 @@ export default class GuideViewController extends Component{
                     color: Colors.theme,
                 },
                 noBorder: true,
-                drawBehind: false,
-                leftButtonColor: Colors.theme,
-                rightButtonColor: Colors.theme,
-                title: {
-                    color: Colors.white,
-                    fontWeight: 'bold',
-                    fontSize: 16,
-                },
-                backButton: {
-                    color: Colors.white,
-                    title: ''
-                },
+                drawBehind: true,
             },
         }
     }
@@ -51,21 +42,19 @@ export default class GuideViewController extends Component{
 
     }
 
-    renderDismissLeftButton() {
+    renderDismissButton() {
+        if (!this.props.isToSignUp) {
+            return ;
+        }
+
         return(
-            <TouchableOpacity style={{
-                position: 'absolute',
-                left: 20,
-                top: NaviBarHeight.height,
-                width: 30,
-                height: 30,
-                justifyContent: 'center',
-                alignItems: 'center',
-            }} onPress={() => {
+            <TouchableOpacity onPress={() => {
                 Navigation.dismissModal(this.props.componentId);
+            }} style={{
+                height: 30, justifyContent: 'center', alignItems: 'center',
+                marginBottom: PLATFORM.isIPhoneX ? 34 : 20,
             }}>
-                <Image style={{tintColor: Colors.theme,  width: 20,
-                    height: 20,}} source={require('../../../resource/image/base/cancel.png')} />
+                <Text style={{fontSize: 16, color: Colors.theme,}}>{'Dismiss'}</Text>
             </TouchableOpacity>
         )
     }
@@ -121,31 +110,33 @@ export default class GuideViewController extends Component{
                     color: Colors.lightBlack, marginTop: ScreenDimensions.height*0.312
                 }}>Doctor Finder</Text>
 
-                <View style={{width: ScreenDimensions.width, flexDirection: 'row', alignItems: 'center',
-                    justifyContent: 'space-between', paddingLeft: 25,
-                    marginBottom: PLATFORM.isIPhoneX ? 34 : 20,
-                    paddingHorizontal: 20,
-                }}>
-                    <TouchableOpacity onPress={() => {
-                        this.modalSignUpPage()
-                    }} style={{width: buttonWidth,
-                        height: buttonHeight, justifyContent: 'center', alignItems: 'center',
-                        backgroundColor: Colors.theme, borderRadius: 4,
+                <View>
+                    <View style={{width: ScreenDimensions.width, flexDirection: 'row', alignItems: 'center',
+                        justifyContent: 'space-between', paddingLeft: 25,
+                        marginBottom: (this.props.isToSignUp ? 16 : (PLATFORM.isIPhoneX ? 34 : 20)),
+                        paddingHorizontal: 20,
                     }}>
-                        <Text style={{fontSize: 18, color: Colors.white, fontWeight: 'bold'}}>{'Create account'}</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            this.modalSignUpPage()
+                        }} style={{width: buttonWidth,
+                            height: buttonHeight, justifyContent: 'center', alignItems: 'center',
+                            backgroundColor: Colors.theme, borderRadius: 4,
+                        }}>
+                            <Text style={{fontSize: 18, color: Colors.white, fontWeight: 'bold'}}>{'Create account'}</Text>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => {
-                        this.modalToLogInPage()
-                    }} style={{width: buttonWidth,
-                        height: buttonHeight, justifyContent: 'center', alignItems: 'center',
-                        backgroundColor: Colors.theme, borderRadius: 4,
-                    }}>
-                        <Text style={{fontSize: 18, color: Colors.white, fontWeight: 'bold'}}>{'Sign in'}</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            this.modalToLogInPage()
+                        }} style={{width: buttonWidth,
+                            height: buttonHeight, justifyContent: 'center', alignItems: 'center',
+                            backgroundColor: Colors.theme, borderRadius: 4,
+                        }}>
+                            <Text style={{fontSize: 18, color: Colors.white, fontWeight: 'bold'}}>{'Sign in'}</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    {this.renderDismissButton()}
                 </View>
-
-                {this.renderDismissLeftButton()}
             </View>
         )
     }

@@ -28,6 +28,7 @@ const storage = new Storage({
 	// 读写时在内存中缓存数据。默认启用。
 	enableCache: true,
 })
+
 global.STORAGE = storage
 global.UserPosition = {lat: 33.506493, lng: -86.77556}
 global.UserInfo = {}

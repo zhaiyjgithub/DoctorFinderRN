@@ -43,8 +43,8 @@ export default class DoctorInfoItem extends Component{
 		let address = info.Address +'\n' + info.City + ' City\n'
 			+ info.State + ' ' + info.Zip
 		let gender = info.Gender
-		let distanceInMi = (((info.Distance)*0.6213).toFixed(2) + 'mi')
-		
+		let distanceInMi = info.Distance ? (((info.Distance)*0.6213).toFixed(2) + 'mi') : ''
+
 		return(
 			<View style={{
 				width: ScreenDimensions.width,

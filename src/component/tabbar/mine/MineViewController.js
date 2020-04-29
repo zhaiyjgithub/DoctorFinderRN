@@ -76,7 +76,28 @@ export default class MineViewController extends Component{
 		})
 	}
 
+	showNotSignUpAlert() {
+		Alert.alert(
+			'Not Sign In',
+			'Oh... You are not sign in now. ',
+			[
+				{text: 'Cancel', onPress: () => console.log('Cancel Pressed')},
+				{text: 'Sign In', onPress: () => {
+						RouterEntry.modalSignUp()
+					}},
+			],
+			{ cancelable: false }
+		)
+	}
+
 	didSelectedItem(type) {
+		if (!UserInfo.Token && (type === ItemType.track || type === ItemType.favor ||
+			type === ItemType.post || type === ItemType.resetPassword
+		)) {
+			this.showNotSignUpAlert()
+			return
+		}
+
 		switch (type) {
 			case ItemType.signOut:
 				this.showSignOutAlert()
@@ -198,13 +219,16 @@ export default class MineViewController extends Component{
 					component: {
 						name: 'GuideViewController',
 						passProps: {
-
+							isToSignUp: true
 						},
-						options: {
-							topBar: {
-								visible: false
-							}
-						}
+						topBar: {
+							visible: true,
+							background: {
+								color: Colors.theme,
+							},
+							noBorder: true,
+							drawBehind: true,
+						},
 					}
 				}]
 			}

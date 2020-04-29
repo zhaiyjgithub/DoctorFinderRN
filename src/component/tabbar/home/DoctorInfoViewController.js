@@ -13,6 +13,7 @@ import DoctorInfoAddressItem from './view/DoctorInfoAddressItem';
 import {ShareTool} from '../../utils/ShareTool';
 import ActionSheet from 'react-native-actionsheet';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
+import RouterEntry from '../../router/RouterEntry';
 
 export default class DoctorInfoViewController extends Component{
 	static defaultProps = {
@@ -105,7 +106,7 @@ export default class DoctorInfoViewController extends Component{
 			ShareTool(shareOptions)
 		}else if (buttonId === 'star') {
 			if (!UserInfo.Token) {
-				alert('sign in first')
+				this.showNotSignUpAlert()
 				return
 			}
 
@@ -115,6 +116,20 @@ export default class DoctorInfoViewController extends Component{
 				this.addCollection()
 			}
 		}
+	}
+
+	showNotSignUpAlert() {
+		Alert.alert(
+			'Not Sign In',
+			'Oh... You are not sign in now. ',
+			[
+				{text: 'Cancel', onPress: () => console.log('Cancel Pressed')},
+				{text: 'Sign In', onPress: () => {
+						RouterEntry.modalSignUp()
+					}},
+			],
+			{ cancelable: false }
+		)
 	}
 
 	getUserID() {
@@ -403,7 +418,8 @@ export default class DoctorInfoViewController extends Component{
 			<Text style={{width: ScreenDimensions.width, textAlign: 'center',
 				fontSize: 16, color: '#202020', lineHeight: 16*1.4,
 				paddingTop: 5, paddingBottom: 5,
-				backgroundColor: Colors.systemGray
+				backgroundColor: Colors.systemGray,
+				fontWeight: 'bold'
 			}}>
 				{'Related doctors'}
 			</Text>

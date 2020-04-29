@@ -1,20 +1,7 @@
-import React, {Component} from 'react'
-import {
-	FlatList,
-	View,
-	StyleSheet,
-	Platform,
-	Alert,
-	DeviceEventEmitter,
-	NativeModules,
-	Animated,
-	Linking,
-	ScrollView,
-	AppState, TouchableOpacity, Image, Text, RefreshControl, SectionList,
-} from 'react-native';
+import React, {Component} from 'react';
+import {FlatList, Image, RefreshControl, TouchableOpacity, View, Alert} from 'react-native';
 import {Colors} from '../../utils/Styles';
-import {NaviBarHeight, ScreenDimensions, TabBar} from '../../utils/Dimensions';
-import {Gender, PLATFORM} from '../../utils/CustomEnums';
+import {TabBar} from '../../utils/Dimensions';
 import PostItem from './view/PostItem';
 import {Navigation} from 'react-native-navigation';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
@@ -123,8 +110,6 @@ export default class PostViewController extends Component{
 			}
 		})
 	}
-
-
 
 	renderItem(item) {
 		return(

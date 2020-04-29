@@ -39,6 +39,10 @@ export default class DoctorSearchResultListViewController extends Component{
 		this.isHasFinishRefresh = false
 	}
 
+	getUserID() {
+		return UserInfo.UserID
+	}
+
 	componentDidMount() {
 		setTimeout(() => {
 			this.refresh()
@@ -81,7 +85,9 @@ export default class DoctorSearchResultListViewController extends Component{
 			Lat: UserPosition.lat,
 			Lng: UserPosition.lng,
 			Page: this.page,
-			PageSize: this.pageSize
+			PageSize: this.pageSize,
+			Platform: Platform.OS,
+			UserID: this.getUserID()
 		}
 
 		if (isRefresh) {

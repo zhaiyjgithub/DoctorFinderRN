@@ -9,6 +9,7 @@ import {HTTP} from '../../utils/HttpTools';
 import {API_Post} from '../../utils/API';
 import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
 import LoadingFooter from '../../BaseComponents/LoadingFooter';
+import RouterEntry from '../../router/RouterEntry';
 
 export default class PostViewController extends Component{
 	static options(passProps) {
@@ -84,6 +85,20 @@ export default class PostViewController extends Component{
 	hideSpinner() {
 		this.setState({isSpinnerVisible: false})
 	}
+
+	showNotSignUpAlert() {
+		Alert.alert(
+			'Not Sign In',
+			'Oh... You are not sign in now. ',
+			[
+				{text: 'Cancel', onPress: () => console.log('Cancel Pressed')},
+				{text: 'Sign In', onPress: () => {
+						RouterEntry.modalSignUp()
+					}},
+			],
+			{ cancelable: false }
+		)
+	}
 	//
 	pushToPostDetailPage(item) {
 		Navigation.push(this.props.componentId, {
@@ -132,6 +147,10 @@ export default class PostViewController extends Component{
 	renderFabButton() {
 		return(
 			<TouchableOpacity onPress={() => {
+				if (!UserInfo.Token) {
+					this.showNotSignUpAlert()
+					return
+				}
 				this.pushToNewPostPage()
 			}} style={{position: 'absolute', right: 16, bottom: TabBar.height + 32, backgroundColor: Colors.theme,
 				borderRadius: 25, width: 50, height: 50, justifyContent: 'center', alignItems: 'center',

@@ -77,7 +77,7 @@ export default class DoctorSearchResultListViewController extends Component{
 	searchDoctors(isRefresh) {
 		const genderType = ['', 'M', 'F']
 		let param = {
-			LastName: this.state.searchContent,
+			Name: this.state.searchContent,
 			Gender: genderType[this.state.gender],
 			Specialty: this.state.lastSpecialty,
 			City: this.state.lastCity,

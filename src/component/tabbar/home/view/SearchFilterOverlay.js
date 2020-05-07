@@ -66,7 +66,7 @@ export default class SearchFilterOverlay extends Component{
 
 	renderSearchBarView() {
 		let width = MainViewWidth - 16
-		let placeHolder = 'Text Doctor\'s Last Name...'
+		let placeHolder = 'e.g. THOMAS'
 		return(
 			<View style={{marginTop: 8, height: 50, justifyContent: 'center'}}>
 				<TextInput

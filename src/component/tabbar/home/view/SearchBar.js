@@ -19,7 +19,7 @@ export default class SearchBar extends Component {
 
 	render() {
 		let props = this.props
-		let placeHolder = 'Text Doctor\'s Last Name...'
+		let placeHolder = 'e.g. THOMAS'
 		if (props.type === SearchBarType.max) {
 			let width = (ScreenDimensions.width - 32)
 			return(

@@ -35,7 +35,7 @@ export default class MyPostListController extends Component{
 
 		this.page = 1
 		this.pageSize = 30
-		this.isHasFinishRefresh = false
+		this.onEndReachedCalledDuringMomentumInTrend = false
 	}
 
 	componentDidMount() {
@@ -64,7 +64,6 @@ export default class MyPostListController extends Component{
 		}
 
 		if (isRefresh) {
-			this.isHasFinishRefresh = false
 			this.setState({isRefreshing: true})
 		}
 
@@ -73,12 +72,6 @@ export default class MyPostListController extends Component{
 				isTotal: response.data.length < this.pageSize,
 				isRefreshing: false
 			})
-
-			if (isRefresh) {
-				setTimeout(() => {
-					this.isHasFinishRefresh = true
-				}, 200)
-			}
 		}).catch((error) => {
 			this.setState({isRefreshing: false})
 		})
@@ -143,11 +136,9 @@ export default class MyPostListController extends Component{
 					keyExtractor={(item, index) => {
 						return 'key' + item.key + index
 					}}
-
 					ListHeaderComponent={() => {
 						return this.renderHeader()
 					}}
-
 					refreshControl={
 						<RefreshControl
 							refreshing={this.state.isRefreshing}
@@ -158,16 +149,17 @@ export default class MyPostListController extends Component{
 							}
 						/>
 					}
-					onEndReachedThreshold = {1}
+					onEndReachedThreshold = {0.1}
 					onEndReached = {() => {
-						if (this.isHasFinishRefresh) {
+						if (!this.onEndReachedCalledDuringMomentumInTrend) {
 							this.loadMore()
+							this.onEndReachedCalledDuringMomentumInTrend = true;
 						}
 					}}
+					onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentumInTrend = false; }}
 					ListFooterComponent={() => {
 						return this.renderListFooter()
 					}}
-
 				/>
 
 				<LoadingSpinner visible={this.state.isSpinnerVisible} />

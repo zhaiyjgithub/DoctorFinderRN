@@ -31,7 +31,6 @@ const  request = (url, options) => {
 	DLogger(JSON.stringify(options.body) + '\n')
 
 	let token = (global.UserInfo.Token ? global.UserInfo.Token : '')
-	DLogger('Token: ' + token)
 	return fetch(requestUrl, Object.assign({}, {
 			credentials: 'include',
 			headers: {

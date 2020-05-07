@@ -36,7 +36,7 @@ export default class DoctorSearchResultListViewController extends Component{
 		this.page = 1
 		this.pageSize = 30
 		this.isScrollToTop = false
-		this.isHasFinishRefresh = false
+		this.onEndReachedCalledDuringMomentumInTrend = false
 	}
 
 	getUserID() {
@@ -44,9 +44,7 @@ export default class DoctorSearchResultListViewController extends Component{
 	}
 
 	componentDidMount() {
-		setTimeout(() => {
-			this.refresh()
-		}, 800)
+
 	}
 
 	setTopBar(searchContent) {
@@ -91,7 +89,6 @@ export default class DoctorSearchResultListViewController extends Component{
 		}
 
 		if (isRefresh) {
-			this.isHasFinishRefresh = false
 			this.setState({isRefreshing: true})
 		}
 
@@ -108,12 +105,6 @@ export default class DoctorSearchResultListViewController extends Component{
 					this.scrollsToTop()
 				}
 			})
-
-			if (isRefresh) {
-				setTimeout(() => {
-					this.isHasFinishRefresh = true
-				}, 200)
-			}
 		}).catch(() => {
 			this.isScrollToTop = true
 			if (isRefresh) {
@@ -320,12 +311,14 @@ export default class DoctorSearchResultListViewController extends Component{
 							}
 						/>
 					}
-					onEndReachedThreshold = {1}
+					onEndReachedThreshold = {0.1}
 					onEndReached = {() => {
-						if (this.isHasFinishRefresh) {
+						if (!this.onEndReachedCalledDuringMomentumInTrend) {
 							this.loadMore()
+							this.onEndReachedCalledDuringMomentumInTrend = true;
 						}
 					}}
+					onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentumInTrend = false; }}
 
 					ListFooterComponent={() => {
 						return this.renderListFooter()

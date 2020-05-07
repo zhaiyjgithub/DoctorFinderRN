@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {FlatList, Image, RefreshControl, TouchableOpacity, View, Alert} from 'react-native';
+import {FlatList, Image, RefreshControl, TouchableOpacity, View, Alert, SectionList} from 'react-native';
 import {Colors} from '../../utils/Styles';
 import {TabBar} from '../../utils/Dimensions';
 import PostItem from './view/PostItem';
@@ -33,7 +33,6 @@ export default class PostViewController extends Component{
 
 		this.page = 1
 		this.pageSize = 30
-		this.isHasFinishRefresh = false
 	}
 
 	componentDidMount() {
@@ -58,7 +57,6 @@ export default class PostViewController extends Component{
 		}
 
 		if (isRefresh) {
-			this.isHasFinishRefresh = false
 			this.setState({isRefreshing: true})
 		}
 
@@ -67,12 +65,6 @@ export default class PostViewController extends Component{
 				isTotal: response.data.length < this.pageSize,
 				isRefreshing: false
 			})
-
-			if (isRefresh) {
-				setTimeout(() => {
-					this.isHasFinishRefresh = true
-				}, 200)
-			}
 		}).catch((error) => {
 			this.setState({isRefreshing: false})
 		})
@@ -185,11 +177,9 @@ export default class PostViewController extends Component{
 					keyExtractor={(item, index) => {
 						return 'key' + item.key + index
 					}}
-
 					ListHeaderComponent={() => {
 						return this.renderHeader()
 					}}
-
 					refreshControl={
 						<RefreshControl
 							refreshing={this.state.isRefreshing}
@@ -200,13 +190,14 @@ export default class PostViewController extends Component{
 							}
 						/>
 					}
-					onEndReachedThreshold = {1}
+					onEndReachedThreshold = {0.1}
 					onEndReached = {() => {
-						if (this.isHasFinishRefresh) {
+						if (!this.onEndReachedCalledDuringMomentumInTrend) {
 							this.loadMore()
+							this.onEndReachedCalledDuringMomentumInTrend = true;
 						}
 					}}
-
+					onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentumInTrend = false; }}
 					ListFooterComponent={() => {
 						return this.renderListFooter()
 					}}

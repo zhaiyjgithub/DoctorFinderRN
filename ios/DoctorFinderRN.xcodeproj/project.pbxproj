@@ -13,6 +13,7 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		143AF0A424654891002377C8 /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 143AF0A324654891002377C8 /* AppCenter-Config.plist */; };
 		9617E1341F7C0043EF3C6E4F /* libPods-DoctorFinderRNTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2659E03194E14043AE9033B /* libPods-DoctorFinderRNTests.a */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = DoctorFinderRN/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = DoctorFinderRN/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = DoctorFinderRN/main.m; sourceTree = "<group>"; };
+		143AF0A324654891002377C8 /* AppCenter-Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "AppCenter-Config.plist"; path = "DoctorFinderRN/AppCenter-Config.plist"; sourceTree = "<group>"; };
 		4F2E0971A9B13ADE7A84500F /* Pods-DoctorFinderRN-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DoctorFinderRN-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-DoctorFinderRN-tvOSTests/Pods-DoctorFinderRN-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		6964B0B7E643967267538BB5 /* Pods-DoctorFinderRN-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DoctorFinderRN-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-DoctorFinderRN-tvOS/Pods-DoctorFinderRN-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		6EB81D72C41CC6390C0B769E /* libPods-DoctorFinderRN.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-DoctorFinderRN.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,7 +96,7 @@
 		13B07FAE1A68108700A75B9A /* DoctorFinderRN */ = {
 			isa = PBXGroup;
 			children = (
-				1428D65123E12AEB009C6816 /* components */,
+				143AF0A324654891002377C8 /* AppCenter-Config.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -104,22 +106,6 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = DoctorFinderRN;
-			sourceTree = "<group>";
-		};
-		1428D65123E12AEB009C6816 /* components */ = {
-			isa = PBXGroup;
-			children = (
-				1428D67D23E12DDF009C6816 /* utils */,
-			);
-			name = components;
-			path = DoctorFinderRN/components;
-			sourceTree = "<group>";
-		};
-		1428D67D23E12DDF009C6816 /* utils */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = utils;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -277,6 +263,7 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				143AF0A424654891002377C8 /* AppCenter-Config.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

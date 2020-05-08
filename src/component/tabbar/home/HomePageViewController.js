@@ -118,7 +118,7 @@ export default class HomePageViewController extends Component{
 
 		this.screenEventListener = Navigation.events().registerComponentDidAppearListener(({ componentId, componentName, passProps }) => {
 			DLogger('Did Appear: ' + componentId + ' - ' + componentName + ' - ')
-			
+
 			this.currentComponentName = componentName
 			this.beginTime = (new Date()).toISOString()
 		});
@@ -259,43 +259,16 @@ export default class HomePageViewController extends Component{
 		});
 	}
 
-	renderSpecialtyItem(item, index) {
-		let containerWidth = (ScreenDimensions.width - 32 - 3*8)/4.0
-
-		return (
-			<TouchableOpacity onPress={() => {
-				this.didSelectSpecialty(item)
-			}} key={index} style={{
-				width: containerWidth,
-				marginTop: 10,
-				alignItems: 'center'
-			}}>
-				<Image style={{width: 40, height: 40, borderRadius: 20, backgroundColor: Colors.blue}}/>
-				<Text numberOfLines={2} style={{maxWidth: containerWidth, fontSize: 12,
-					marginTop: 8,
-					textAlign: 'center',
-					color: Colors.black}}>{item}</Text>
-			</TouchableOpacity>
-		)
-	}
-
 	renderSpecialty() {
-		let topSpecialtyListLine1 = [
+		let list = [
 			'Internal Medicine',
 			'Family Medicine',
 			'Pediatrics',
 			'Chiropractor',
-		]
-
-		let topSpecialtyListLine2 = [
 			'Optometrist',
 			'Psychiatry & Neurology',
 			'Emergency Medicine',
 			'Obstetrics & Gynecology',
-
-		]
-
-		let topSpecialtyListLine3 = [
 			'Radiology',
 			'Anesthesiology',
 			'Surgery',
@@ -303,36 +276,18 @@ export default class HomePageViewController extends Component{
 		]
 
 		return(
-			<View style={{backgroundColor: Colors.white, paddingBottom: 10,}}>
-				<View style={{width: ScreenDimensions.width, paddingHorizontal: 16,
-					flexDirection: 'row',
-					justifyContent: 'space-between',
-					flexWrap: 'wrap',
-				}}>
-					{topSpecialtyListLine1.map((item, index) => {
-						return this.renderSpecialtyItem(item, index)
-					})}
-				</View>
-
-				<View style={{width: ScreenDimensions.width, paddingHorizontal: 16,
-					flexDirection: 'row',
-					justifyContent: 'space-between',
-					flexWrap: 'wrap'
-				}}>
-					{topSpecialtyListLine2.map((item, index) => {
-						return this.renderSpecialtyItem(item, index)
-					})}
-				</View>
-
-				<View style={{width: ScreenDimensions.width, paddingHorizontal: 16,
-					flexDirection: 'row',
-					justifyContent: 'space-between',
-					flexWrap: 'wrap'
-				}}>
-					{topSpecialtyListLine3.map((item, index) => {
-						return this.renderSpecialtyItem(item, index)
-					})}
-				</View>
+			<View style={{padding: 8, flexDirection: 'row', flexWrap: 'wrap'}}>
+				{list.map((item, index) => {
+					return(
+						<TouchableOpacity onPress={() => {
+							this.didSelectSpecialty(item)
+						}} key={index} style={{borderRadius: 15, borderWidth: 1.0, borderColor: Colors.theme,
+							marginRight: 8, height: 30, justifyContent: 'center', marginBottom: 8
+						}}>
+							<Text style={{fontSize: 16, color: Colors.black, paddingHorizontal: 8, fontWeight: 'bold'}}>{item}</Text>
+						</TouchableOpacity>
+					)
+				})}
 			</View>
 		)
 	}

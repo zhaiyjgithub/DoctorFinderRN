@@ -276,13 +276,13 @@ export default class HomePageViewController extends Component{
 		]
 
 		return(
-			<View style={{padding: 8, flexDirection: 'row', flexWrap: 'wrap'}}>
+			<View style={{padding: 8, flexDirection: 'row', flexWrap: 'wrap', backgroundColor: Colors.white}}>
 				{list.map((item, index) => {
 					return(
 						<TouchableOpacity onPress={() => {
 							this.didSelectSpecialty(item)
 						}} key={index} style={{borderRadius: 15, borderWidth: 1.0, borderColor: Colors.theme,
-							marginRight: 8, height: 30, justifyContent: 'center', marginBottom: 8
+							marginRight: 8, height: 30, justifyContent: 'center', marginBottom: 8, backgroundColor: Colors.white
 						}}>
 							<Text style={{fontSize: 16, color: Colors.black, paddingHorizontal: 8, fontWeight: 'bold'}}>{item}</Text>
 						</TouchableOpacity>
@@ -368,7 +368,7 @@ export default class HomePageViewController extends Component{
 				}}>
 					<Text style={{fontSize: 18, color: Colors.black,
 						fontWeight: 'bold', marginLeft: 8,
-					}}>{'Hot search'}</Text>
+					}}>{'Pop Doctors'}</Text>
 				</View>
 			)
 		}

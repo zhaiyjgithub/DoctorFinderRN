@@ -282,9 +282,9 @@ export default class HomePageViewController extends Component{
 						<TouchableOpacity onPress={() => {
 							this.didSelectSpecialty(item)
 						}} key={index} style={{borderRadius: 15, borderWidth: 1.0, borderColor: Colors.theme,
-							marginRight: 8, height: 30, justifyContent: 'center', marginBottom: 8, backgroundColor: Colors.white
+							marginRight: 8, height: 30, justifyContent: 'center', marginBottom: 8, backgroundColor: Colors.listBg
 						}}>
-							<Text style={{fontSize: 16, color: Colors.black, paddingHorizontal: 8, fontWeight: 'bold'}}>{item}</Text>
+							<Text style={{fontSize: 16, color: Colors.theme, paddingHorizontal: 8, fontWeight: 'bold'}}>{item}</Text>
 						</TouchableOpacity>
 					)
 				})}

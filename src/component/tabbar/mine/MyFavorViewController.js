@@ -24,6 +24,7 @@ import LoadingFooter from '../../BaseComponents/LoadingFooter';
 import DoctorInfoItem from '../home/view/DoctorInfoItem';
 import PostItem from '../post/view/PostItem'
 import Toast from 'react-native-simple-toast'
+import ListEmptyView from '../../BaseComponents/ListEmptyView';
 
 export default class MyFavorViewController extends Component{
 	static options(passProps) {
@@ -339,16 +340,16 @@ export default class MyFavorViewController extends Component{
 	renderListFooter() {
 		if (this.state.selectedType === CollectionType.doctor) {
 			return(
-				<View style={{paddingBottom: TabBar.height}}>
-					<LoadingFooter isTotal={this.state.isDoctorListTotal}
+				<View style={{paddingBottom: 0}}>
+					<LoadingFooter isTotal={this.state.doctorList.length && this.state.isDoctorListTotal}
 								   isLoading={this.state.doctorList.length}
 					/>
 				</View>
 			)
 		}else {
 			return(
-				<View style={{paddingBottom: TabBar.height}}>
-					<LoadingFooter isTotal={this.state.isPostListTotal}
+				<View style={{paddingBottom: 0}}>
+					<LoadingFooter isTotal={this.state.postList.length && this.state.isPostListTotal}
 								   isLoading={this.state.postList.length}
 					/>
 				</View>
@@ -365,11 +366,14 @@ export default class MyFavorViewController extends Component{
 				keyExtractor={(item, index) => {
 					return 'key' + item.key + index
 				}}
-
 				ListHeaderComponent={() => {
 					return this.renderHeader()
 				}}
-
+				ListEmptyComponent={() => {
+					return(
+						<ListEmptyView />
+					)
+				}}
 				refreshControl={
 					<RefreshControl
 						refreshing={this.state.isDoctorListRefreshing}

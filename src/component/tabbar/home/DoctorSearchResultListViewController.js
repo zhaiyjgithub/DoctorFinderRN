@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Alert, Linking, SectionList, Text, View, RefreshControl, ActivityIndicator,
-	Keyboard, TouchableOpacity
+	Keyboard, TouchableOpacity, FlatList
 } from 'react-native';
 import {Colors} from '../../utils/Styles';
 import {ScreenDimensions, TabBar} from '../../utils/Dimensions';
@@ -11,6 +11,7 @@ import {API_Doctor} from '../../utils/API';
 import {PLATFORM, SearchBarOverlayType, SearchBarType} from '../../utils/CustomEnums';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 import SearchFilterOverlay from './view/SearchFilterOverlay';
+import ListEmptyView from '../../BaseComponents/ListEmptyView';
 
 export default class DoctorSearchResultListViewController extends Component{
 	constructor(props) {
@@ -24,7 +25,7 @@ export default class DoctorSearchResultListViewController extends Component{
 			city: 'BIRMINGHAM',
 			State: 'AL',
 			searchContent: props.searchContent,
-			isRefreshing: true,
+			isRefreshing: false,
 			filterOverlayVisible: false,
 			lastSpecialty: props.specialty ? props.specialty : '',
 			lastCity: 'BIRMINGHAM',
@@ -44,7 +45,7 @@ export default class DoctorSearchResultListViewController extends Component{
 	}
 
 	componentDidMount() {
-
+		this.refresh()
 	}
 
 	setTopBar(searchContent) {
@@ -270,7 +271,7 @@ export default class DoctorSearchResultListViewController extends Component{
 	}
 
 	renderListFooter() {
-		if (this.state.isTotal) {
+		if (this.state.dataSource.length && this.state.isTotal) {
 			return(
 				<View style={{width: ScreenDimensions.width, height: 44, alignItems: 'center'}}>
 					<Text style={{fontSize: 14, color: Colors.lightGray,}}>{'No more data...'}</Text>
@@ -291,13 +292,14 @@ export default class DoctorSearchResultListViewController extends Component{
 	render() {
 		return(
 			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
-				<SectionList
+				{this.renderHeader()}
+				<FlatList
 					ref={(o) => {
 						this._sectionList = o
 					}}
 					style={{flex: 1, backgroundColor: Colors.systemGray}}
 					renderItem={({item}) => this.renderItem(item)}
-					sections={[{data: this.state.dataSource}]}
+					data={this.state.dataSource}
 					keyExtractor = {(item,index) =>{
 						return 'key' + item.key + index
 					}}
@@ -319,13 +321,14 @@ export default class DoctorSearchResultListViewController extends Component{
 						}
 					}}
 					onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentumInTrend = false; }}
-
 					ListFooterComponent={() => {
 						return this.renderListFooter()
 					}}
 
-					renderSectionHeader={() => {
-						return(this.renderHeader())
+					ListEmptyComponent={() => {
+						return(
+							<ListEmptyView />
+						)
 					}}
 				/>
 

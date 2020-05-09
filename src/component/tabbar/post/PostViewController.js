@@ -10,6 +10,7 @@ import {API_Post} from '../../utils/API';
 import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
 import LoadingFooter from '../../BaseComponents/LoadingFooter';
 import RouterEntry from '../../router/RouterEntry';
+import ListEmptyView from '../../BaseComponents/ListEmptyView';
 
 export default class PostViewController extends Component{
 	static options(passProps) {
@@ -179,6 +180,11 @@ export default class PostViewController extends Component{
 					}}
 					ListHeaderComponent={() => {
 						return this.renderHeader()
+					}}
+					ListEmptyComponent={() => {
+						return(
+							<ListEmptyView />
+						)
 					}}
 					refreshControl={
 						<RefreshControl

@@ -142,8 +142,10 @@ const RouterEntry = {
 								options: {
 									bottomTab: {
 										text: 'Finder',
-										icon: require('../../resource/image/doctor.png'),
-										testID: 'FIRST_TAB_BAR_BUTTON'
+										icon: require('../../resource/image/finder.png'),
+										testID: 'finder',
+										selectedTextColor: Colors.theme,
+										selectedIconColor: Colors.theme,
 									}
 								}
 							}
@@ -161,8 +163,10 @@ const RouterEntry = {
 								options: {
 									bottomTab: {
 										text: 'Post',
-										icon: require('../../resource/image/doctor.png'),
-										testID: 'FIRST_TAB_BAR_BUTTON'
+										icon: require('../../resource/image/post.png'),
+										testID: 'post',
+										selectedTextColor: Colors.theme,
+										selectedIconColor: Colors.theme,
 									},
 								}
 							}
@@ -180,14 +184,17 @@ const RouterEntry = {
 								options: {
 									bottomTab: {
 										text: 'Mine',
-										icon: require('../../resource/image/doctor.png'),
-										testID: 'FIRST_TAB_BAR_BUTTON'
+										icon: require('../../resource/image/mine.png'),
+										testID: 'mine',
+										selectedTextColor: Colors.theme,
+										selectedIconColor: Colors.theme,
 									}
 								}
 							}
 						}
 					]
-				}
+				},
+
 			}
 		})
 	},

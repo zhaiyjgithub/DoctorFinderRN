@@ -291,13 +291,13 @@ export default class DoctorSearchResultListViewController extends Component{
 
 	render() {
 		return(
-			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
+			<View style={{flex: 1, backgroundColor: Colors.listBg}}>
 				{this.renderHeader()}
 				<FlatList
 					ref={(o) => {
 						this._sectionList = o
 					}}
-					style={{flex: 1, backgroundColor: Colors.systemGray}}
+					style={{flex: 1, backgroundColor: Colors.listBg}}
 					renderItem={({item}) => this.renderItem(item)}
 					data={this.state.dataSource}
 					keyExtractor = {(item,index) =>{

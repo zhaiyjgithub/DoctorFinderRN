@@ -472,7 +472,7 @@ export default class DoctorInfoViewController extends Component{
 
 	render() {
 		return(
-			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
+			<View style={{flex: 1, backgroundColor: Colors.listBg}}>
 				<SectionList
 					style={{flex: 1}}
 					renderItem={({item}) => this.renderItem(item)}

@@ -72,7 +72,7 @@ export default class PostItem extends Component{
 
 				<View style={{flex: 1, width: ScreenDimensions.width,
 					marginLeft: this.state.isEdit ? 60 : 0,
-					backgroundColor: Colors.systemGray,
+					backgroundColor: Colors.listBg,
 				}}>
 
 					<TouchableOpacity onPress={() => {

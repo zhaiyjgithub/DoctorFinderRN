@@ -170,7 +170,7 @@ export default class PostViewController extends Component{
 
 	render() {
 		return(
-			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
+			<View style={{flex: 1, backgroundColor: Colors.listBg}}>
 				<FlatList
 					style={{flex: 1}}
 					renderItem={({item}) => this.renderItem(item)}

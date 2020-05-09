@@ -549,14 +549,14 @@ export default class MyFavorViewController extends Component{
 
 	render() {
 		return(
-			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
+			<View style={{flex: 1, backgroundColor: Colors.listBg}}>
 				<ScrollView scrollEnabled={!this.state.isEdit} showsHorizontalScrollIndicator={false} ref = {(o) => {
 					this._scrollView = o
 				}} onMomentumScrollEnd={(e) => {
 					this.onAnimationEnd(e)
 				}} style={{
 					flex: 1,
-					backgroundColor: Colors.systemGray
+					backgroundColor: Colors.listBg
 				}} horizontal={true} pagingEnabled={true}>
 					{this.renderDoctorList()}
 					{this.renderPostList()}

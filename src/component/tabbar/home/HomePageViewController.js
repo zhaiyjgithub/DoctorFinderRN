@@ -202,7 +202,7 @@ export default class HomePageViewController extends Component{
 					height={(ScreenDimensions.width/BannerScale)}
 					showsButtons={false}
 					autoplay={true}
-					activeDotColor ={Colors.systemGray}
+					activeDotColor ={Colors.listBg}
 			>
 				<ImageBackground source={require('../../../resource/image/banner.png')} style={styles.Banner}>
 					<Text style={{fontSize:  24, color: Colors.white, fontWeight: 'bold'}}>Hello Swiper</Text>
@@ -353,7 +353,7 @@ export default class HomePageViewController extends Component{
 	renderSectionHeader(section) {
 		if (section === 0) {
 			return (
-				<View style={{width: ScreenDimensions.width, backgroundColor: Colors.systemGray,
+				<View style={{width: ScreenDimensions.width, backgroundColor: Colors.listBg,
 					justifyContent: 'center', height: 40,
 				}}>
 					<Text style={{fontSize: 18, color: Colors.black,
@@ -363,7 +363,7 @@ export default class HomePageViewController extends Component{
 			)
 		}else {
 			return (
-				<View style={{width: ScreenDimensions.width, backgroundColor: Colors.systemGray,
+				<View style={{width: ScreenDimensions.width, backgroundColor: Colors.listBg,
 					justifyContent: 'center', height: 40,
 				}}>
 					<Text style={{fontSize: 18, color: Colors.black,
@@ -377,7 +377,7 @@ export default class HomePageViewController extends Component{
 
 	render() {
 		return(
-			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
+			<View style={{flex: 1, backgroundColor: Colors.listBg}}>
 				<SectionList
 					renderItem={({item}) => this.renderItem(item)}
 					sections={this.state.dataSource}

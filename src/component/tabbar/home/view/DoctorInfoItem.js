@@ -48,7 +48,7 @@ export default class DoctorInfoItem extends Component{
 		return(
 			<View style={{
 				width: ScreenDimensions.width,
-				backgroundColor: Colors.systemGray,
+				backgroundColor: Colors.listBg,
 				paddingVertical: 8,
 			}}>
 				<TouchableOpacity  onPress={() => {
@@ -62,7 +62,7 @@ export default class DoctorInfoItem extends Component{
 
 				<View style={{flex: 1, width: ScreenDimensions.width,
 					marginLeft: this.state.isEdit ? 60 : 0,
-					backgroundColor: Colors.systemGray,
+					backgroundColor: Colors.listBg,
 				}}>
 					<TouchableOpacity onPress={() => {
 						this.props.didSelectedItem && this.props.didSelectedItem()

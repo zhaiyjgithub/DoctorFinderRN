@@ -19,7 +19,7 @@ export default class SearchBar extends Component {
 
 	render() {
 		let props = this.props
-		let placeHolder = 'e.g. THOMAS'
+		let placeHolder = 'e.g. Thomas'
 		if (props.type === SearchBarType.max) {
 			let width = (ScreenDimensions.width - 32)
 			return(
@@ -96,7 +96,7 @@ export default class SearchBar extends Component {
 		} else {
 			return(
 				<View style={{
-					backgroundColor: Colors.white,
+					backgroundColor: Colors.listBg,
 					paddingVertical: 5,
 				}}>
 					<TextInput
@@ -116,7 +116,7 @@ export default class SearchBar extends Component {
 						style={{
 							width: ScreenDimensions.width - 32,
 							height: 36,
-							backgroundColor: Colors.searchBar,
+							backgroundColor: Colors.white,
 							marginLeft: 16,
 							borderRadius: 6,
 							paddingLeft: 8,

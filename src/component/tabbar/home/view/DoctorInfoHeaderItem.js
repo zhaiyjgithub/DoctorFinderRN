@@ -34,7 +34,7 @@ export default class DoctorInfoHeaderItem extends Component{
 		return(
 			<View style={{position: 'absolute',
 				left: 0, right: 0, bottom: 0,
-				top: 74, backgroundColor: Colors.systemGray,
+				top: 74, backgroundColor: Colors.listBg,
 			}}/>
 		)
 	}

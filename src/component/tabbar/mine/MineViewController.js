@@ -311,7 +311,7 @@ export default class MineViewController extends Component{
 
 	renderListSectionHeader() {
 		return(
-			<View style={{height: 16, backgroundColor: Colors.systemGray}}>
+			<View style={{height: 16, backgroundColor: Colors.listBg}}>
 				<View style={{position: 'absolute', left: 0, right: 0, bottom: 0, height: 1.0, backgroundColor: Colors.lineColor}}/>
 			</View>
 		)
@@ -357,7 +357,7 @@ export default class MineViewController extends Component{
 				}}/>
 				<View style={{flex: 1, backgroundColor: Colors.clear}}>
 					<SectionList
-						style={{flex: 1, backgroundColor: Colors.systemGray}}
+						style={{flex: 1, backgroundColor: Colors.listBg}}
 						renderItem={({item}) => this.renderItem(item)}
 						sections={this.state.dataSource}
 						stickySectionHeadersEnabled={false}

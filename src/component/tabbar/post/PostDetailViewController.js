@@ -402,7 +402,7 @@ export default class PostDetailViewController extends Component{
 			}}>
 				{postInfo.URLs.map((item ,index) => {
 					return(
-						<View key={index} style={{width: size, height: size, backgroundColor: Colors.systemGray,
+						<View key={index} style={{width: size, height: size, backgroundColor: Colors.listBg,
 							justifyContent: 'center', alignItems: 'center', marginRight: 10
 						}}>
 							<TouchableOpacity onPress={() => {
@@ -590,7 +590,7 @@ export default class PostDetailViewController extends Component{
 
 		return(
 			<View style={{width: '100%', height: 30, flexDirection: 'row', alignItems: 'center',
-				backgroundColor: Colors.systemGray, marginTop: postInfo.URLs.length ? 20 : 0,
+				backgroundColor: Colors.listBg, marginTop: postInfo.URLs.length ? 20 : 0,
 			}}>
 				<Text style={{fontSize: 14, color: Colors.black, marginLeft: 16,}}>{title}</Text>
 			</View>
@@ -686,7 +686,7 @@ export default class PostDetailViewController extends Component{
 
 	renderMyPostView() {
 		return(
-			<ScrollView style={{flex:1, backgroundColor: Colors.systemGray}}>
+			<ScrollView style={{flex:1, backgroundColor: Colors.listBg}}>
 				{this.renderHeader()}
 				<View style={{width: '100%', height: 44 + 10 + (PLATFORM.isIPhoneX ? 34 : 0) + 50}}/>
 			</ScrollView>
@@ -732,7 +732,7 @@ export default class PostDetailViewController extends Component{
 
 	render() {
 		return(
-			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
+			<View style={{flex: 1, backgroundColor: Colors.listBg}}>
 				{!this.props.isAppendPost ? this.renderSectionList() : this.renderMyPostView()}
 
 				{this.renderAddAnswerView()}

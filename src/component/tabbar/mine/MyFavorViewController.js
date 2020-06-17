@@ -451,6 +451,24 @@ export default class MyFavorViewController extends Component{
 	finishEdit() {
 		this.setState({isEdit: false})
 		this.sendUpdateSegmentTabEnableStatusNoti(true)
+
+		if (this.state.selectedType === CollectionType.doctor) {
+			let data = this.state.doctorList.map((item) => {
+				item.isSelected = false
+
+				return item
+			})
+
+			this.setState({doctorList: data})
+		}else {
+			let data = this.state.postList.map((item) => {
+				item.isSelected = false
+
+				return item
+			})
+
+			this.setState({postList: data})
+		}
 	}
 
 	deleteAction() {

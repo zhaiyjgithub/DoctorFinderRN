@@ -5,7 +5,6 @@ import {
 } from 'react-native';
 import {Colors} from '../../utils/Styles';
 import React, {Component} from 'react';
-import {ShareTool} from '../../utils/ShareTool';
 import {Navigation} from 'react-native-navigation';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 
@@ -13,15 +12,15 @@ export default class StateListViewController extends Component {
 	static options(passProps) {
 		return {
 			topBar: {
-				rightButtons: [
-					{
-						id: 'deselect',
-						enabled: true,
-						disableIconTint: false,
-						color: Colors.white,
-						text: 'Deselect'
-					},
-				],
+				// rightButtons: [
+				// 	{
+				// 		id: 'undo',
+				// 		enabled: true,
+				// 		disableIconTint: false,
+				// 		color: Colors.white,
+				// 		text: 'Undo'
+				// 	},
+				// ],
 				leftButtons: [
 					{
 						id: 'cancel',
@@ -109,7 +108,7 @@ export default class StateListViewController extends Component {
 	navigationButtonPressed({ buttonId }) {
 		if (buttonId === 'cancel') {
 			Navigation.dismissModal(this.props.componentId);
-		}else if (buttonId === 'deselect') {
+		}else if (buttonId === 'undo') {
 			this.props.didSelectedCity && this.props.didSelectedCity('')
 			this.props.didSelectedState && this.props.didSelectedState('')
 			Navigation.dismissModal(this.props.componentId);

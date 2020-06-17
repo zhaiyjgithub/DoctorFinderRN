@@ -315,7 +315,7 @@ export default class DoctorInfoViewController extends Component{
 
 				return (
 					<DoctorInfoAddressItem
-						title = {'Address'}
+						title = {'Location'}
 						desc = {address}
 						lat = {this.state.doctorInfo.Geo.Lat}
 						lng = {this.state.doctorInfo.Geo.Lng}
@@ -418,7 +418,6 @@ export default class DoctorInfoViewController extends Component{
 			<Text style={{width: ScreenDimensions.width, textAlign: 'center',
 				fontSize: 16, color: '#202020', lineHeight: 16*1.4,
 				paddingTop: 5, paddingBottom: 5,
-				backgroundColor: Colors.systemGray,
 				fontWeight: 'bold'
 			}}>
 				{'Related doctors'}

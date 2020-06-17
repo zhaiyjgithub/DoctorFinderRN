@@ -45,6 +45,8 @@ target 'DoctorFinderRN' do
 
   pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
 
+  pod 'RNSpringScrollView', :path => '../node_modules/react-native-spring-scrollview/ios'
+
   target 'DoctorFinderRNTests' do
     inherit! :search_paths
     # Pods for testing

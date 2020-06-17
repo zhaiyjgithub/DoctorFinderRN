@@ -7,6 +7,7 @@ import {Text,
 import {Colors} from '../../../utils/Styles';
 import {ScreenDimensions} from '../../../utils/Dimensions';
 import {Gender} from '../../../utils/CustomEnums';
+import {FormatFirstChat} from '../../../utils/Utils';
 
 export default class DoctorInfoItem extends Component{
 	constructor(props) {
@@ -40,10 +41,10 @@ export default class DoctorInfoItem extends Component{
 		let credential = info.Credential
 		let specialty = info.Specialty
 		let subSpecialty = info.SubSpectialty
-		let address = info.Address +'\n' + info.City + ' City\n'
-			+ info.State + ' ' + info.Zip
+		let address = info.Address
 		let gender = info.Gender
 		let distanceInMi = info.Distance ? (((info.Distance)*0.6213).toFixed(2) + 'mi') : ''
+		let jobTitle = info.JobTitle ? FormatFirstChat(info.JobTitle) : ''
 
 		return(
 			<View style={{
@@ -110,7 +111,7 @@ export default class DoctorInfoItem extends Component{
 
 							<Text style={{fontSize: 16, color: Colors.lightGray,
 								marginTop: 6,
-							}}>{'Physician'}</Text>
+							}}>{jobTitle}</Text>
 
 							<Text style={{fontSize: 16, color: Colors.black,
 								fontWeight: 'bold',

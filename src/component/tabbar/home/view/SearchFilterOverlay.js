@@ -201,7 +201,7 @@ export default class SearchFilterOverlay extends Component{
 
 				<TouchableOpacity onPress={() => {
 					this.props.confirm && this.props.confirm(this.state.searchContent, this.state.gender)
-				}} style={{width: '50%', height: 50, backgroundColor: Colors.red,
+				}} style={{width: '50%', height: 50, backgroundColor: Colors.theme,
 					justifyContent: 'center', alignItems: 'center'
 				}}>
 					<Text style={{fontSize: 16, color: Colors.white}}>{'Confirm'}</Text>

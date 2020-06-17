@@ -69,6 +69,14 @@ const DLogger = (msg) => {
 	console.log(msg)
 }
 
+const FormatFirstChat = (title) => {
+	if (title && title.length >= 2) {
+		let prefix = title.charAt(0).toUpperCase()
+		return prefix + title.substr(1, title.length - 1)
+	}
+
+	return ""
+}
 
 
 
@@ -77,5 +85,6 @@ export {
 	CalcTimeStamp,
 	VerifyEmail,
 	MD5Encrypt,
-	DLogger
+	DLogger,
+	FormatFirstChat
 }

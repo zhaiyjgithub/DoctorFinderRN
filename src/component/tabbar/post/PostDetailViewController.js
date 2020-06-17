@@ -579,7 +579,6 @@ export default class PostDetailViewController extends Component{
 		)
 	}
 
-
 	renderSectionHeader(){
 		let postInfo = this.props.postInfo
 		if (!postInfo || this.props.isAppendPost) {

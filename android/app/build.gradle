@@ -189,6 +189,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-spring-scrollview')
     implementation project(':react-native-permissions')
     implementation project(':@react-native-community_async-storage')
     implementation project(':rn-fetch-blob')

@@ -22,14 +22,14 @@ export default class DoctorSearchResultListViewController extends Component{
 			dataSource: [],
 			gender: 0,
 			specialty: props.specialty ? props.specialty : '',
-			city: 'BIRMINGHAM',
-			State: 'AL',
+			city: 'New York',
+			State: 'NY',
 			searchContent: props.searchContent,
 			isRefreshing: false,
 			filterOverlayVisible: false,
 			lastSpecialty: props.specialty ? props.specialty : '',
-			lastCity: 'BIRMINGHAM',
-			lastState: 'AL',
+			lastCity: 'New York',
+			lastState: 'NY',
 			isTotal: false,
 			isNoData: false,
 		}
@@ -125,12 +125,9 @@ export default class DoctorSearchResultListViewController extends Component{
 	}
 
 	scrollsToTop() {
-		this._sectionList && this._sectionList.scrollToLocation({
+		this._flatList && this._flatList.scrollToOffset({
 			animated: true,
-			itemIndex: 0,
-			sectionIndex: 0,
-			viewOffset: 0,
-			viewPosition: 0,
+			offset: 0,
 		})
 	}
 
@@ -166,7 +163,7 @@ export default class DoctorSearchResultListViewController extends Component{
 			return null
 		}else {
 			return(
-				<View style={{width: '100%', height: 25, justifyContent: 'center', backgroundColor: Colors.systemGray}}>
+				<View style={{width: '100%', height: 25, justifyContent: 'center', backgroundColor: Colors.white}}>
 					<Text numberOfLines={1} style={{width: ScreenDimensions.width - 32, marginLeft: 16,
 						fontSize: 12, color: Colors.red, fontWeight: 'bold'
 					}}>{header}</Text>
@@ -295,7 +292,7 @@ export default class DoctorSearchResultListViewController extends Component{
 				{this.renderHeader()}
 				<FlatList
 					ref={(o) => {
-						this._sectionList = o
+						this._flatList = o
 					}}
 					style={{flex: 1, backgroundColor: Colors.listBg}}
 					renderItem={({item}) => this.renderItem(item)}

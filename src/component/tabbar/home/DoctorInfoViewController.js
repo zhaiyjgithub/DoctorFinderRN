@@ -418,6 +418,7 @@ export default class DoctorInfoViewController extends Component{
 			<Text style={{width: ScreenDimensions.width, textAlign: 'center',
 				fontSize: 16, color: '#202020', lineHeight: 16*1.4,
 				paddingTop: 5, paddingBottom: 5,
+				backgroundColor: Colors.listBg,
 				fontWeight: 'bold'
 			}}>
 				{'Related doctors'}

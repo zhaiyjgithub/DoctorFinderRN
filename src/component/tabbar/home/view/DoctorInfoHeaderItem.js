@@ -41,7 +41,7 @@ export default class DoctorInfoHeaderItem extends Component{
 
 	render() {
 		let doctorInfo = this.state.info
-		let doctorName = 'Dr. ' + doctorInfo.FirstName + ' ' + doctorInfo.LastName + ' '
+		let doctorName = 'Dr. ' + doctorInfo.FullName + ' '
 		let credential = doctorInfo.Credential
 		let specialty = doctorInfo.Specialty
 		let subSpecialty = doctorInfo.SubSpecialty

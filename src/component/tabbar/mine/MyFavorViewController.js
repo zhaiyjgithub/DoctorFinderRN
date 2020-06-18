@@ -79,13 +79,9 @@ export default class MyFavorViewController extends Component{
 
 	navigationButtonPressed({ buttonId }) {
 		if (buttonId === 'edit') {
-			if (this.state.isEdit) {
-				this.setState({isEdit: false})
-				this.sendUpdateSegmentTabEnableStatusNoti(true)
-			}else {
-				this.setState({isEdit: true})
-				this.sendUpdateSegmentTabEnableStatusNoti(false)
-			}
+			let isEdit = this.state.isEdit
+			this.setState({isEdit: !isEdit})
+			this.sendUpdateSegmentTabEnableStatusNoti(isEdit)
 		}
 	}
 

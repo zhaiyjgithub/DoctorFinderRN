@@ -15,31 +15,63 @@ import {
 import {Colors} from '../../utils/Styles';
 import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
 import {NaviBarHeight, ScreenDimensions, TabBar} from '../../utils/Dimensions';
-import {Gender, PLATFORM} from '../../utils/CustomEnums';
+import {CollectionType, ErrorCode, Gender, PLATFORM} from '../../utils/CustomEnums';
 import PostItem from './../post/view/PostItem';
 import {Navigation} from 'react-native-navigation';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 import {HTTP} from '../../utils/HttpTools';
 import {API_Post} from '../../utils/API';
 import LoadingFooter from '../../BaseComponents/LoadingFooter';
+import Toast from 'react-native-simple-toast';
 
 export default class MyPostListController extends Component{
+	static options(passProps) {
+		return {
+			topBar: {
+				title: {
+					text: 'Post'
+				},
+				rightButtons: [
+					{
+						id: 'edit',
+						enabled: true,
+						disableIconTint: false,
+						color: Colors.white,
+						text: 'Edit',
+					},
+				]
+			}
+		};
+	}
+
 	constructor(props) {
 		super(props)
 		this.state = {
 			dataSource: [],
 			isSpinnerVisible: false,
 			isTotal: false,
-			isRefreshing: false
+			isRefreshing: false,
+			isEdit: false
 		}
 
 		this.page = 1
 		this.pageSize = 30
 		this.onEndReachedCalledDuringMomentumInTrend = false
+		this.navigationEventListener = Navigation.events().bindComponent(this);
+	}
+
+	navigationButtonPressed({ buttonId }) {
+		if (buttonId === 'edit') {
+			this.setState({isEdit: !this.state.isEdit})
+		}
 	}
 
 	componentDidMount() {
 		this.refresh()
+	}
+
+	componentWillUnmount() {
+		this.navigationEventListener && this.navigationEventListener.remove();
 	}
 
 	getUserID() {
@@ -98,13 +130,116 @@ export default class MyPostListController extends Component{
 		})
 	}
 
+	finishEdit() {
+		this.setState({isEdit: false})
+		let data = this.state.dataSource.map((item) => {
+			item.isSelected = false
+
+			return item
+		})
+
+		this.setState({dataSource: data})
+	}
+
+	deleteAction() {
+		Alert.alert(
+			'Are sure to delete ?',
+			'Delete the selected items.',
+			[
+				{text: 'OK', onPress: () => {this.deleteSelectedItem()}},
+				{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+			],
+			{ cancelable: false }
+		)
+	}
+
+	deleteSelectedItem() {
+		let deleteIdList = []
+		let filterList = this.state.dataSource.filter((item) => {
+			if (item.isSelected) {
+				deleteIdList.push(item.PostID)
+			}
+			return !item.isSelected
+		})
+
+		if (deleteIdList.length) {
+			this.setState({dataSource: filterList})
+			this.finishEdit()
+			this.deleteSelectedFromNet(deleteIdList)
+		} else {
+			Toast.showWithGravity('Please select at least one!', Toast.SHORT, Toast.CENTER)
+		}
+	}
+
+	deleteSelectedFromNet(ids) {
+		let param = {
+			IDs: ids,
+			UserID: this.getUserID()
+		}
+
+		this.showSpinner()
+		HTTP.post(API_Post.deletePostByIds, param).then((response) => {
+			this.hideSpinner()
+			if (response.code === ErrorCode.Ok) {
+				Toast.show('Delete successfully')
+			}else {
+
+			}
+		}).catch(() => {
+			this.hideSpinner()
+			Toast.show('Request failed')
+		})
+	}
+
+	renderButtonActonBar() {
+		if (!this.state.isEdit) {
+			return null
+		}
+
+		return(
+			<View style={{width: ScreenDimensions.width, height: 50 + (PLATFORM.isIPhoneX ? 34 : 0),
+				backgroundColor: Colors.bottom_bar, justifyContent: 'space-between', flexDirection: 'row',
+				paddingHorizontal: 16,
+			}}>
+				<View style={{position: 'absolute', left: 0, top: 0, right: 0, height: 1, backgroundColor: Colors.lineColor}}/>
+
+				<TouchableOpacity onPress={() => {
+					this.finishEdit()
+				}}>
+					<Text style={{fontSize: 16, color: Colors.theme, marginTop: 16, fontWeight: 'bold'}}>{'Cancel'}</Text>
+				</TouchableOpacity>
+
+				<TouchableOpacity onPress={() => {
+					this.deleteAction()
+				}}>
+					<Text style={{fontSize: 16, color: Colors.red, marginTop: 16, fontWeight: 'bold'}}>{'Delete'}</Text>
+				</TouchableOpacity>
+			</View>
+		)
+	}
+
 	renderItem(item) {
 		return(
 			<PostItem
 				id={item.PostID}
+				isEdit={this.state.isEdit}
+				isSelected = {item.isSelected}
 				postInfo = {item}
 				didSelectedItem={() => {
+					if (this.state.isEdit) {
+						return
+					}
+
 					this.pushToPostDetailPage(item)
+				}}
+				clickSelectedButton={() => {
+					let dataSource = this.state.dataSource
+					let index = dataSource.findIndex((data) => {
+						return data.PostID === item.PostID
+					})
+
+					dataSource[index].isSelected = !dataSource[index].isSelected
+					this.setState({doctorList: dataSource})
 				}}
 			/>
 		)
@@ -162,6 +297,7 @@ export default class MyPostListController extends Component{
 					}}
 				/>
 
+				{this.renderButtonActonBar()}
 				<LoadingSpinner visible={this.state.isSpinnerVisible} />
 			</View>
 		)

@@ -265,9 +265,9 @@ export default class MineViewController extends Component{
 		}
 
 		return(
-			<View style={{width: '100%', backgroundColor: Colors.red, height: 92,}}>
+			<View style={{width: '100%', backgroundColor: Colors.listBg, height: 92,}}>
 				<View style={{position: 'absolute', left: 0, right: 0, top: 0, height: 16 + 30, backgroundColor: Colors.theme}}/>
-				<View style={{position: 'absolute', left: 0, right: 0, bottom: 0, height: 16 + 30, backgroundColor: Colors.systemGray}}/>
+				<View style={{position: 'absolute', left: 0, right: 0, bottom: 0, height: 16 + 30, backgroundColor: Colors.listBg}}/>
 
 				<TouchableOpacity activeOpacity={1} style={{position: 'absolute', left: 16, top: 16, width: 60, height: 60,
 					borderRadius: 6, justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: Colors.white,

@@ -261,7 +261,7 @@ export default class HomePageViewController extends Component{
 
 	renderSpecialty() {
 		let list = [
-			'Internal Medicine',
+			'Allergy & Immunology',
 			'Family Medicine',
 			'Pediatrics',
 			'Chiropractor',

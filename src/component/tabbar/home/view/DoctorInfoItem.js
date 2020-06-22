@@ -45,6 +45,22 @@ export default class DoctorInfoItem extends Component{
 		let gender = info.Gender
 		let distanceInMi = info.Distance ? (((info.Distance)*0.6213).toFixed(2) + 'mi') : ''
 		let jobTitle = info.JobTitle ? FormatFirstChat(info.JobTitle) : ''
+		let experience = ''
+		if (info.YearOfExperience.length) {
+			let years = info.YearOfExperience.split(', ')
+			if (years.length === 1) {
+				experience = years[0]
+			}else if (years.length === 2) {
+				let start = years[0]
+				let end = years[1]
+
+				if (end === '-1') {
+					experience = start + '+'
+				}else {
+					experience = start + '-' + end
+				}
+			}
+		}
 
 		return(
 			<View style={{
@@ -129,6 +145,14 @@ export default class DoctorInfoItem extends Component{
 
 								<Text style={{fontSize: 16, color: Colors.lightGray, marginRight: 8}}>{distanceInMi}</Text>
 							</View>
+
+							{/*{experience.length ? }*/}
+							<Text style={{fontSize: 16, color: Colors.black,
+								fontWeight: 'bold',
+								marginTop: 6,
+							}}>{'Experience'}</Text>
+							<Text style={{fontSize: 14, color: Colors.black,}}>{experience + ' years'}</Text>
+
 						</View>
 					</TouchableOpacity>
 				</View>

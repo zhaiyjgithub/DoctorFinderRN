@@ -167,7 +167,7 @@ export default class UpdatePasswordViewController extends Component{
 				}} style={{flexDirection: 'row', alignItems: 'center', height: buttonHeight, width:  ScreenDimensions.width - 40, marginTop: 20,
 					backgroundColor: Colors.theme, justifyContent: 'center', borderRadius: 4,
 				}}>
-					<Text style={{fontSize: 16, color: Colors.white, fontWeight: 'bold'}}>{'Update'}</Text>
+					<Text style={{fontSize: 16, color: Colors.white, fontWeight: 'bold'}}>{'Reset'}</Text>
 				</TouchableOpacity>
 
 				<LoadingSpinner visible={this.state.isSpinnerVisible} />

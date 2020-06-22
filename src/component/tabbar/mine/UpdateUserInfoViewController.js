@@ -58,9 +58,15 @@ export default class UpdateUserInfoViewController extends Component{
 	}
 
 	updateUserInfo() {
-		if (!this.state.item.length) {
+		let item = this.state.item
+		if (!item.length) {
 			Toast.showWithGravity('User name can`t be empty!', Toast.LONG, Toast.CENTER)
 			return
+		}
+
+		if (item.length < 4 || item.length > 20) {
+			Toast.showWithGravity('User name length must be 4-20 characters!', Toast.LONG, Toast.CENTER)
+			return;
 		}
 
 		let param = {
@@ -68,7 +74,7 @@ export default class UpdateUserInfoViewController extends Component{
 		}
 
 		if (this.props.type === UpdateUserInfoType.name) {
-			param.Name = this.state.item
+			param.Name = item
 		}
 
 		this.showSpinner()
@@ -126,7 +132,7 @@ export default class UpdateUserInfoViewController extends Component{
 					backgroundColor: Colors.theme, borderRadius: 4,
 					marginTop: 20
 				}}>
-					<Text style={{fontSize: 18, color: Colors.white, fontWeight: 'bold'}}>{'Update'}</Text>
+					<Text style={{fontSize: 16, color: Colors.white, fontWeight: 'bold'}}>{'Update'}</Text>
 				</TouchableOpacity>
 
 				<LoadingSpinner visible={this.state.isSpinnerVisible} />

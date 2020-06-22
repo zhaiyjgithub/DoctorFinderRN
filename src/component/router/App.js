@@ -30,7 +30,7 @@ const storage = new Storage({
 })
 
 global.STORAGE = storage
-global.UserPosition = {lat: 33.506493, lng: -86.77556}
+global.UserPosition = {lat: 40.746100, lng: -73.979920}
 global.UserInfo = {}
 
 Navigation.events().registerAppLaunchedListener(async () => {

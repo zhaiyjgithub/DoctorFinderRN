@@ -172,7 +172,14 @@ export default class DoctorInfoViewController extends Component{
 	}
 
 	getRelatedDoctors() {
-		HTTP.post(API_Doctor.getRelatedDoctors, {}).then((response) => {
+		let info = this.props.info
+		let doctorInfo = {
+			Npi: info.Npi,
+			Specialty: info.Specialty,
+			City: info.City,
+			State: info.State
+		}
+		HTTP.post(API_Doctor.getRelatedDoctors, doctorInfo).then((response) => {
 			this.setState({dataSource: this.state.dataSource.concat({section: 1, data: response.data})})
 		}).catch(() => {
 
@@ -310,8 +317,7 @@ export default class DoctorInfoViewController extends Component{
 					return null
 				}
 
-				let address = this.props.info.Address +'\n' + this.props.info.City + ' City\n'
-					+ this.props.info.State + ' ' + this.props.info.Zip
+				let address = this.props.info.Address
 
 				return (
 					<DoctorInfoAddressItem
@@ -506,8 +512,8 @@ export default class DoctorInfoViewController extends Component{
 
 				<ActionSheet
 					ref={o => this._actionSheet = o}
-					title={'Please choose a map.'}
-					options={['Apple Map', 'Google Map', 'cancel']}
+					title={'Please select the map you need to navigate'}
+					options={['Apple Map', 'Google Map', 'Cancel']}
 					destructiveButtonIndex={2}
 					onPress={(index) => {
 						if (index === 0) {

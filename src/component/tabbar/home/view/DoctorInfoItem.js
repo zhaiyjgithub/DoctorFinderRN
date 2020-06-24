@@ -62,6 +62,12 @@ export default class DoctorInfoItem extends Component{
 			}
 		}
 
+		if (!experience.length) {
+			experience = 'unknown'
+		}else {
+			experience = experience + ' years'
+		}
+
 		return(
 			<View style={{
 				width: ScreenDimensions.width,
@@ -151,7 +157,7 @@ export default class DoctorInfoItem extends Component{
 								fontWeight: 'bold',
 								marginTop: 6,
 							}}>{'Experience'}</Text>
-							<Text style={{fontSize: 14, color: Colors.black,}}>{experience + ' years'}</Text>
+							<Text style={{fontSize: 14, color: Colors.black,}}>{experience}</Text>
 
 						</View>
 					</TouchableOpacity>

@@ -14,6 +14,7 @@ import Permissions from 'react-native-permissions'
 import GeoLocation from "@react-native-community/geolocation";
 import {UserTrack} from '../../utils/UserTrack';
 import {DLogger} from '../../utils/Utils';
+import {MapAppKey} from '../../../conf/Conf';
 
 const BannerScale = (375.0/190.0)
 
@@ -84,6 +85,8 @@ export default class HomePageViewController extends Component{
 			if (info && info.coords) {
 				UserPosition.lat = info.coords.latitude
 				UserPosition.lng = info.coords.longitude
+
+				this.reverseCoordToAddress(UserPosition.lat, UserPosition.lng)
 			}
 		})
 	}
@@ -100,6 +103,35 @@ export default class HomePageViewController extends Component{
 			},
 			{ enableHighAccuracy: !error3, timeout: 1000 },
 		)
+	}
+
+	reverseCoordToAddress(lat, lng) {
+		//'http://www.mapquestapi.com/geocoding/v1/reverse?key=lYrP4vF3Uk5zgTiGGuEzQGwGIVDGuy24&location=40.7461,-74.0&includeRoadMetadata=false&includeNearestIntersection=false'
+		let url = 'http://www.mapquestapi.com/geocoding/v1/reverse?key=' + MapAppKey +  '&location=' + lat + ',' + lng  + '&includeRoadMetadata=false&includeNearestIntersection=false'
+		fetch(url, {
+			credentials: 'include',
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		}).then((response) => {
+			return response.json()
+		}).then((data) => {
+			console.log(JSON.stringify(data))
+			if (data && data.results.length) {
+				let locations = data.results[0].locations
+				if (locations && locations.length) {
+					let location = locations[0]
+					let state = location.adminArea3
+					let city = location.adminArea4
+
+					UserPosition.city = city
+					UserPosition.state = state
+				}
+			}
+		}).catch((error) => {
+			console.log(error)
+		})
 	}
 
 	addGlobalScreenEventListener() {
@@ -261,17 +293,14 @@ export default class HomePageViewController extends Component{
 
 	renderSpecialty() {
 		let list = [
-			'Allergy & Immunology',
 			'Family Medicine',
 			'Pediatrics',
-			'Chiropractor',
-			'Optometrist',
-			'Psychiatry & Neurology',
-			'Emergency Medicine',
 			'Obstetrics & Gynecology',
-			'Radiology',
-			'Anesthesiology',
-			'Surgery',
+			'Dermatology',
+			"Psychiatry",
+			"Ophthalmology",
+			"Otolaryngology (ENT)",
+			"Gastroenterology",
 			'More',
 		]
 

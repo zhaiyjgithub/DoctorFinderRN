@@ -17,7 +17,6 @@ export default class DoctorSearchResultListViewController extends Component{
 	constructor(props) {
 		super(props)
 		this.setTopBar(props.searchContent)
-
 		this.state = {
 			dataSource: [],
 			gender: 0,

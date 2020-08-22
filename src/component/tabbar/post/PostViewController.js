@@ -11,6 +11,8 @@ import LoadingSpinner from '../../BaseComponents/LoadingSpinner';
 import LoadingFooter from '../../BaseComponents/LoadingFooter';
 import RouterEntry from '../../router/RouterEntry';
 import ListEmptyView from '../../BaseComponents/ListEmptyView';
+import SearchBar from '../home/view/SearchBar';
+import {SearchBarType} from '../../utils/CustomEnums';
 
 export default class PostViewController extends Component{
 	static options(passProps) {
@@ -34,6 +36,7 @@ export default class PostViewController extends Component{
 
 		this.page = 1
 		this.pageSize = 30
+		this.isHasShowTopBarSearchBar = false
 	}
 
 	componentDidMount() {
@@ -132,9 +135,57 @@ export default class PostViewController extends Component{
 	}
 
 	renderHeader() {
-		return(
-			<View style={{width: '100%', height: 16, backgroundColor: Colors.clear}}/>
+		return this.renderSearchBar()
+	}
+
+	renderSearchBar() {
+		return (
+			<SearchBar
+				type = {SearchBarType.normal}
+				placeholder = {'Find something...'}
+				onSubmitEditing={(searchContent) => {
+					// this.goToSearch(searchContent, '')
+				}}
+			/>
 		)
+	}
+
+	setTopBarView(isShow) {
+		if (isShow && isShow !== this.isHasShowTopBarSearchBar) {
+			this.isHasShowTopBarSearchBar = true
+			Navigation.mergeOptions(this.props.componentId, {
+				topBar: {
+					title: {
+						component: {
+							name: 'SearchBar',
+							passProps:{
+								type: SearchBarType.max,
+								placeholder: 'Find something...',
+								onSubmitEditing: (searchContent) => {
+									// this.goToSearch(searchContent, '')
+								}
+							}
+						}
+					}
+				}
+			});
+		} else {
+			if (isShow === false && isShow !== this.isHasShowTopBarSearchBar) {
+				this.isHasShowTopBarSearchBar = false
+				Navigation.mergeOptions(this.props.componentId, {
+					topBar: {
+						title: {
+							component: {
+								name: 'HomePageTitleView',
+								passProps: {
+									title: 'Post'
+								}
+							}
+						}
+					}
+				});
+			}
+		}
 	}
 
 	renderFabButton() {
@@ -204,6 +255,16 @@ export default class PostViewController extends Component{
 						}
 					}}
 					onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentumInTrend = false; }}
+					onScroll={(event) => {
+						const y = event.nativeEvent.contentOffset.y
+
+						if (y > 46) {
+							this.setTopBarView(true)
+						}else {
+							this.setTopBarView(false)
+						}
+
+					}}
 					ListFooterComponent={() => {
 						return this.renderListFooter()
 					}}

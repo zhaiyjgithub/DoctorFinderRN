@@ -193,6 +193,7 @@ export default class HomePageViewController extends Component{
 							name: 'SearchBar',
 							passProps:{
 								type: SearchBarType.max,
+								placeholder: 'e.g. Smith',
 								onSubmitEditing: (searchContent) => {
 									this.goToSearch(searchContent, '')
 								}
@@ -209,6 +210,9 @@ export default class HomePageViewController extends Component{
 						title: {
 							component: {
 								name: 'HomePageTitleView',
+								passProps: {
+									title: 'Find a Doctor'
+								}
 							}
 						}
 					}
@@ -221,8 +225,9 @@ export default class HomePageViewController extends Component{
 		return (
 			<SearchBar
 				type = {SearchBarType.normal}
+				placeholder={'e.g. Smith'}
 				onSubmitEditing={(searchContent) => {
-					this.goToSearch(searchContent, '')
+					//
 				}}
 			/>
 		)
@@ -422,7 +427,7 @@ export default class HomePageViewController extends Component{
 					}}
 
 					onScroll={(event) => {
-						let y = event.nativeEvent.contentOffset.y
+						const y = event.nativeEvent.contentOffset.y
 
 						if (y > 46) {
 							this.setTopBarView(true)

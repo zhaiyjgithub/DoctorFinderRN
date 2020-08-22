@@ -7,7 +7,9 @@ import {SearchBarType} from '../../../utils/CustomEnums';
 export default class SearchBar extends Component {
 	static defaultProps = {
 		marginLeft: 18,
-		type: SearchBarType.max
+		type: SearchBarType.max,
+		placeholder: '',
+		searchContent: ''
 	}
 
 	constructor(props) {
@@ -19,8 +21,9 @@ export default class SearchBar extends Component {
 
 	render() {
 		let props = this.props
-		let placeHolder = 'e.g. Thomas'
-		if (props.type === SearchBarType.max) {
+		const {placeholder, type, onSubmitEditing, filterAction} = this.props
+		const {searchContent} = this.state
+		if (type === SearchBarType.max) {
 			let width = (ScreenDimensions.width - 32)
 			return(
 				<TextInput
@@ -31,12 +34,12 @@ export default class SearchBar extends Component {
 					}}
 					selectionColor = {Colors.theme}
 					onSubmitEditing={() => {
-						this.props.onSubmitEditing && this.props.onSubmitEditing(this.state.searchContent)
+						onSubmitEditing && onSubmitEditing(searchContent)
 					}}
-					value = {this.state.searchContent}
+					value = {searchContent}
 					underlineColorAndroid = {'transparent'}
 					numberOfLines={1}
-					placeholder = {placeHolder}
+					placeholder = {placeholder}
 					placeholderTextColor={Colors.lightGray}
 					style={{
 						width: width,
@@ -49,7 +52,7 @@ export default class SearchBar extends Component {
 					}}>
 				</TextInput>
 			)
-		}else if (this.props.type === SearchBarType.min) {
+		}else if (type === SearchBarType.min) {
 			let width = (ScreenDimensions.width - 60)
 			return (
 				<View style={{
@@ -65,15 +68,15 @@ export default class SearchBar extends Component {
 						clearButtonMode={'while-editing'}
 						numberOfLines={1}
 						underlineColorAndroid={'transparent'}
-						placeholder = {placeHolder}
+						placeholder = {placeholder}
 						placeholderTextColor={Colors.lightGray}
 						onSubmitEditing = {(event) => {
-							this.props.onSubmitEditing && this.props.onSubmitEditing(this.state.searchContent)
+							onSubmitEditing && onSubmitEditing(searchContent)
 						}}
 						onChangeText={(text) => {
 							this.setState({searchContent: text.trim() + ''})
 						}}
-						value = {this.state.searchContent}
+						value = {searchContent}
 						style={{
 							width: width - 44 - 10,
 							height: 36,
@@ -85,7 +88,7 @@ export default class SearchBar extends Component {
 						}} />
 
 					<TouchableOpacity onPress={() => {
-						this.props.filterAction && this.props.filterAction()
+						filterAction && filterAction()
 					}} style={{width: 44, height: 40,
 						justifyContent: 'center', alignItems: 'center'
 					}}>
@@ -104,15 +107,15 @@ export default class SearchBar extends Component {
 						clearButtonMode={'while-editing'}
 						numberOfLines={1}
 						underlineColorAndroid={'transparent'}
-						placeholder = {placeHolder}
+						placeholder = {placeholder}
 						placeholderTextColor={Colors.lightGray}
 						onSubmitEditing = {(event) => {
-							this.props.onSubmitEditing && this.props.onSubmitEditing(this.state.searchContent)
+							onSubmitEditing && onSubmitEditing(searchContent)
 						}}
 						onChangeText={(text) => {
 							this.setState({searchContent: text.trim() + ''})
 						}}
-						value = {this.state.searchContent}
+						value = {searchContent}
 						style={{
 							width: ScreenDimensions.width - 32,
 							height: 36,

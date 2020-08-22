@@ -68,7 +68,7 @@ export default class LogInViewController extends Component{
             this.hideSpinner()
 
             if (!response.code) {
-                let userInfo = Object.assign(response.data.User, {Token: response.data.Token})
+                let userInfo = response.data
                 CacheDB.save(DBKey.userInfo, userInfo)
 
                 global.UserInfo = userInfo

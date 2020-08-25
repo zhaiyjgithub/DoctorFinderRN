@@ -200,7 +200,7 @@ export default class NewPostViewController extends Component{
 				this.props.refreshPostListCB && this.props.refreshPostListCB()
 			}, 1000)
 		}).catch((error) => {
-			SimpleToast.show("Create fail", SimpleToast.LONG, SimpleToast.CENTER)
+			SimpleToast.show("Create failed", SimpleToast.LONG, SimpleToast.CENTER)
 			this.hideSpinner()
 		})
 	}

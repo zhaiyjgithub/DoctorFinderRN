@@ -193,7 +193,7 @@ export default class NewPostViewController extends Component{
 			this.hideSpinner()
 
 			Keyboard.dismiss()
-			SimpleToast.show("Create successfully", SimpleToast.LONG, SimpleToast.CENTER)
+			SimpleToast.showWithGravity("Create successfully", SimpleToast.LONG, SimpleToast.CENTER)
 
 			setTimeout(() => {
 				Navigation.pop(this.props.componentId)

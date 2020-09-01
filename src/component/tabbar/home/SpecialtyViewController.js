@@ -1,12 +1,14 @@
 import {
 	SectionList, Text, View,
 	TouchableOpacity, Image,
+	PixelRatio
 } from 'react-native';
 import {Colors} from '../../utils/Styles';
 import React, {Component} from 'react';
-import {ShareTool} from '../../utils/ShareTool';
 import {Navigation} from 'react-native-navigation';
-
+import {Specialty} from '../../../resource/specialty';
+import {NaviBarHeight, ScreenDimensions} from '../../utils/Dimensions';
+import {LargeList} from 'react-native-largelist-v3';
 
 export default class SpecialtyViewController extends Component {
 	static options(passProps) {
@@ -14,11 +16,11 @@ export default class SpecialtyViewController extends Component {
 			topBar: {
 				rightButtons: [
 					{
-						id: 'deselect',
+						id: 'undo',
 						enabled: true,
 						disableIconTint: false,
 						color: Colors.white,
-						text: 'Deselect'
+						text: 'Undo'
 					},
 				],
 				leftButtons: [
@@ -37,94 +39,9 @@ export default class SpecialtyViewController extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			dataSource: [{section: 0, header: 'A', data: [
-					{section: 0, name: "Allergy & Immunology"},
-					{section: 0, name: "Audiologist"},
-					{section: 0, name: "Anesthesiology"},]
-			},
-			{section: 1, header: 'C', data: [
-					{section: 1, name: "Colon & Rectal Surgery"},
-					{section: 1, name: "Chiropractor"},]
-			},
-				{section: 2, header: 'D', data: [
-						{section: 2, name: "Dermatology"},
-					]
-				},
-				{section: 3, header: 'E', data: [
-						{section: 4, name: "Emergency Medicine"},
-					]
-				},
-				{section: 1, header: 'F', data: [
-						{section: 0, name: "Family Medicine"},
-					]
-				},
-				{section: 1, header: 'G', data: [
-						{section: 0, name: "General Practice"},
-					]
-				},
-				{section: 1, header: 'H', data: [
-						{section: 0, name: "Hospitalist"},
-					]
-				},
-				{section: 1, header: 'I', data: [
-						{section: 0, name: "Independent Medical Examiner"},
-						{section: 0, name: "Internal Medicine"},
-					]
-				},
-				{section: 1, header: 'M', data: [
-						{section: 0, name: "Medical Genetics"},
-					]
-				},
-				{section: 1, header: 'N', data: [
-						{section: 0, name: "Neurological Surgery"},
-						{section: 0, name: "Neuromusculoskeletal Medicine, Sports Medicine"},
-						{section: 0, name: "Neuromusculoskeletal Medicine & OMM"},
-						{section: 0, name: "Nuclear Medicine"},
-					]
-				},
-				{section: 1, header: 'O', data: [
-						{section: 0, name: "Otolaryngology"},
-						{section: 0, name: "Oral & Maxillofacial Surgery"},
-						{section: 0, name: "Optometrist"},
-						{section: 0, name: "Orthopaedic Surgery"},
-						{section: 0, name: "Obstetrics & Gynecology"},
-						{section: 0, name: "Ophthalmology"},
-					]
-				},
-				{section: 1, header: 'P', data: [
-						{section: 0, name: "Plastic Surgery"},
-						{section: 0, name: "Phlebology"},
-						{section: 0, name: "Psychiatry & Neurology"},
-						{section: 0, name: "Pediatrics"},
-						{section: 0, name: "Podiatrist"},
-						{section: 0, name: "Preventive Medicine"},
-						{section: 0, name: "Pain Medicine"},
-						{section: 0, name: "Pathology"},
-						{section: 0, name: "Physical Medicine & Rehabilitation"},
-					]
-				},
-				{section: 1, header: 'R', data: [
-						{section: 0, name: "Radiology"},
-					]
-				},
-				{section: 1, header: 'S', data: [
-						{section: 0, name: "Surgery"},
-					]
-				},
-				{section: 1, header: 'T', data: [
-						{section: 0, name: "Thoracic Surgery (Cardiothoracic Vascular Surgery)"},
-						{section: 0, name: "Transplant Surgery"},
-					]
-				},
-				{section: 1, header: 'U', data: [
-						{section: 0, name: "Urology"},
-					]
-				},
-			],
+			dataSource: this.parseCityArray(Specialty),
 			selectedSpecialty: props.selectedSpecialty
 		}
-
-		this.reloadDataSource(this.state.dataSource)
 	}
 
 	componentDidMount() {
@@ -141,26 +58,64 @@ export default class SpecialtyViewController extends Component {
 	navigationButtonPressed({ buttonId }) {
 		if (buttonId === 'cancel') {
 			Navigation.dismissModal(this.props.componentId);
-		}else if (buttonId === 'deselect') {
+		}else if (buttonId === 'undo') {
 			this.props.didSelectedSpecialty && this.props.didSelectedSpecialty('')
 			Navigation.dismissModal(this.props.componentId);
 		}
 	}
 
-	reloadDataSource(dataSource) {
-		for (let section = 0; section < dataSource.length; section ++) {
-			dataSource.section = section
-
-			let data = dataSource[section]
-			if (data.length) {
-				dataSource.header = data[0].substr(0, 1).toUpperCase()
-
-				for (let row = 0; row < data.length; row ++) {
-					data[row].section = row
-				}
+	parseCityArray(cities) {
+		let sectionMap = new Map()
+		cities.forEach((city, index) => {
+			let key = city.charAt(0).toUpperCase()
+			if (sectionMap.has(key)) {
+				let data = sectionMap.get(key)
+				data.push(city)
+			}else {
+				let data = [city]
+				sectionMap.set(key, data)
 			}
+		})
 
-		}
+		let datas = []
+		sectionMap.forEach((v, k) => {
+			let item = {items: v, name: k , section: 0}
+			datas.push(item)
+		})
+
+		datas = datas.sort((x, y) => {
+			if (x.name > y.name) {
+				return 1
+			}else {
+				return -1
+			}
+		})
+
+		datas.forEach((item, index) => {
+			item.section = index
+		})
+
+		return datas
+	}
+
+	scrollListView(index) {
+		this._largeList && this._largeList.scrollToIndexPath({section: index, row: -1}, true)
+	}
+
+	renderIndexView() {
+		return(
+			<View style={{width: 12, position: 'absolute', top: 40, right: 10, backgroundColor: Colors.clear}}>
+				{this.state.dataSource.map((item, index) => {
+					return(
+						<TouchableOpacity onPress={() => {
+							this.scrollListView(index)
+						}}>
+							<Text style={{fontSize: 10, color: Colors.black, paddingVertical: 5}}>{item.name}</Text>
+						</TouchableOpacity>
+					)
+				})}
+			</View>
+		)
 	}
 
 	renderLineView() {
@@ -171,50 +126,76 @@ export default class SpecialtyViewController extends Component {
 
 	renderRightArrowImage() {
 		return(
-			<Image source={require('../../../resource/image/base/checkmark.png')} style={{width: 16, height: 12, marginLeft: 8}}/>
+			<Image source={require('../../../resource/image/base/checkmark.png')} style={{width: 16, height: 12, marginLeft: 8,
+				marginRight: 16
+			}}/>
 		)
 	}
 
 	renderItem(item) {
-		let isSelected = (item.name === this.state.selectedSpecialty)
+		let isSelected = (item === this.state.selectedSpecialty)
 		return(
 			<TouchableOpacity onPress={() => {
-				this.props.didSelectedSpecialty && this.props.didSelectedSpecialty(item.name)
-				Navigation.dismissModal(this.props.componentId)
+				let newSpecialty = this.state.selectedSpecialty === item ? '' : item
+				this.props.didSelectedSpecialty && this.props.didSelectedSpecialty(newSpecialty)
+				Navigation.dismissModal(this.props.componentId);
 			}} style={{width: '100%', paddingHorizontal: 16, height: 50,
 				flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
 			}}>
-				<Text style={{fontSize: 16, color: isSelected ? Colors.theme : Colors.black,}}>{item.name}</Text>
+				<Text style={{fontSize: 16, color: isSelected ? Colors.theme : Colors.black,}}>{item}</Text>
 				{isSelected ? this.renderRightArrowImage() : null}
 				{this.renderLineView()}
 			</TouchableOpacity>
 		)
 	}
 
-	renderSectionHeader(header) {
+	renderLargeList() {
 		return(
-			<View style={{justifyContent: 'center', paddingHorizontal: 8, height: 20,
-				backgroundColor: Colors.systemGray,
-			}}>
-				<Text style={{fontSize: 14, color: Colors.black, fontWeight: 'bold'}}>{header}</Text>
-			</View>
+			<LargeList
+				ref = {(o) => {
+					this._largeList = o
+				}}
+				data={this.state.dataSource}
+				heightForSection={() => 30}
+				renderSection={(section) => {
+					if (!this.state.dataSource.length) {
+						return ;
+					}
+
+					let title = this.state.dataSource[section].name
+					return(
+						<View style={{width: ScreenDimensions.width, height: 30, backgroundColor: Colors.systemGray,
+							justifyContent: 'center'
+						}}>
+							<Text style={{fontSize: 18, color: Colors.black, fontWeight: 'bold',
+								marginLeft: 15,
+							}}>{title}</Text>
+						</View>
+					)
+				}}
+				heightForIndexPath={() => 50}
+				renderIndexPath={(index) => {
+					if (!this.state.dataSource.length) {
+						return;
+					}
+
+					let sectionData = this.state.dataSource[index.section]
+					let item = sectionData.items[index.row]
+					return this.renderItem(item)
+				}}
+			/>
 		)
 	}
 
 	render() {
 		return (
 			<View style={{flex: 1, backgroundColor: Colors.white}}>
-				<SectionList
-					renderItem={({item}) => this.renderItem(item)}
-					sections={this.state.dataSource}
-					keyExtractor={(item, index) => {
-						return 'key' + item.key + index
-					}}
-					renderSectionHeader={({section}) => {
-						return this.renderSectionHeader(section.header)
-					}}
-				/>
+				{this.renderLargeList()}
+				{this.renderIndexView()}
 			</View>
 		)
 	}
 }
+
+
+//

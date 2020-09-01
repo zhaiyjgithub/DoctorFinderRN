@@ -48,7 +48,9 @@ const Colors = {
 	textGray: '#D8D8D8',
 	male: '#7dc5eb',
 	female: '#e8989a',
-	lightBlack: '#333333'
+	lightBlack: '#333333',
+	tab: '#d4237a',
+	listBg: '#e5ecf5'
 };
 
 

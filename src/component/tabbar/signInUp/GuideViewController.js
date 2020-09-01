@@ -19,19 +19,47 @@ import {Navigation} from 'react-native-navigation';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 
 export default class GuideViewController extends Component{
-    pushToLogInPage() {
-        // Navigation.push(this.props.componentId, {
-        //     component: {
-        //         name: 'LogInViewController',
-        //         passProps: {
-        //
-        //         },
-        //         topBar: {
-        //             visible: false
-        //         }
-        //     }
-        // });
+    static defaultProps = {
+        isToSignUp: false
+    }
+    static options(passProps) {
+        return {
+            statusBar: {
+                style: 'light'
+            },
+            topBar: {
+                visible: false,
+                background: {
+                    color: Colors.theme,
+                },
+                noBorder: true,
+                drawBehind: true,
+            },
+        }
+    }
 
+    componentDidMount(): void {
+
+    }
+
+    renderDismissButton() {
+        if (!this.props.isToSignUp) {
+            return ;
+        }
+
+        return(
+            <TouchableOpacity onPress={() => {
+                Navigation.dismissModal(this.props.componentId);
+            }} style={{
+                height: 30, justifyContent: 'center', alignItems: 'center',
+                marginBottom: PLATFORM.isIPhoneX ? 34 : 20,
+            }}>
+                <Text style={{fontSize: 16, color: Colors.theme,}}>{'Dismiss'}</Text>
+            </TouchableOpacity>
+        )
+    }
+
+    modalToLogInPage() {
         Navigation.showModal({
             stack: {
                 children: [{
@@ -50,6 +78,27 @@ export default class GuideViewController extends Component{
             }
         });
     }
+
+    modalSignUpPage() {
+        Navigation.showModal({
+            stack: {
+                children: [{
+                    component: {
+                        name: 'SignUpViewController',
+                        passProps: {
+
+                        },
+                        options: {
+                            topBar: {
+                                visible: false
+                            }
+                        }
+                    }
+                }]
+            }
+        });
+    }
+
     render() {
         let buttonWidth = (ScreenDimensions.width - 40 - 16)/2.0
         let buttonHeight = ScreenDimensions.width*(50.0/375)
@@ -61,26 +110,32 @@ export default class GuideViewController extends Component{
                     color: Colors.lightBlack, marginTop: ScreenDimensions.height*0.312
                 }}>Doctor Finder</Text>
 
-                <View style={{width: ScreenDimensions.width, flexDirection: 'row', alignItems: 'center',
-                    justifyContent: 'space-between', paddingLeft: 25,
-                    marginBottom: PLATFORM.isIPhoneX ? 34 : 20,
-                    paddingHorizontal: 20,
-                }}>
-                    <TouchableOpacity style={{width: buttonWidth,
-                        height: buttonHeight, justifyContent: 'center', alignItems: 'center',
-                        backgroundColor: Colors.theme, borderRadius: 4,
+                <View>
+                    <View style={{width: ScreenDimensions.width, flexDirection: 'row', alignItems: 'center',
+                        justifyContent: 'space-between', paddingLeft: 25,
+                        marginBottom: (this.props.isToSignUp ? 16 : (PLATFORM.isIPhoneX ? 34 : 20)),
+                        paddingHorizontal: 20,
                     }}>
-                        <Text style={{fontSize: 18, color: Colors.white, fontWeight: 'bold'}}>{'Create account'}</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            this.modalSignUpPage()
+                        }} style={{width: buttonWidth,
+                            height: buttonHeight, justifyContent: 'center', alignItems: 'center',
+                            backgroundColor: Colors.theme, borderRadius: 4,
+                        }}>
+                            <Text style={{fontSize: 18, color: Colors.white, fontWeight: 'bold'}}>{'Create account'}</Text>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => {
-                        this.pushToLogInPage()
-                    }} style={{width: buttonWidth,
-                        height: buttonHeight, justifyContent: 'center', alignItems: 'center',
-                        backgroundColor: Colors.theme, borderRadius: 4,
-                    }}>
-                        <Text style={{fontSize: 18, color: Colors.white, fontWeight: 'bold'}}>{'Sign in'}</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            this.modalToLogInPage()
+                        }} style={{width: buttonWidth,
+                            height: buttonHeight, justifyContent: 'center', alignItems: 'center',
+                            backgroundColor: Colors.theme, borderRadius: 4,
+                        }}>
+                            <Text style={{fontSize: 18, color: Colors.white, fontWeight: 'bold'}}>{'Sign in'}</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    {this.renderDismissButton()}
                 </View>
             </View>
         )

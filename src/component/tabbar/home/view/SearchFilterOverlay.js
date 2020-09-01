@@ -7,6 +7,7 @@ import {
 	Animated,
 	Modal,
 	Easing, SectionList, TextInput,
+	Keyboard
 } from 'react-native';
 import {Colors} from '../../../utils/Styles';
 import {ScreenDimensions, StatusBar} from '../../../utils/Dimensions';
@@ -65,13 +66,14 @@ export default class SearchFilterOverlay extends Component{
 
 	renderSearchBarView() {
 		let width = MainViewWidth - 16
+		let placeHolder = 'e.g. Thomas'
 		return(
 			<View style={{marginTop: 8, height: 50, justifyContent: 'center'}}>
 				<TextInput
-					returnKeyType={'search'}
+					// returnKeyType={'search'}
 					clearButtonMode={'while-editing'}
 					onChangeText={(text) => {
-						this.setState({searchContent: text + ''})
+						this.setState({searchContent: text.trim() + ''})
 					}}
 					selectionColor = {Colors.theme}
 					onSubmitEditing={() => {
@@ -80,7 +82,7 @@ export default class SearchFilterOverlay extends Component{
 					value = {this.state.searchContent}
 					underlineColorAndroid = {'transparent'}
 					numberOfLines={1}
-					placeholder = {'e.g. Dr. Fei or Pediatrics'}
+					placeholder = {placeHolder}
 					placeholderTextColor={Colors.lightGray}
 					style={{
 						width: width,
@@ -190,7 +192,7 @@ export default class SearchFilterOverlay extends Component{
 				backgroundColor: Colors.bottom_bar,
 			}}>
 				<TouchableOpacity onPress={() => {
-					this.dismiss()
+					this.props.cancel && this.props.cancel()
 				}} style={{width: '50%', height: 50,
 					justifyContent: 'center', alignItems: 'center'
 				}}>
@@ -199,7 +201,7 @@ export default class SearchFilterOverlay extends Component{
 
 				<TouchableOpacity onPress={() => {
 					this.props.confirm && this.props.confirm(this.state.searchContent, this.state.gender)
-				}} style={{width: '50%', height: 50, backgroundColor: Colors.red,
+				}} style={{width: '50%', height: 50, backgroundColor: Colors.theme,
 					justifyContent: 'center', alignItems: 'center'
 				}}>
 					<Text style={{fontSize: 16, color: Colors.white}}>{'Confirm'}</Text>
@@ -226,7 +228,9 @@ export default class SearchFilterOverlay extends Component{
 				}}
 			>
 
-				<View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center',
+				<TouchableOpacity activeOpacity={1} onPress={() => {
+					Keyboard.dismiss()
+				}} style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center',
 					alignItems: 'center'
 				}}>
 					<View style={{width: MainViewWidth, backgroundColor: Colors.white,
@@ -239,15 +243,9 @@ export default class SearchFilterOverlay extends Component{
 						{this.renderActionButtonView()}
 
 					</View>
-				</View>
+				</TouchableOpacity>
 
 			</Modal>
 		)
 	}
-}
-
-const ListType = {
-	specialty: 0,
-	city: 1,
-	state: 2,
 }

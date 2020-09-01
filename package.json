@@ -9,15 +9,30 @@
     "run-ios": " react-native run-ios --simulator=\"iPhone 11 Pro\""
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.7.1",
+    "@react-native-community/geolocation": "^2.0.2",
+    "appcenter": "3.0.2",
+    "appcenter-analytics": "3.0.2",
+    "appcenter-crashes": "3.0.2",
+    "crypto-js": "^3.1.9-1",
     "react": "16.8.6",
     "react-native": "0.60.3",
     "react-native-actionsheet": "^2.4.2",
+    "react-native-camera-kit": "^8.0.4",
     "react-native-extra-dimensions-android": "^1.2.5",
+    "react-native-largelist-v3": "^3.0.15",
     "react-native-maps": "0.26.1",
     "react-native-navigation": "3.2.0",
+    "react-native-permissions": "1.0.6",
+    "react-native-section-list-get-item-layout": "^2.2.3",
     "react-native-segmented-control-tab": "^3.4.1",
     "react-native-share": "^2.0.0",
-    "react-native-swiper": "^1.5.14"
+    "react-native-simple-toast": "^1.0.0",
+    "react-native-spinkit": "^1.5.0",
+    "react-native-spring-scrollview": "^2.0.23",
+    "react-native-storage": "^1.0.1",
+    "react-native-swiper": "^1.5.14",
+    "rn-fetch-blob": "^0.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",

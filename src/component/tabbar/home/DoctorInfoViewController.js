@@ -1,18 +1,19 @@
 import React, {Component} from 'react';
-import {Alert, Linking, SectionList, Text, View} from 'react-native';
+import {Alert, Linking, SectionList, Text, TouchableOpacity, View} from 'react-native';
 import {Colors} from '../../utils/Styles';
 import {ScreenDimensions} from '../../utils/Dimensions';
 import {Navigation} from 'react-native-navigation';
 import DoctorInfoItem from './view/DoctorInfoItem';
 import {HTTP} from '../../utils/HttpTools';
-import {API_Doctor} from '../../utils/API';
-import {PLATFORM} from '../../utils/CustomEnums';
+import {API_Doctor, API_User} from '../../utils/API';
+import {CollectionType, PLATFORM} from '../../utils/CustomEnums';
 import DoctorInfoHeaderItem from './view/DoctorInfoHeaderItem';
 import DoctorInfoTextItem from './view/DoctorInfoTextItem';
 import DoctorInfoAddressItem from './view/DoctorInfoAddressItem';
 import {ShareTool} from '../../utils/ShareTool';
 import ActionSheet from 'react-native-actionsheet';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
+import RouterEntry from '../../router/RouterEntry';
 
 export default class DoctorInfoViewController extends Component{
 	static defaultProps = {
@@ -76,7 +77,7 @@ export default class DoctorInfoViewController extends Component{
 	}
 
 	componentWillUnmount() {
-		this.navigationEventListener && this.navigationEventListener.remove();
+		this.navigationEventListener && this.navigationEventListener.remove()
 	}
 
 	componentDidAppear() {
@@ -104,12 +105,35 @@ export default class DoctorInfoViewController extends Component{
 
 			ShareTool(shareOptions)
 		}else if (buttonId === 'star') {
+			if (!UserInfo.Token) {
+				this.showNotSignUpAlert()
+				return
+			}
+
 			if (this.isCollected) {
 				this.cancelCollection()
 			}else {
 				this.addCollection()
 			}
 		}
+	}
+
+	showNotSignUpAlert() {
+		Alert.alert(
+			'Not Sign In',
+			'Oh... You are not sign in now. ',
+			[
+				{text: 'Cancel', onPress: () => console.log('Cancel Pressed')},
+				{text: 'Sign In', onPress: () => {
+						RouterEntry.modalSignUp()
+					}},
+			],
+			{ cancelable: false }
+		)
+	}
+
+	getUserID() {
+		return UserInfo.UserID
 	}
 
 	setTopBarButtons(isCollected) {
@@ -148,7 +172,14 @@ export default class DoctorInfoViewController extends Component{
 	}
 
 	getRelatedDoctors() {
-		HTTP.post(API_Doctor.getRelatedDoctors, {}).then((response) => {
+		let info = this.props.info
+		let doctorInfo = {
+			Npi: info.Npi,
+			Specialty: info.Specialty,
+			City: info.City,
+			State: info.State
+		}
+		HTTP.post(API_Doctor.getRelatedDoctors, doctorInfo).then((response) => {
 			this.setState({dataSource: this.state.dataSource.concat({section: 1, data: response.data})})
 		}).catch(() => {
 
@@ -157,8 +188,9 @@ export default class DoctorInfoViewController extends Component{
 
 	getCollectionStatus() {
 		let param = {
-			Npi: this.props.info.Npi,
-			UserId: 1,
+			ObjectID: this.props.info.Npi,
+			ObjectType: CollectionType.doctor,
+			UserID: this.getUserID(),
 		}
 
 		HTTP.post(API_Doctor.getCollectionStatus, param).then((response) => {
@@ -171,12 +203,12 @@ export default class DoctorInfoViewController extends Component{
 
 	addCollection() {
 		let param = {
-			Npi: this.props.info.Npi,
-			UserId: 1,
+			ObjectID: this.props.info.Npi,
+			ObjectType: CollectionType.doctor,
+			UserID: this.getUserID(),
 		}
 
-		HTTP.post(API_Doctor.addCollection, param).then((response) => {
-			console.log(response)
+		HTTP.post(API_User.addFavorite, param).then((response) => {
 			if (response.code === 0) {
 				this.isCollected = true
 				this.setTopBarButtons(this.isCollected)
@@ -190,8 +222,9 @@ export default class DoctorInfoViewController extends Component{
 
 	cancelCollection() {
 		let param = {
-			Npi: this.props.info.Npi,
-			UserId: 1,
+			ObjectID: this.props.info.Npi,
+			ObjectType: CollectionType.doctor,
+			UserID: this.getUserID(),
 		}
 
 		HTTP.post(API_Doctor.deleteCollection, param).then((response) => {
@@ -212,11 +245,23 @@ export default class DoctorInfoViewController extends Component{
 			[
 				{text: 'Cancel', onPress: () => {}, style: 'cancel'},
 				{text: 'Feedback', onPress: () => {
-
+						this.pushFeedbackViewController()
 					}},
 			],
 			{ cancelable: false }
 		)
+	}
+
+	pushFeedbackViewController() {
+		Navigation.push(this.props.componentId, {
+			component: {
+				name: 'FeedbackViewController',
+				passProps: {
+
+				},
+				options: BaseNavigatorOptions('Feedback')
+			}
+		});
 	}
 
 	pushToDoctorInfoPage(item) {
@@ -248,6 +293,9 @@ export default class DoctorInfoViewController extends Component{
 					<DoctorInfoHeaderItem
 						id = {10}
 						info = {this.props.info}
+						questionAction = {() => {
+							this.showQuestionAlert()
+						}}
 					/>
 				)
 			}else if (type === menuType.summary) {
@@ -269,12 +317,11 @@ export default class DoctorInfoViewController extends Component{
 					return null
 				}
 
-				let address = this.props.info.Address +'\n' + this.props.info.City + ' City\n'
-					+ this.props.info.State + ' ' + this.props.info.Zip
+				let address = this.props.info.Address
 
 				return (
 					<DoctorInfoAddressItem
-						title = {'Address'}
+						title = {'Location'}
 						desc = {address}
 						lat = {this.state.doctorInfo.Geo.Lat}
 						lng = {this.state.doctorInfo.Geo.Lng}
@@ -377,7 +424,8 @@ export default class DoctorInfoViewController extends Component{
 			<Text style={{width: ScreenDimensions.width, textAlign: 'center',
 				fontSize: 16, color: '#202020', lineHeight: 16*1.4,
 				paddingTop: 5, paddingBottom: 5,
-				backgroundColor: Colors.systemGray
+				backgroundColor: Colors.listBg,
+				fontWeight: 'bold'
 			}}>
 				{'Related doctors'}
 			</Text>
@@ -411,9 +459,26 @@ export default class DoctorInfoViewController extends Component{
 		}
 	}
 
+	renderCallButton() {
+		return(
+			<TouchableOpacity style={{position: 'absolute', left: 30, width: ScreenDimensions.width - 60,
+				height: 50, borderRadius: 25, justifyContent: 'center', alignItems: 'center',
+				bottom: PLATFORM.isIPhoneX ? 34 : 20, backgroundColor: Colors.theme
+			}}>
+				<Text style={{fontSize: 18, color: Colors.white, fontWeight: 'bold'}}>{'Book'}</Text>
+			</TouchableOpacity>
+		)
+	}
+
+	renderListFooter() {
+		return(
+			<View style={{width: ScreenDimensions.width, height: 60, alignItems: 'center'}} />
+		)
+	}
+
 	render() {
 		return(
-			<View style={{flex: 1, backgroundColor: Colors.systemGray}}>
+			<View style={{flex: 1, backgroundColor: Colors.listBg}}>
 				<SectionList
 					style={{flex: 1}}
 					renderItem={({item}) => this.renderItem(item)}
@@ -428,6 +493,10 @@ export default class DoctorInfoViewController extends Component{
 						}
 					}}
 
+					ListFooterComponent={() => {
+						return this.renderListFooter()
+					}}
+
 					onScroll={(event) => {
 						this._offsetY = event.nativeEvent.contentOffset.y
 
@@ -439,10 +508,12 @@ export default class DoctorInfoViewController extends Component{
 					}}
 				/>
 
+				{this.renderCallButton()}
+
 				<ActionSheet
 					ref={o => this._actionSheet = o}
-					title={'Please choose a map.'}
-					options={['Apple Map', 'Google Map', 'cancel']}
+					title={'Please select the map you need to navigate'}
+					options={['Apple Map', 'Google Map', 'Cancel']}
 					destructiveButtonIndex={2}
 					onPress={(index) => {
 						if (index === 0) {

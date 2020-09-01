@@ -7,6 +7,12 @@ import com.facebook.react.PackageList;
 import com.facebook.hermes.reactexecutor.HermesExecutorFactory;
 import com.facebook.react.bridge.JavaScriptExecutorFactory;
 import com.facebook.react.ReactApplication;
+import com.bolan9999.SpringScrollViewPackage;
+import com.reactnativecommunity.rnpermissions.RNPermissionsPackage;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
+import com.wix.RNCameraKit.RNCameraKitPackage;
+import com.react.rnspinkit.RNSpinkitPackage;
 import cl.json.RNSharePackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.facebook.react.ReactNativeHost;
@@ -37,10 +43,10 @@ public class MainApplication extends NavigationApplication {
 
         protected List<ReactPackage> getPackages() {
         // Add additional packages you require here
-                // No need to add RnnPackage and MainReactPackage
-                        return Arrays.<ReactPackage>asList(
-                    // eg. new VectorIconsPackage()
-                        );
+        // No need to add RnnPackage and MainReactPackage
+        return Arrays.<ReactPackage>asList(
+                // eg. new VectorIconsPackage()
+        );
     }
 
     @Override

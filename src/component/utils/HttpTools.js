@@ -2,6 +2,7 @@
  * Created by zack on 2018/3/14.
  */
 import {BaseUrl} from './API'
+import {DLogger} from './Utils';
 // import {//LoginTools } from './UserTools';
 
 const parseJSON = (response) => {
@@ -24,18 +25,22 @@ const checkStatus = (response) => {
 	throw error;
 }
 
-const request = (url, options) => {
+const  request = (url, options) => {
 	const requestUrl = `${BaseUrl}${url}`;
+	DLogger(requestUrl + '\n')
+	DLogger(JSON.stringify(options.body) + '\n')
+
+	let token = (global.UserInfo.Token ? global.UserInfo.Token : '')
 	return fetch(requestUrl, Object.assign({}, {
 			credentials: 'include',
 			headers: {
 				'Content-Type': 'application/json',
-			    // 'Authorization': "Bearer " + (global.token ? global.token : ''),
-				// 'X-GBmono-Language': global.userSelectedLanguage === 'zh-tw' ? 'zh-tw' : 'zh-cn',
-				// 'x-gbmono-user-lon': (global.userRegion.lon + ''),
-				// 'x-gbmono-user-lat': (global.userRegion.lat + ''),
-				// 'x-gbmono-user-id' : global.userId ? global.userId + '' : '',
-				// 'x-gbmono-source' :'Globalbusiness.mono.App'
+			    'Authorization': "Bearer " + token,
+				// 'X-Language': global.userSelectedLanguage === 'zh-tw' ? 'zh-tw' : 'zh-cn',
+				// 'x-user-lon': (global.userRegion.lon + ''),
+				// 'x-user-lat': (global.userRegion.lat + ''),
+				// 'x-user-id' : global.userId ? global.userId + '' : '',
+				// 'x-source' :'Globalbusiness.mono.App'
 			},
 	}, options))
 		.then(checkStatus)

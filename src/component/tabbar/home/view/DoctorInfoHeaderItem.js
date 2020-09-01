@@ -7,7 +7,7 @@ import {Text,
 import {Colors} from '../../../utils/Styles';
 import {ScreenDimensions} from '../../../utils/Dimensions';
 import {Gender} from '../../../utils/CustomEnums';
-import {FormatPhone} from '../../../utils/Utils';
+import {FormatFirstChat, FormatPhone} from '../../../utils/Utils';
 
 export default class DoctorInfoHeaderItem extends Component{
 
@@ -34,19 +34,22 @@ export default class DoctorInfoHeaderItem extends Component{
 		return(
 			<View style={{position: 'absolute',
 				left: 0, right: 0, bottom: 0,
-				top: 74, backgroundColor: Colors.systemGray,
+				top: 74, backgroundColor: Colors.listBg,
 			}}/>
 		)
 	}
 
 	render() {
-		let doctorName = 'Dr. ' + this.state.info.FirstName + ' ' + this.state.info.LastName + ' '
-		let credential = this.state.info.Credential
-		let specialty = this.state.info.Specialty
-		let subSpecialty = this.state.info.SubSpectialty
+		let doctorInfo = this.state.info
+		let doctorName = 'Dr. ' + doctorInfo.FullName + ' '
+		let credential = doctorInfo.Credential
+		let specialty = doctorInfo.Specialty
+		let subSpecialty = doctorInfo.SubSpecialty
 
-		let phone = FormatPhone(this.state.info.Phone)
-		let gender = this.state.info.Gender
+		let phone = doctorInfo.Phone
+		let gender = doctorInfo.Gender
+
+		let jobTitle = FormatFirstChat(doctorInfo.JobTitle)
 
 		return(
 			<View style={{
@@ -99,7 +102,7 @@ export default class DoctorInfoHeaderItem extends Component{
 
 						<Text style={{fontSize: 16, color: Colors.lightGray,
 							marginTop: 6,
-						}}>{'Physician'}</Text>
+						}}>{jobTitle}</Text>
 
 						<Text style={{fontSize: 16, color: Colors.black,
 							fontWeight: 'bold',
@@ -111,10 +114,6 @@ export default class DoctorInfoHeaderItem extends Component{
 						<View style={{width: '100%',
 							marginTop: 6,
 						}}>
-							<Text style={{fontSize: 16, color: Colors.black,
-								fontWeight: 'bold'
-							}}>{'Phone '}</Text>
-
 							<TouchableOpacity style={{width: '100%', flexDirection: 'row',
 								alignItems: 'center', marginTop: 6,
 							}}>

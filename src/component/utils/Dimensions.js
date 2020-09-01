@@ -1,6 +1,6 @@
 import {Dimensions, Platform} from 'react-native'
 import  ExtraDimensions from 'react-native-extra-dimensions-android'
-import {PLATFORM} from "./../utils/CustomEnums";
+import {PLATFORM} from "./../utils/CustomEnums"
 
 const ScreenDimensions = {
 	width: (PLATFORM.isIOS) ? Dimensions.get('window').width : ExtraDimensions.get('REAL_WINDOW_WIDTH'),

@@ -25,8 +25,11 @@ const ErrorCode = {
 const Gender = {
 	male: 'M',
 	female: 'F',
-	unknown: ''
+	unknown: '',
+	maleType: 0,
+	femaleTye: 1,
 }
+
 
 const SearchBarType = {
 	normal: 0,
@@ -39,8 +42,25 @@ const SearchBarOverlayType = {
 	location: 1,
 }
 
-const NavigationEventName = {
-	dismissAllModals: 'dismissAllModals'
+const DBKey = {
+	userInfo: 'UserInfo'
+}
+
+const CollectionType = {
+	doctor: 0,
+	post: 1,
+}
+
+const EventName = {
+	other: {
+		segmentTab: 'segmentTab',
+		segmentTabEnable: 'segmentTabEnable'
+	}
+}
+
+const PostTagType = {
+	qa: 0,
+	hot: 1,
 }
 
 export {
@@ -50,5 +70,8 @@ export {
 	Gender,
 	SearchBarType,
 	SearchBarOverlayType,
-	NavigationEventName
+	DBKey,
+	CollectionType,
+	EventName,
+	PostTagType
 }

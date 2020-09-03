@@ -20,7 +20,8 @@ const API_Post = {
 	getMyPostByPage: 'Post/GetMyPostByPage',
 	addAppendToPost: 'Post/AddAppendToPost',
 	getAppendByPostID: 'Post/GetAppendByPostID',
-	deletePostByIds: 'Post/DeletePostByIds'
+	deletePostByIds: 'Post/DeletePostByIds',
+	searchPostByPageFromElastic: 'Post/SearchPostByPageFromElastic'
 }
 
 const API_Answer = {

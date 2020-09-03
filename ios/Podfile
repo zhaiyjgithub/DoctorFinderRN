@@ -47,10 +47,10 @@ target 'DoctorFinderRN' do
 
   pod 'RNSpringScrollView', :path => '../node_modules/react-native-spring-scrollview/ios'
 
-  target 'DoctorFinderRNTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
+#  target 'DoctorFinderRNTests' do
+#    inherit! :search_paths
+#    # Pods for testing
+#  end
 
   use_native_modules!
 end

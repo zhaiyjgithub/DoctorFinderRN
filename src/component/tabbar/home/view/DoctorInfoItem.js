@@ -46,7 +46,7 @@ export default class DoctorInfoItem extends Component{
 		let distanceInMi = info.Distance ? (((info.Distance)*0.6213).toFixed(2) + 'mi') : ''
 		let jobTitle = info.JobTitle ? FormatFirstChat(info.JobTitle) : ''
 		let experience = ''
-		if (info.YearOfExperience.length) {
+		if (info.YearOfExperience && info.YearOfExperience.length) {
 			let years = info.YearOfExperience.split(', ')
 			if (years.length === 1) {
 				experience = years[0]

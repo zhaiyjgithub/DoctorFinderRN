@@ -75,7 +75,7 @@ export default class PostViewController extends Component{
 		}
 
 		HTTP.post(API_Post.getPostByPage, param).then((response) => {
-			let data = response.data ? response.data : []
+			let data = response.data
 			this.setState({dataSource: isRefresh ? data : this.state.dataSource.concat(data),
 				isTotal: data.length < this.pageSize,
 				isRefreshing: false
@@ -98,7 +98,7 @@ export default class PostViewController extends Component{
 
 		HTTP.post(API_Post.searchPostByPageFromElastic, param).then((response) => {
 			this.hideRefreshing()
-			let data = response.data ? response.data : []
+			let data = response.data
 			this.setState({dataSource: isRefresh ? data : this.state.dataSource.concat(data),
 				isTotal: data.length < this.pageSize,
 			})

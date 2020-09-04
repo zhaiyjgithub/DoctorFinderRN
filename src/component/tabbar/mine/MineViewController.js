@@ -36,7 +36,6 @@ export default class MineViewController extends Component{
 				]},
 
 				{data:[
-						{title: 'My Track', type: ItemType.track},
 						{title: 'My Favorite', type: ItemType.favor},
 						{title: 'My Post', type: ItemType.post},
 					]},

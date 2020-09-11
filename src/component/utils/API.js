@@ -7,6 +7,7 @@ const API_Doctor = {
 	getCollectionStatus: 'Doctor/GetCollectionStatus',
 	deleteCollection: 'Doctor/DeleteCollection',
 	searchDoctorByPage: 'Doctor/SearchDoctorByPage',
+	searchDoctorES: 'Doctor/SearchDoctorES'
 }
 
 const API_Post = {

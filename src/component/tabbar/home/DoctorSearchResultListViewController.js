@@ -57,7 +57,7 @@ export default class DoctorSearchResultListViewController extends Component{
 							type: SearchBarType.min,
 							searchContent: searchContent,
 							onSubmitEditing: (searchContent) => {
-								this.setState({searchContent: searchContent, isRefreshing: true}, () => {
+								this.setState({searchContent: searchContent.trim(), isRefreshing: true}, () => {
 									this.refresh()
 								})
 							},
@@ -72,16 +72,31 @@ export default class DoctorSearchResultListViewController extends Component{
 		})
 	}
 
-	searchDoctors(isRefresh) {
-		const genderType = ['', 'M', 'F']
+	checkIsNumber(str) {
+		let reg = /^[0-9]+.?[0-9]*$/;
+		return reg.test(str)
+	}
+		searchDoctors(isRefresh) {
+		const {searchContent} = this.state
+
+		let name = searchContent.trim()
+		let address = searchContent.trim()
+		let zipCode = 0
+
+		if (this.checkIsNumber(searchContent)) {
+			name = ''
+			address = ''
+			zipCode = parseInt(searchContent)
+		}
+
 		let param = {
-			Name: this.state.searchContent,
-			Gender: genderType[this.state.gender],
+			Name: name,
+			Gender: this.state.gender,
 			Specialty: this.state.lastSpecialty,
+			Address: address,
 			City: this.state.lastCity,
 			State: this.state.lastState,
-			Lat: UserPosition.lat,
-			Lng: UserPosition.lng,
+			ZipCode: zipCode,
 			Page: this.page,
 			PageSize: this.pageSize,
 			Platform: Platform.OS,
@@ -92,7 +107,7 @@ export default class DoctorSearchResultListViewController extends Component{
 			this.setState({isRefreshing: true})
 		}
 
-		HTTP.post(API_Doctor.searchDoctorByPage, param).then((response) => {
+		HTTP.post(API_Doctor.searchDoctorES, param).then((response) => {
 			let data = isRefresh ? response.data : this.state.dataSource.concat(response.data)
 			this.setState({
 				dataSource: data,

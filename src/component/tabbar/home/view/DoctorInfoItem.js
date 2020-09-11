@@ -152,13 +152,11 @@ export default class DoctorInfoItem extends Component{
 								<Text style={{fontSize: 16, color: Colors.lightGray, marginRight: 8}}>{distanceInMi}</Text>
 							</View>
 
-							{/*{experience.length ? }*/}
 							<Text style={{fontSize: 16, color: Colors.black,
 								fontWeight: 'bold',
 								marginTop: 6,
 							}}>{'Experience'}</Text>
 							<Text style={{fontSize: 14, color: Colors.black,}}>{experience}</Text>
-
 						</View>
 					</TouchableOpacity>
 				</View>

@@ -109,9 +109,10 @@ export default class StateListViewController extends Component {
 		if (buttonId === 'cancel') {
 			Navigation.dismissModal(this.props.componentId);
 		}else if (buttonId === 'undo') {
-			this.props.didSelectedCity && this.props.didSelectedCity('')
-			this.props.didSelectedState && this.props.didSelectedState('')
-			Navigation.dismissModal(this.props.componentId);
+			const {didSelectedCity, componentId, didSelectedState} = this.props
+			didSelectedCity && didSelectedCity('')
+			didSelectedState && didSelectedState('')
+			Navigation.dismissModal(componentId);
 		}
 	}
 
@@ -143,13 +144,15 @@ export default class StateListViewController extends Component {
 	}
 
 	renderItem(item) {
-		let isSelected = (item.code === this.state.selectedState)
+		const {selectedState} = this.state
+		const {didSelectedState} = this.props
+		let isSelected = (item.code === selectedState)
 
 		let desc = item.name + '(' + item.code + ')'
 		return(
 			<TouchableOpacity onPress={() => {
 				this.setState({selectedState: item.code})
-				this.props.didSelectedState && this.props.didSelectedState(item.code)
+				didSelectedState && didSelectedState(item.code)
 				this.pushToCityPage()
 			}} style={{width: '100%', paddingHorizontal: 16, height: 50,
 				flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
@@ -170,9 +173,6 @@ export default class StateListViewController extends Component {
 					keyExtractor={(item, index) => {
 						return 'key' + item.key + index
 					}}
-					// ListHeaderComponent={() => {
-					//
-					// }}
 				/>
 			</View>
 		)

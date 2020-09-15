@@ -49,8 +49,9 @@ export default class CityListViewController extends Component {
 
 	navigationButtonPressed({ buttonId }) {
 		if (buttonId === 'undo') {
-			this.props.didSelectedCity && this.props.didSelectedCity('')
-			Navigation.pop(this.props.componentId);
+			const {didSelectedCity, componentId} = this.props
+			didSelectedCity && didSelectedCity('')
+			Navigation.pop(componentId);
 		}
 	}
 
@@ -93,9 +94,10 @@ export default class CityListViewController extends Component {
 	}
 
 	renderIndexView() {
+		const {dataSource} = this.state
 		return(
 			<View style={{width: 12, position: 'absolute', top: 40, right: 10, backgroundColor: Colors.clear}}>
-				{this.state.dataSource.map((item, index) => {
+				{dataSource.map((item, index) => {
 					return(
 						<TouchableOpacity onPress={() => {
 							this.scrollListView(index)
@@ -123,12 +125,14 @@ export default class CityListViewController extends Component {
 	}
 
 	renderItem(item) {
-		let isSelected = (item === this.state.selectedCity)
+		const {selectedCity} = this.state
+		let isSelected = (item === selectedCity)
 		return(
 			<TouchableOpacity onPress={() => {
-				let newSpecialty = this.state.selectedCity === item ? '' : item
-				this.props.didSelectedCity && this.props.didSelectedCity(newSpecialty)
-				Navigation.dismissModal(this.props.componentId);
+				const {didSelectedCity, componentId} = this.props
+				let newSpecialty = selectedCity === item ? '' : item
+				didSelectedCity &&didSelectedCity(newSpecialty)
+				Navigation.dismissModal(componentId);
 			}} style={{width: '100%', paddingHorizontal: 16, height: 50,
 				flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
 			}}>
@@ -140,19 +144,20 @@ export default class CityListViewController extends Component {
 	}
 
 	renderLargeList() {
+		const {dataSource} = this.state
 		return(
 			<LargeList
 				ref = {(o) => {
 					this._largeList = o
 				}}
-				data={this.state.dataSource}
+				data={dataSource}
 				heightForSection={() => 30}
 				renderSection={(section) => {
-					if (!this.state.dataSource.length) {
+					if (!dataSource.length) {
 						return ;
 					}
 
-					let title = this.state.dataSource[section].name
+					let title = dataSource[section].name
 					return(
 						<View style={{width: ScreenDimensions.width, height: 30, backgroundColor: Colors.systemGray,
 							justifyContent: 'center'
@@ -165,11 +170,11 @@ export default class CityListViewController extends Component {
 				}}
 				heightForIndexPath={() => 50}
 				renderIndexPath={(index) => {
-					if (!this.state.dataSource.length) {
+					if (!dataSource.length) {
 						return;
 					}
 
-					let sectionData = this.state.dataSource[index.section]
+					let sectionData = dataSource[index.section]
 					let item = sectionData.items[index.row]
 					return this.renderItem(item)
 				}}

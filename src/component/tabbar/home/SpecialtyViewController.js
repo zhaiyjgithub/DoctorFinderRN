@@ -136,9 +136,10 @@ export default class SpecialtyViewController extends Component {
 		let isSelected = (item === this.state.selectedSpecialty)
 		return(
 			<TouchableOpacity onPress={() => {
+				const {didSelectedSpecialty, componentId} = this.props
 				let newSpecialty = this.state.selectedSpecialty === item ? '' : item
-				this.props.didSelectedSpecialty && this.props.didSelectedSpecialty(newSpecialty)
-				Navigation.dismissModal(this.props.componentId);
+				didSelectedSpecialty && didSelectedSpecialty(newSpecialty)
+				Navigation.dismissModal(componentId);
 			}} style={{width: '100%', paddingHorizontal: 16, height: 50,
 				flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
 			}}>
@@ -150,19 +151,20 @@ export default class SpecialtyViewController extends Component {
 	}
 
 	renderLargeList() {
+		const {dataSource} = this.state
 		return(
 			<LargeList
 				ref = {(o) => {
 					this._largeList = o
 				}}
-				data={this.state.dataSource}
+				data={dataSource}
 				heightForSection={() => 30}
 				renderSection={(section) => {
-					if (!this.state.dataSource.length) {
+					if (!dataSource.length) {
 						return ;
 					}
 
-					let title = this.state.dataSource[section].name
+					let title = dataSource[section].name
 					return(
 						<View style={{width: ScreenDimensions.width, height: 30, backgroundColor: Colors.systemGray,
 							justifyContent: 'center'
@@ -175,11 +177,11 @@ export default class SpecialtyViewController extends Component {
 				}}
 				heightForIndexPath={() => 50}
 				renderIndexPath={(index) => {
-					if (!this.state.dataSource.length) {
+					if (!dataSource.length) {
 						return;
 					}
 
-					let sectionData = this.state.dataSource[index.section]
+					let sectionData = dataSource[index.section]
 					let item = sectionData.items[index.row]
 					return this.renderItem(item)
 				}}
@@ -196,6 +198,3 @@ export default class SpecialtyViewController extends Component {
 		)
 	}
 }
-
-
-//

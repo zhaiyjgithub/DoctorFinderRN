@@ -36,7 +36,7 @@ export default class DoctorInfoItem extends Component{
 	}
 
 	render() {
-		let info = this.state.info
+		const {info, isSelected, isEdit} = this.state
 		let doctorName = 'Dr. ' + info.FullName + ' '
 		let credential = info.Credential
 		let specialty = info.Specialty
@@ -68,6 +68,7 @@ export default class DoctorInfoItem extends Component{
 			experience = experience + ' years'
 		}
 
+		const {clickSelectedButton, didSelectedItem, questionAction} = this.props
 		return(
 			<View style={{
 				width: ScreenDimensions.width,
@@ -75,20 +76,20 @@ export default class DoctorInfoItem extends Component{
 				paddingVertical: 8,
 			}}>
 				<TouchableOpacity  onPress={() => {
-					this.props.clickSelectedButton && this.props.clickSelectedButton()
+					clickSelectedButton && clickSelectedButton()
 				}} style={{position: 'absolute', left: 0, top: 8, width: 60, bottom: 8,
 					backgroundColor: Colors.white,
 					justifyContent: 'center', alignItems: 'center',
 				}}>
-					<Image style={{width: 20, height: 20,}} source={this.state.isSelected ? require('../../../../resource/image/register/checkbox-selected.png') : require('../../../../resource/image/register/checkbox-unselected.png')}/>
+					<Image style={{width: 20, height: 20,}} source={isSelected ? require('../../../../resource/image/register/checkbox-selected.png') : require('../../../../resource/image/register/checkbox-unselected.png')}/>
 				</TouchableOpacity>
 
 				<View style={{flex: 1, width: ScreenDimensions.width,
-					marginLeft: this.state.isEdit ? 60 : 0,
+					marginLeft: isEdit ? 60 : 0,
 					backgroundColor: Colors.listBg,
 				}}>
 					<TouchableOpacity onPress={() => {
-						this.props.didSelectedItem && this.props.didSelectedItem()
+						didSelectedItem && didSelectedItem()
 					}} style={{
 						width: ScreenDimensions.width - 32,
 						marginLeft: 16,
@@ -111,7 +112,7 @@ export default class DoctorInfoItem extends Component{
 							</View>
 
 							<TouchableOpacity onPress={() => {
-								this.props.questionAction && this.props.questionAction()
+								questionAction && questionAction()
 							}} style={{width: 40, height: 40, justifyContent: 'center',
 								alignItems: 'center', marginTop: 0}}>
 								<Image source={require('../../../../resource/image/home/question.png')}

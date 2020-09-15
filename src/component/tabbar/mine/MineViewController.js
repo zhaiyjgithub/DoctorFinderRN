@@ -16,7 +16,7 @@ import {ScreenDimensions, TabBar} from '../../utils/Dimensions';
 import {Colors} from '../../utils/Styles';
 import RouterEntry from '../../router/RouterEntry';
 import {CacheDB} from '../../utils/DBTool';
-import {DBKey} from '../../utils/CustomEnums';
+import {DBKey, EventName} from '../../utils/CustomEnums';
 import {API_Post, API_Register, API_User, BaseUrl} from '../../utils/API';
 import {Navigation} from 'react-native-navigation';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
@@ -70,8 +70,24 @@ export default class MineViewController extends Component{
 	}
 
 	componentDidMount() {
+		this.addEventListener()
 		this.setState({
 			userName: this.getUserName()
+		})
+	}
+
+	componentWillUnmount() {
+		this.newLoginListener && this.newLoginListener.remove()
+	}
+
+	addEventListener() {
+		this.newLoginListener = DeviceEventEmitter.addEventListener(EventName.other.newLogin, (userInfo) => {
+			const {dataSource} = this.state
+			let data = dataSource.map((item) => {
+				return item
+			})
+
+			this.setState({dataSource: dataSource})
 		})
 	}
 
@@ -208,7 +224,7 @@ export default class MineViewController extends Component{
 
 	signOut() {
 		CacheDB.remove(DBKey.userInfo)
-		RouterEntry.guide()
+		RouterEntry.modalSignUp()
 	}
 
 	signIn() {

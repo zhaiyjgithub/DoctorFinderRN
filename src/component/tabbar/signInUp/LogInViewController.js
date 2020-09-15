@@ -15,7 +15,7 @@ import {
 } from 'react-native'
 import {Colors} from '../../utils/Styles';
 import {NaviBarHeight, ScreenDimensions} from '../../utils/Dimensions';
-import {DBKey, PLATFORM} from '../../utils/CustomEnums';
+import {DBKey, EventName, PLATFORM} from '../../utils/CustomEnums';
 import {Navigation} from 'react-native-navigation';
 import {BaseNavigatorOptions} from '../../BaseComponents/BaseNavigatorOptions';
 import Toast from 'react-native-simple-toast'
@@ -71,9 +71,10 @@ export default class LogInViewController extends Component{
                 let userInfo = response.data
                 CacheDB.save(DBKey.userInfo, userInfo)
 
-                global.UserInfo = userInfo
-
-                RouterEntry.homePage()
+                global.UserInfo =
+                userInfo
+                DeviceEventEmitter.emit(EventName.other.newLogin, {userInfo: userInfo})
+                Navigation.dismissAllModals()
             }else {
                 Toast.showWithGravity('Email or password is wrong!', Toast.LONG, Toast.CENTER)
             }

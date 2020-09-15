@@ -3,7 +3,6 @@ import {
 	Platform,
 } from 'react-native';
 
-
 const Language = {
 	english: 'en',
 	chinese: 'zh-Hans-CN',
@@ -54,7 +53,8 @@ const CollectionType = {
 const EventName = {
 	other: {
 		segmentTab: 'segmentTab',
-		segmentTabEnable: 'segmentTabEnable'
+		segmentTabEnable: 'segmentTabEnable',
+		newLogin: 'newLogin'
 	}
 }
 

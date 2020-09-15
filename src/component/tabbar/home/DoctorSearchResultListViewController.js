@@ -76,7 +76,7 @@ export default class DoctorSearchResultListViewController extends Component{
 		let reg = /^[0-9]+.?[0-9]*$/;
 		return reg.test(str)
 	}
-		searchDoctors(isRefresh) {
+	searchDoctors(isRefresh) {
 		const {searchContent} = this.state
 
 		let name = searchContent.trim()

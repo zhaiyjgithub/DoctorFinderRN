@@ -37,6 +37,8 @@ export default class PostViewController extends Component{
 		this.page = 1
 		this.pageSize = 30
 		this.isHasShowTopBarSearchBar = false
+		this.isUserSearchAction = false
+		this.searchContent = ''
 	}
 
 	componentDidMount() {
@@ -45,12 +47,20 @@ export default class PostViewController extends Component{
 
 	refresh() {
 		this.page = 1
-		this.getPostList(true)
+		if (this.isUserSearchAction) {
+			this.searchPostList(this.searchContent, true)
+		}else {
+			this.getPostList(true)
+		}
 	}
 
 	loadMore() {
 		this.page = this.page + 1
-		this.getPostList(false)
+		if (this.isUserSearchAction) {
+			this.searchPostList(this.searchContent, false)
+		}else {
+			this.getPostList(false)
+		}
 	}
 
 	getPostList(isRefresh) {
@@ -65,12 +75,35 @@ export default class PostViewController extends Component{
 		}
 
 		HTTP.post(API_Post.getPostByPage, param).then((response) => {
-			this.setState({dataSource: isRefresh ? response.data : this.state.dataSource.concat(response.data),
-				isTotal: response.data.length < this.pageSize,
+			let data = response.data
+			this.setState({dataSource: isRefresh ? data : this.state.dataSource.concat(data),
+				isTotal: data.length < this.pageSize,
 				isRefreshing: false
 			})
 		}).catch((error) => {
 			this.setState({isRefreshing: false})
+		})
+	}
+
+	searchPostList(content, isRefresh) {
+		let param = {
+			Content: content,
+			Page: this.page,
+			PageSize: this.pageSize,
+		}
+
+		if (isRefresh) {
+			this.showRefreshing()
+		}
+
+		HTTP.post(API_Post.searchPostByPageFromElastic, param).then((response) => {
+			this.hideRefreshing()
+			let data = response.data
+			this.setState({dataSource: isRefresh ? data : this.state.dataSource.concat(data),
+				isTotal: data.length < this.pageSize,
+			})
+		}).catch((error) => {
+			this.hideRefreshing()
 		})
 	}
 
@@ -80,6 +113,14 @@ export default class PostViewController extends Component{
 
 	hideSpinner() {
 		this.setState({isSpinnerVisible: false})
+	}
+
+	showRefreshing() {
+		this.setState({isRefreshing: true})
+	}
+
+	hideRefreshing() {
+		this.setState({isRefreshing: false})
 	}
 
 	showNotSignUpAlert() {
@@ -143,8 +184,11 @@ export default class PostViewController extends Component{
 			<SearchBar
 				type = {SearchBarType.normal}
 				placeholder = {'Find something...'}
+				searchContent = {this.searchContent}
 				onSubmitEditing={(searchContent) => {
-					// this.goToSearch(searchContent, '')
+					this.searchContent = searchContent
+					this.isUserSearchAction = (searchContent && searchContent.length)
+					this.refresh()
 				}}
 			/>
 		)
@@ -161,8 +205,11 @@ export default class PostViewController extends Component{
 							passProps:{
 								type: SearchBarType.max,
 								placeholder: 'Find something...',
+								searchContent: this.searchContent,
 								onSubmitEditing: (searchContent) => {
-									// this.goToSearch(searchContent, '')
+									this.searchContent = searchContent
+									this.isUserSearchAction = (searchContent && searchContent.length)
+									this.refresh()
 								}
 							}
 						}

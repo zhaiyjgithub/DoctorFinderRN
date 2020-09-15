@@ -278,7 +278,7 @@ export default class NewPostViewController extends Component{
 			}} style={{flex: 1, backgroundColor: Colors.white, }}>
 				<Text style={{fontSize: 14, color: Colors.red, width: ScreenDimensions.width - 40, marginLeft: 20,
 					marginTop: 15, fontWeight: 'bold'
-				}}>{'Please enter something meaningful.'}</Text>
+				}}>{'Please write as many meaningful questions or content as possible.'}</Text>
 
 				<View style={{marginLeft: 20}}>
 					<TextInput
@@ -310,7 +310,7 @@ export default class NewPostViewController extends Component{
 					selectionColor = {Colors.theme}
 					underlineColorAndroid = {'transparent'}
 					numberOfLines={1}
-					placeholder = {'Description'}
+					placeholder = {'Description...'}
 					placeholderTextColor={Colors.lightGray}
 					style={{width: ScreenDimensions.width - 40, marginTop: 15,
 						height: 200, textAlign: 'left', paddingLeft: 8, fontSize: 16,

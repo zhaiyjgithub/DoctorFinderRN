@@ -154,7 +154,7 @@ export default class LogInViewController extends Component{
                             this.setState({account: text.trim() + ''})
                         }}
                         selectionColor = {Colors.theme}
-                        // value = {this.state.searchContent}
+                        value = {this.state.account}
                         underlineColorAndroid = {'transparent'}
                         numberOfLines={1}
                         placeholder = {'Email'}

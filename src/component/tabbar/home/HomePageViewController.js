@@ -170,7 +170,7 @@ export default class HomePageViewController extends Component{
 		})
 	}
 
-	goToSearch(searchContent, specialty) {
+	goToSearch(searchContent = '', specialty = '') {
 		Navigation.push(this.props.componentId, {
 			component: {
 				name: 'DoctorSearchResultListViewController',
@@ -227,7 +227,7 @@ export default class HomePageViewController extends Component{
 				type = {SearchBarType.normal}
 				placeholder={'e.g. Smith'}
 				onSubmitEditing={(searchContent) => {
-					//
+					this.goToSearch(searchContent, '')
 				}}
 			/>
 		)
@@ -437,14 +437,19 @@ export default class HomePageViewController extends Component{
 
 					}}
 					ListFooterComponent={() => {
-						return (
-							<View style={{width: ScreenDimensions.width,
-								justifyContent: 'center', alignItems: 'center',
-								paddingBottom: TabBar.height,
-							}}>
-								<Text style={{fontSize: 12, color: Colors.lightGray}}>{'Click \'Search bar\' and get more information.'}</Text>
-							</View>
-						)
+						const {dataSource} = this.state
+						if (dataSource.length > 1 && dataSource[1].data.length) {
+							return (
+								<View style={{width: ScreenDimensions.width,
+									justifyContent: 'center', alignItems: 'center',
+									paddingBottom: TabBar.height,
+								}}>
+									<Text style={{fontSize: 14, color: Colors.lightGray}}>{'Click \'Search bar\' and get more information.'}</Text>
+								</View>
+							)
+						}
+
+						return null
 					}}
 				/>
 			</View>

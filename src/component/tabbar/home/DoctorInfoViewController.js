@@ -465,7 +465,7 @@ export default class DoctorInfoViewController extends Component{
 				height: 50, borderRadius: 25, justifyContent: 'center', alignItems: 'center',
 				bottom: PLATFORM.isIPhoneX ? 34 : 20, backgroundColor: Colors.theme
 			}}>
-				<Text style={{fontSize: 18, color: Colors.white, fontWeight: 'bold'}}>{'Book'}</Text>
+				<Text style={{fontSize: 18, color: Colors.white, fontWeight: 'bold'}}>{'Request Now'}</Text>
 			</TouchableOpacity>
 		)
 	}

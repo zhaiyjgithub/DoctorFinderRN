@@ -12,15 +12,15 @@ export default class StateListViewController extends Component {
 	static options(passProps) {
 		return {
 			topBar: {
-				// rightButtons: [
-				// 	{
-				// 		id: 'undo',
-				// 		enabled: true,
-				// 		disableIconTint: false,
-				// 		color: Colors.white,
-				// 		text: 'Undo'
-				// 	},
-				// ],
+				rightButtons: [
+					{
+						id: 'undo',
+						enabled: true,
+						disableIconTint: false,
+						color: Colors.white,
+						text: 'Undo'
+					},
+				],
 				leftButtons: [
 					{
 						id: 'cancel',
@@ -149,6 +149,7 @@ export default class StateListViewController extends Component {
 		return(
 			<TouchableOpacity onPress={() => {
 				this.setState({selectedState: item.code})
+				this.props.didSelectedState && this.props.didSelectedState(item.code)
 				this.pushToCityPage()
 			}} style={{width: '100%', paddingHorizontal: 16, height: 50,
 				flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',

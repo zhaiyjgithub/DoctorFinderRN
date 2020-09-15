@@ -47,7 +47,6 @@ target 'DoctorFinderRN' do
 
   pod 'RNSpringScrollView', :path => '../node_modules/react-native-spring-scrollview/ios'
 
-
   use_native_modules!
 end
 

@@ -51,16 +51,16 @@ export default class DoctorInfoViewController extends Component{
 		this.state = {
 			doctorInfo: null,
 			dataSource: [{section: 0, data: [
-					{section: 0, type: menuType.header},
-					{section: 0, type: menuType.summary},
-					{section: 0, type: menuType.language},
-					{section: 0, type: menuType.address},
-					{section: 0, type: menuType.education},
-					{section: 0, type: menuType.certification},
-					{section: 0, type: menuType.award},
-					{section: 0, type: menuType.memberShip},
-					{section: 0, type: menuType.affiliation},
-					{section: 0, type: menuType.clinic}
+					{section: 0, type: MenuType.header},
+					{section: 0, type: MenuType.summary},
+					{section: 0, type: MenuType.language},
+					{section: 0, type: MenuType.address},
+					{section: 0, type: MenuType.education},
+					{section: 0, type: MenuType.certification},
+					{section: 0, type: MenuType.award},
+					{section: 0, type: MenuType.memberShip},
+					{section: 0, type: MenuType.affiliation},
+					{section: 0, type: MenuType.clinic}
 		]}],
 		}
 
@@ -69,8 +69,9 @@ export default class DoctorInfoViewController extends Component{
 	}
 
 	componentDidMount() {
-		if (this.props.info) {
-			this.getDoctorInfoWithNpi(this.props.info.Npi)
+		const {info} = this.props
+		if (info) {
+			this.getDoctorInfoWithNpi(info.Npi)
 			this.getRelatedDoctors()
 			this.getCollectionStatus()
 		}
@@ -81,7 +82,8 @@ export default class DoctorInfoViewController extends Component{
 	}
 
 	componentDidAppear() {
-		this.doctorName = 'Dr. ' + this.props.info.FirstName + ' ' + this.props.info.LastName
+		const {info} = this.props
+		this.doctorName = 'Dr. ' + info.FirstName + ' ' + info.LastName
 		if (this._offsetY > 40) {
 			this.setTopBarTitle(this.doctorName)
 		}else {
@@ -187,8 +189,9 @@ export default class DoctorInfoViewController extends Component{
 	}
 
 	getCollectionStatus() {
+		const {info} = this.props
 		let param = {
-			ObjectID: this.props.info.Npi,
+			ObjectID: info.Npi,
 			ObjectType: CollectionType.doctor,
 			UserID: this.getUserID(),
 		}
@@ -202,8 +205,9 @@ export default class DoctorInfoViewController extends Component{
 	}
 
 	addCollection() {
+		const {info} = this.props
 		let param = {
-			ObjectID: this.props.info.Npi,
+			ObjectID: info.Npi,
 			ObjectType: CollectionType.doctor,
 			UserID: this.getUserID(),
 		}
@@ -221,8 +225,9 @@ export default class DoctorInfoViewController extends Component{
 	}
 
 	cancelCollection() {
+		const {info} = this.props
 		let param = {
-			ObjectID: this.props.info.Npi,
+			ObjectID: info.Npi,
 			ObjectType: CollectionType.doctor,
 			UserID: this.getUserID(),
 		}
@@ -278,95 +283,97 @@ export default class DoctorInfoViewController extends Component{
 	}
 
 	renderItem(item) {
-		if (!this.props.info) {
+		const {info} = this.props
+		const {doctorInfo} = this.state
+		if (!info) {
 			return null
 		}
 
 		if (item.section === 0) {
 			let type = item.type
-			if (type !== menuType.header && type !== menuType.summary && !this.state.doctorInfo) {
+			if (type !== MenuType.header && type !== MenuType.summary && !this.state.doctorInfo) {
 				return null
 			}
 
-			if (type === menuType.header) {
+			if (type === MenuType.header) {
 				return (
 					<DoctorInfoHeaderItem
 						id = {10}
-						info = {this.props.info}
+						info = {info}
 						questionAction = {() => {
 							this.showQuestionAlert()
 						}}
 					/>
 				)
-			}else if (type === menuType.summary) {
+			}else if (type === MenuType.summary) {
 				return (
 					<DoctorInfoTextItem
 						title = {'Summary'}
-						desc = {this.props.info.Summary}
+						desc = {info.Summary}
 					/>
 				)
-			}else if (type === menuType.language) {
+			}else if (type === MenuType.language) {
 				return (
 					<DoctorInfoTextItem
 						title = {'Other Language'}
-						desc = {this.state.doctorInfo.Lang.Lang}
+						desc = {doctorInfo.Lang.Lang}
 					/>
 				)
-			}else if (type === menuType.address) {
-				if (!this.state.doctorInfo) {
+			}else if (type === MenuType.address) {
+				if (!doctorInfo) {
 					return null
 				}
 
-				let address = this.props.info.Address
+				let address = info.Address
 
 				return (
 					<DoctorInfoAddressItem
 						title = {'Location'}
 						desc = {address}
-						lat = {this.state.doctorInfo.Geo.Lat}
-						lng = {this.state.doctorInfo.Geo.Lng}
+						lat = {doctorInfo.Geo.Lat}
+						lng = {doctorInfo.Geo.Lng}
 						gotoRoute = {() => {
-							this.selectedAddress = this.props.info.Address +'\n' + this.props.info.City + ' '
-								+ this.props.info.State + ' ' + this.props.info.Zip
+							this.selectedAddress = info.Address +'\n' + info.City + ' '
+								+ info.State + ' ' + info.Zip
 							this.openMap()
 						}}
 					/>
 				)
-			}else if (type === menuType.education) {
-				if (!this.state.doctorInfo) {
+			}else if (type === MenuType.education) {
+				if (!doctorInfo) {
 					return null
 				}
 
 				return (
 					<DoctorInfoTextItem
 						title = {'Education & Training'}
-						list = {this.state.doctorInfo.Education}
+						list = {doctorInfo.Education}
 					/>
 				)
-			}else if (type === menuType.certification) {
-				if (!this.state.doctorInfo) {
+			}else if (type === MenuType.certification) {
+				if (!doctorInfo) {
 					return null
 				}
 
 				return (
 					<DoctorInfoTextItem
 						title = {'Certifications & Licensure'}
-						list = {this.state.doctorInfo.Certification}
+						list = {doctorInfo.Certification}
 					/>
 				)
-			}else if (type === menuType.award) {
-				if (!this.state.doctorInfo) {
+			}else if (type === MenuType.award) {
+				if (!doctorInfo) {
 					return null
 				}
 
 				return (
 					<DoctorInfoTextItem
 						title = {'Awards, Honors, & Recognition'}
-						list = {this.state.doctorInfo.Award}
+						list = {doctorInfo.Award}
 					/>
 				)
-			}else if (type === menuType.memberShip) {
-				if (!this.state.doctorInfo) {
+			}else if (type === MenuType.memberShip) {
+				if (!doctorInfo) {
 					return null
 				}
 
@@ -376,26 +383,26 @@ export default class DoctorInfoViewController extends Component{
 						list = {this.state.doctorInfo.MemberShip}
 					/>
 				)
-			}else if (type === menuType.affiliation) {
-				if (!this.state.doctorInfo) {
+			}else if (type === MenuType.affiliation) {
+				if (!doctorInfo) {
 					return null
 				}
 
 				return (
 					<DoctorInfoTextItem
 						title = {'Professional Memberships'}
-						list = {this.state.doctorInfo.Affiliation}
+						list = {doctorInfo.Affiliation}
 					/>
 				)
-			}else if (type === menuType.clinic) {
-				if (!this.state.doctorInfo) {
+			}else if (type === MenuType.clinic) {
+				if (!doctorInfo) {
 					return null
 				}
 
 				return (
 					<DoctorInfoTextItem
 						title = {'Clinical Trials'}
-						list = {this.state.doctorInfo.Clinic}
+						list = {doctorInfo.Clinic}
 					/>
 				)
 			}
@@ -417,9 +424,10 @@ export default class DoctorInfoViewController extends Component{
 	}
 
 	renderRelateDoctorHeader() {
-		if (this.state.dataSource.length === 2 &&
-			this.state.dataSource[1].data &&
-			this.state.dataSource[1].data.length)
+		const {dataSource} = this.state
+		if (dataSource.length === 2 &&
+			dataSource[1].data &&
+			dataSource[1].data.length)
 		return(
 			<Text style={{width: ScreenDimensions.width, textAlign: 'center',
 				fontSize: 16, color: '#202020', lineHeight: 16*1.4,
@@ -530,7 +538,7 @@ export default class DoctorInfoViewController extends Component{
 	}
 }
 
-const menuType = {
+const MenuType = {
 	header: 0,
 	summary: 1,
 	language: 2,

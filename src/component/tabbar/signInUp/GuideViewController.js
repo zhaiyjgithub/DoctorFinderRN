@@ -22,6 +22,7 @@ export default class GuideViewController extends Component{
     static defaultProps = {
         isToSignUp: false
     }
+
     static options(passProps) {
         return {
             statusBar: {

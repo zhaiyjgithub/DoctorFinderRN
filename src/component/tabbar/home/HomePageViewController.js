@@ -25,10 +25,10 @@ export default class HomePageViewController extends Component{
 		this.state = {
 			dataSource: [{section: 0, data: [{section: 0,}]}],
 		}
-		this.addGlobalScreenEventListener()
-
-		this.setTopBarView(false)
 		this.isHasShowTopBarSearchBar = false
+
+		this.addGlobalScreenEventListener()
+		this.setTopBarView(false)
 	}
 
 	componentDidMount() {
@@ -117,20 +117,16 @@ export default class HomePageViewController extends Component{
 		}).then((response) => {
 			return response.json()
 		}).then((data) => {
-			console.log(JSON.stringify(data))
 			if (data && data.results.length) {
 				let locations = data.results[0].locations
 				if (locations && locations.length) {
 					let location = locations[0]
-					let state = location.adminArea3
-					let city = location.adminArea4
-
-					UserPosition.city = city
-					UserPosition.state = state
+					UserPosition.city = location.adminArea3
+					UserPosition.state = location.adminArea4
 				}
 			}
 		}).catch((error) => {
-			console.log(error)
+			//
 		})
 	}
 

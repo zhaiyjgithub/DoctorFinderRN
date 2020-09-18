@@ -81,13 +81,13 @@ export default class MineViewController extends Component{
 	}
 
 	addEventListener() {
-		this.newLoginListener = DeviceEventEmitter.addEventListener(EventName.other.newLogin, (userInfo) => {
+		this.newLoginListener = DeviceEventEmitter.addListener(EventName.other.newLogin, (userInfo) => {
 			const {dataSource} = this.state
 			let data = dataSource.map((item) => {
 				return item
 			})
 
-			this.setState({dataSource: dataSource})
+			this.setState({dataSource: data})
 		})
 	}
 

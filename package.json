@@ -16,7 +16,7 @@
     "appcenter-crashes": "3.0.2",
     "crypto-js": "^3.1.9-1",
     "react": "16.8.6",
-    "react-native": "0.60.3",
+    "react-native": "0.62.3",
     "react-native-actionsheet": "^2.4.2",
     "react-native-camera-kit": "^8.0.4",
     "react-native-extra-dimensions-android": "^1.2.5",

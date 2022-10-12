@@ -11,9 +11,9 @@
   "dependencies": {
     "@react-native-community/async-storage": "^1.7.1",
     "@react-native-community/geolocation": "^2.0.2",
-    "appcenter": "3.0.2",
-    "appcenter-analytics": "3.0.2",
-    "appcenter-crashes": "3.0.2",
+    "appcenter": "4.4.5",
+    "appcenter-analytics": "4.4.5",
+    "appcenter-crashes": "4.4.5",
     "crypto-js": "^3.1.9-1",
     "react": "16.8.6",
     "react-native": "0.60.3",
